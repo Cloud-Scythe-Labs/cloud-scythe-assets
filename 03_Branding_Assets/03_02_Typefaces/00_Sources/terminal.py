@@ -15,7 +15,8 @@ Pipeline
      plus renaming to CSL Terminal (the OFL lets us modify and rename; it does not let us
      use the JetBrains trademark, which is removed). Italic masters are unslanted for the
      outline steps and slanted back afterwards.
-  3. fontmake -> variable fonts, upright and italic, weight 100-800, all features and ligatures.
+  3. fontmake -> variable fonts, upright and italic, weight 100-800, all features and ligatures
+     (and a second pair without v1 chunks, for the Bold statics only).
   4. fontTools instancer -> static Regular, Bold, Italic, Bold Italic for terminals and IDEs.
   5. WOFF2 of both variable fonts for the web.
 
@@ -118,8 +119,9 @@ LONE_COUNTER_CORNERS = ("R", "six", "nine")
 # Letters whose free corners keep JetBrains Mono's curves (squared by SQUARENESS) instead of
 # the concentric rebuild: the bowl-on-stem and arch letters read better that way.
 KEEP_JBM_CURVES = ("b", "d", "p", "q", "r", "m", "h", "n")
-# Letters whose JetBrains Mono ink-trap joins are evened out.
-JOIN_LETTERS = ("b", "d", "p", "q", "r", "n", "h", "m", "a", "g", "u")
+# Glyphs whose JetBrains Mono ink-trap joins are evened out (@'s inner bowl meets its stem the
+# same way as a's).
+JOIN_LETTERS = ("b", "d", "p", "q", "r", "n", "h", "m", "a", "g", "u", "at")
 # Diagonals only widen while the counters next to them stay at least this many stems wide
 # (w, W and M are tight in a monospace cell, more so in the heavy weights).
 MIN_COUNTER = 0.8
@@ -149,9 +151,13 @@ FLAT_CATEGORIES = ("L", "Nd", "Po", "Sc")
 # tightened to a half-stroke radius and the bite's inner corner gets a half-stroke fillet, so
 # the two strokes touch only through a thin diagonal neck (the "ghost" gap).
 # Corners per glyph (and its alternates), read from v1's outlines. BL / BR = the bottom-left /
-# bottom-right corner of the glyph's lowest bowl. Empty while the base is still being iterated;
-# the first batch to try is ("BL", "BR") on o c e s u O C G U J S zero six eight.
-CHUNKS = {}
+# bottom-right corner of the glyph's lowest bowl (TL / TR = the top corners, unused: i, j and l
+# were tried and dropped, as were a's bottom-right and 8's). Rolled out a glyph at a time, as
+# approved.
+_BOTH = ("BL", "BR")
+CHUNKS = {"zero": _BOTH, "o": _BOTH, "s": _BOTH, "u": _BOTH, "O": _BOTH, "G": _BOTH,
+          "U": _BOTH, "S": _BOTH,
+          "c": ("BL",), "e": ("BL",), "C": ("BL",), "J": ("BR",), "D": ("BR",)}
 # Arcs may end this far off the axis (run/rise) and still count as corners (foot terminals of
 # c e s, joins).
 TERMINAL_SLOPE = 0.35
@@ -164,6 +170,9 @@ ROUND_GLYPHS = ("parenleft", "parenright")
 DOT_OPTICAL_SHRINK = 0.06
 # Swap these with their ".zero" alternates so the slashed form is the default.
 ZEROS = ("zero", "zero.numr", "zero.dnom", "zeroinferior", "zerosuperior")
+# Glyphs the italic takes from the upright masters (then slants): JetBrains Mono's italic a is
+# single-storey; CSL Terminal keeps the double-storey a in both.
+UPRIGHT_IN_ITALIC = ("a",)
 
 STATICS = {                            # file suffix -> (source, wght, subfamily, bold, italic)
     "": ("roman", 400, "Regular", False, False),
@@ -268,8 +277,13 @@ def corner_geometry(pts, corner):
         c = (p[0], p0[1]) if h0 else (p0[0], p[1])
     else:
         p0, c, p = pts[(i - 1) % n], pts[i], pts[(i + 1) % n]
-    e0 = (_sign(c[0] - p0[0]), _sign(c[1] - p0[1]))
-    e1 = (_sign(p[0] - c[0]), _sign(p[1] - c[1]))
+
+    def axis(d):
+        # the edge's own axis only: unslanted italic edges are off-axis by rounding
+        return (_sign(d[0]), 0) if abs(d[0]) >= abs(d[1]) else (0, _sign(d[1]))
+
+    e0 = axis((c[0] - p0[0], c[1] - p0[1]))
+    e1 = axis((p[0] - c[0], p[1] - c[1]))
     return (c[0], c[1]), e0, e1, p0, p
 
 
@@ -277,15 +291,17 @@ def plan_chunks(glyph, tags, stem, tol=0.0):
     """[((ci, kind, i), (cj, kind, j))]: outer corner and inner corner of each CHUNKS tag.
 
     Decided once, on the default master, so every master gets the same point structure. The
-    outer corner is the lowest convex bottom corner on that side of an outer contour; the inner
-    corner is the nearest corner diagonally inside it, opening the same way (the counter's or
-    the aperture's corner), which bounds the overlap square that is cut out.
+    outer corner is the lowest convex bottom corner (BL, BR) or the highest convex top corner
+    (TL, TR) on that side of an outer contour; the inner corner is the nearest corner
+    diagonally inside it, opening the same way (the counter's, the aperture's, or the join
+    under i's arm), which bounds the overlap square that is cut out.
     """
     snap = [[(p.x, p.y) for p in c.points] for c in glyph.contours]
     found = [(ci, *k) for ci, c in enumerate(glyph.contours) for k in corners(c, tol)]
     centre = glyph.width / 2
     plan = []
     for tag in tags:
+        top = tag[0] == "T"
         best = None
         for ci, kind, i in found:
             if not _is_outer(glyph.contours[ci]):
@@ -293,12 +309,14 @@ def plan_chunks(glyph, tags, stem, tol=0.0):
             c, e0, e1, a, b = corner_geometry(snap[ci], (kind, i))
             if e0[0] * e1[1] - e0[1] * e1[0] <= 0:
                 continue                   # concave
-            if not (min(a[1], b[1]) >= c[1] - tol and max(a[1], b[1]) > c[1] + tol):
-                continue                   # not a bottom corner
-            left = max(a[0], b[0]) > c[0]  # the bottom edge runs off to the right
-            if left != (tag == "BL"):
+            side = -1 if top else 1        # the other edge runs up from a bottom corner
+            if not (min(side * a[1], side * b[1]) >= side * c[1] - tol
+                    and max(side * a[1], side * b[1]) > side * c[1] + tol):
+                continue                   # not a corner on that side
+            left = max(a[0], b[0]) > c[0] + tol    # the flat edge runs off to the right
+            if left != (tag[1] == "L"):
                 continue
-            key = (c[1], -abs(c[0] - centre))
+            key = (side * c[1], -abs(c[0] - centre))
             if best is None or key < best[0]:
                 best = (key, (ci, kind, i), c, e0, e1)
         if best is None:
@@ -331,13 +349,15 @@ def _rounded(k, e0, e1, r):
             ((q1[0] - e1[0] * h, q1[1] - e1[1] * h), None), (q1, "curve")]
 
 
-def apply_chunks(glyph, plan):
+def apply_chunks(glyph, plan, cut=True):
     """Cut each planned overlap square out of this master's outlines.
 
-    Sizes come from this master's own corners, so the cut is the full stroke overlap at every
-    weight. Walking into the outer corner C: stop short of C level with the inner corner K, run
-    in to K (filleted), run back out along the other stroke past C, carry on. K itself is
-    tightened to the same half-stroke radius.
+    Sizes come from this master's own corners, so the cut is the full stroke overlap. Walking
+    into the outer corner C: stop short of C level with the inner corner K, run in to K
+    (filleted), run back out along the other stroke past C, carry on. K itself is tightened to
+    half the overlap. With `cut` off (the heavy master) the cut's points all sit on C, a square
+    corner like the chunk's own square ends, so the chunk shrinks towards C with weight: Bold,
+    between Regular and ExtraBold, keeps a smaller chunk of the same shape and ExtraBold none.
     """
     snap = [[(p.x, p.y) for p in c.points] for c in glyph.contours]
     edits = {}                             # (ci, i) -> (indices removed, replacement points)
@@ -355,17 +375,24 @@ def apply_chunks(glyph, plan):
         b0 = min(b0, 0.95 * (abs(c[0] - a[0]) + abs(c[1] - a[1])))
         b1 = min(b1, 0.95 * (abs(b[0] - c[0]) + abs(b[1] - c[1])))
         r = min(b0, b1) / 2
-        inner = (c[0] - e0[0] * b0 + e1[0] * b1, c[1] - e0[1] * b0 + e1[1] * b1)
-        pts = [((c[0] - e0[0] * b0, c[1] - e0[1] * b0), "line")]
-        pts += _rounded(inner, e1, e0, r)  # into the cut's inner corner along e1, out along e0
-        pts.append(((c[0] + e1[0] * b1, c[1] + e1[1] * b1), "line"))
+        # The neck is the ink between two quarter rounds of half the overlap: K's and the cut's
+        # inner corner. A square K (the join under i's arm) is rounded like a counter corner.
+        if cut:
+            inner = (c[0] - e0[0] * b0 + e1[0] * b1, c[1] - e0[1] * b0 + e1[1] * b1)
+            pts = [((c[0] - e0[0] * b0, c[1] - e0[1] * b0), "line")]
+            pts += _rounded(inner, e1, e0, r)  # into the cut's inner corner along e1, out along e0
+            pts.append(((c[0] + e1[0] * b1, c[1] + e1[1] * b1), "line"))
+        else:
+            pts = [(c, "line"), (c, "line"), (c, None), (c, None), (c, "curve"), (c, "line")]
         if ok == "arc":
             pts.append((b, "line"))
         edits[(ci, oi)] = (span(len(snap[ci]), ok, oi), pts)
+        reach = min(abs(k[0] - ka[0]) + abs(k[1] - ka[1]), abs(kb[0] - k[0]) + abs(kb[1] - k[1]))
         if ik == "arc":
-            reach = min(abs(k[0] - ka[0]) + abs(k[1] - ka[1]), abs(kb[0] - k[0]) + abs(kb[1] - k[1]))
             tight = _rounded(k, f0, f1, min(r, 0.9 * reach)) + [(kb, "line")]
-            edits[(cj, ij)] = (span(len(snap[cj]), ik, ij), tight)
+        else:
+            tight = _rounded(k, f0, f1, min(r, 0.45 * reach))
+        edits[(cj, ij)] = (span(len(snap[cj]), ik, ij), tight)
     for ci, contour in enumerate(glyph.contours):
         mine = {i: e for (cc, i), e in edits.items() if cc == ci}
         if not mine:
@@ -783,23 +810,7 @@ def draw_question(ufo, stem, flip_bottom=None):
           600: min(stem_bottom + span * 400 / 600, cap - 1.6 * s), 700: cap - s, 800: cap}
     radius = {"o": CORNER_RADIUS * s, "i": (CORNER_RADIUS - 1) * s, "s": 0}
     poly = [(xs[x], ys[y], radius[r]) for x, y, r in QUESTION]
-    n = len(poly)
-    # Heavy weights crowd CSL's five-column grid: shrink radii that don't fit their edges.
-    fit = []
-    for i, (x, y, r) in enumerate(poly):
-        limit = r
-        for j in (i - 1, (i + 1) % n):
-            ox, oy, other = poly[j]
-            if r:
-                limit = min(limit, 0.98 * (abs(ox - x) + abs(oy - y)) * r / (r + other))
-        fit.append(limit)
-    hook = []
-    for i, (x, y, _) in enumerate(poly):
-        px, py, _ = poly[i - 1]
-        nx, ny, _ = poly[(i + 1) % n]
-        e0 = (_sign(x - px), _sign(y - py))
-        e1 = (_sign(nx - x), _sign(ny - y))
-        hook += _arc((x, y), e0, e1, fit[i], fit[i]) if fit[i] else [((x, y), "line")]
+    hook = _rounded_poly(poly)
     h = side / 2
     square = [((centre - h, dot_bottom), "line"), ((centre + h, dot_bottom), "line"),
               ((centre + h, dot_bottom + side), "line"), ((centre - h, dot_bottom + side), "line")]
@@ -810,6 +821,29 @@ def draw_question(ufo, stem, flip_bottom=None):
     return contours
 
 
+def _rounded_poly(poly):
+    """Contour points for a right-angled polygon [(x, y, radius)], each corner rounded with its
+    radius (0: square). Radii that don't fit their edges shrink (heavy weights crowd CSL's
+    grids)."""
+    n = len(poly)
+    fit = []
+    for i, (x, y, r) in enumerate(poly):
+        limit = r
+        for j in (i - 1, (i + 1) % n):
+            ox, oy, other = poly[j]
+            if r:
+                limit = min(limit, 0.98 * (abs(ox - x) + abs(oy - y)) * r / (r + other))
+        fit.append(limit)
+    out = []
+    for i, (x, y, _) in enumerate(poly):
+        px, py, _ = poly[i - 1]
+        nx, ny, _ = poly[(i + 1) % n]
+        e0 = (_sign(x - px), _sign(y - py))
+        e1 = (_sign(nx - x), _sign(ny - y))
+        out += _arc((x, y), e0, e1, fit[i], fit[i]) if fit[i] else [((x, y), "line")]
+    return out
+
+
 def set_contours(glyph, contours):
     glyph.clearContours()
     for points in contours:
@@ -818,7 +852,9 @@ def set_contours(glyph, contours):
 
 def csl_zero_slash(glyph):
     """Redraw the slash of a slashed zero as CSL's: as thick as the stroke, ending in the
-    stems, through the counter's centre at ZERO_SLASH's angle."""
+    stems, through the counter's centre at ZERO_SLASH's angle, but never into the counter's
+    rounded corners (heavy weights would steepen it into them; with 0's bottom corners chunked
+    the slash's buried end would also show through the cut)."""
     slash = next((c for c in glyph.contours if len(c) == 4), None)
     counters = [c for c in glyph.contours if not _is_outer(c) and c is not slash]
     outers = [c for c in glyph.contours if _is_outer(c) and c is not slash]
@@ -827,12 +863,19 @@ def csl_zero_slash(glyph):
     cx = [p.x for p in counters[0].points]
     cy = [p.y for p in counters[0].points]
     stroke = min(cx) - min(p.x for p in outers[0].points)
-    in_l, in_r, bottom, height = min(cx), max(cx), min(cy), max(cy) - min(cy)
-    y_l, y_r = bottom + ZERO_SLASH[0] * height, bottom + ZERO_SLASH[1] * height
+    in_l, in_r, bottom, top = min(cx), max(cx), min(cy), max(cy)
+    clear = (CORNER_RADIUS - 1) * stroke                  # the counter corners' radius
+    y_l, y_r = bottom + ZERO_SLASH[0] * (top - bottom), bottom + ZERO_SLASH[1] * (top - bottom)
+    for _ in range(4):                                     # half depends on the slope
+        slope = (y_r - y_l) / (in_r - in_l)
+        half = stroke / 2 * math.hypot(1, slope)          # vertical half-thickness
+        y_l = max(y_l, bottom + clear + half)
+        y_r = min(y_r, top - clear - half)
     slope = (y_r - y_l) / (in_r - in_l)
-    half = stroke / 2 * math.hypot(1, slope)            # vertical half-thickness
-    x0, x1 = in_l - stroke / 2, in_r + stroke / 2      # ends buried in the stems
-    y0, y1 = y_l - slope * stroke / 2, y_r + slope * stroke / 2
+    half = stroke / 2 * math.hypot(1, slope)
+    bury = stroke / 4                                      # ends buried in the stems
+    x0, x1 = in_l - bury, in_r + bury
+    y0, y1 = y_l - slope * bury, y_r + slope * bury
     for p, (x, y) in zip(slash.points, ((x0, y0 - half), (x1, y1 - half), (x1, y1 + half), (x0, y0 + half))):
         p.x, p.y, p.type = round(x, 2), round(y, 2), "line"
 
@@ -1328,6 +1371,34 @@ def restore_zones(glyph, info, delta):
             p.y = round(remap(p.y), 2)
 
 
+def _location(source):
+    return tuple(sorted(source.location.items()))
+
+
+def _upright_masters(workdir):
+    """JetBrains Mono's upright masters, by designspace location, for the italic build."""
+    out = workdir / "upright"
+    glyphsLib.build_masters(str(UPSTREAM / "JetBrainsMono.glyphs"), str(out))
+    ds = DesignSpaceDocument.fromfile(next(out.glob("*.designspace")))
+    return {_location(s): ufoLib2.Font.open(out / s.filename) for s in ds.sources}
+
+
+def use_upright(ufo, upright):
+    """Replace UPRIGHT_IN_ITALIC glyphs with the upright master's: outlines and anchors (the
+    italic master is unslanted at this point, so they slant back with it)."""
+    for name in UPRIGHT_IN_ITALIC:
+        if name not in ufo or name not in upright:
+            continue
+        src, dst = upright[name], ufo[name]
+        dst.clearContours()
+        for c in src.contours:
+            dst.appendContour(Contour(points=[Point(p.x, p.y, p.type, p.smooth) for p in c]))
+        dst.clearAnchors()
+        for a in src.anchors:
+            dst.appendAnchor({"name": a.name, "x": a.x, "y": a.y})
+        dst.width = src.width
+
+
 def slant(ufo, angle):
     """Shear every contour point and anchor by `angle` degrees about the baseline (components
     stay put; everything is restored exactly by shearing back)."""
@@ -1427,8 +1498,9 @@ def rename(ufo):
     i.openTypeNameUniqueID = f"{VERSION[0]}.{VERSION[1]:03d};{VENDOR.strip()};{i.postscriptFontName}"
 
 
-def prepare(glyphs_file, workdir):
-    """Masters with the CSL layer applied; returns the designspace path."""
+def prepare(glyphs_file, workdir, chunked=True):
+    """Masters with the CSL layer applied (v1 chunks only if `chunked`); returns the
+    designspace path."""
     glyphsLib.build_masters(str(glyphs_file), str(workdir), write_skipexportglyphs=True)
     ds_path = next(workdir.glob("*.designspace"))
     ds = DesignSpaceDocument.fromfile(ds_path)
@@ -1447,6 +1519,11 @@ def prepare(glyphs_file, workdir):
     angle = default_ufo.info.italicAngle or 0
     tol = ITALIC_TOLERANCE if angle else 0.0
     slant(default_ufo, angle)
+    # Italic masters (unslanted by now) take the upright master's outlines for UPRIGHT_IN_ITALIC
+    # at the same weight, so the italic is slanted from them like everything else.
+    uprights = _upright_masters(workdir) if angle else {}
+    if angle:
+        use_upright(default_ufo, uprights[_location(default)])
     # ? and ¿ are redrawn with square dots of their own.
     dots = [(n, i) for n, i in find_dots(default_ufo) if n not in ("question", "questiondown")]
     default_stem = default_ufo.info.postscriptStemSnapV[0]
@@ -1471,7 +1548,7 @@ def prepare(glyphs_file, workdir):
         close_crotches(default_ufo[name], plan)
     # Planned last, on the default master as every other structural step leaves it.
     chunks = {g.name: plan_chunks(g, CHUNKS[g.name.split(".")[0]], default_stem, tol)
-              for g in default_ufo if g.name.split(".")[0] in CHUNKS}
+              for g in default_ufo if chunked and g.name.split(".")[0] in CHUNKS}
     # Monospace across the whole weight axis: upstream's ExtraBold master gives NULL and uniFEFF a
     # 510 advance, so interpolated Bold had two non-600 glyphs and fontconfig stopped treating it
     # as monospaced (kitty then refused it). Every master takes the default master's advances.
@@ -1479,6 +1556,8 @@ def prepare(glyphs_file, workdir):
     for src in ds.sources:
         ufo = ufoLib2.Font.open(workdir / src.filename)
         slant(ufo, angle)
+        if angle:
+            use_upright(ufo, uprights[_location(src)])
         stem = ufo.info.postscriptStemSnapV[0]
         base_edits(ufo, stem)
         t_bar = ufo["T"].getBounds(ufo)               # knee ends span no wider than T's bar
@@ -1496,7 +1575,9 @@ def prepare(glyphs_file, workdir):
                 apply_knees(g, knee_plans.get(g.name, []), stem, (t_bar.xMin, t_bar.xMax))
                 close_crotches(g, crotch_plans.get(g.name, []))
             if chunks.get(g.name):
-                apply_chunks(g, chunks[g.name])
+                # full chunks up to Regular; the heavy master draws the round corner instead,
+                # so they fade out with weight
+                apply_chunks(g, chunks[g.name], cut=stem <= default_stem + 0.5)
         for name, idx in dots:
             square_dot(ufo[name].contours[idx])
         trim = STROKE_TRIM / 2 * ufo.info.postscriptStemSnapV[0]
@@ -1558,22 +1639,28 @@ def build():
         variable = {}
         for key, src, stem in (("roman", "JetBrainsMono.glyphs", "CSL_Terminal"),
                                ("italic", "JetBrainsMono-Italic.glyphs", "CSL_Terminal-Italic")):
-            work = tmp / key
-            work.mkdir()
-            ds = prepare(UPSTREAM / src, work)
-            vf_path = tmp / f"{stem}[wght].ttf"
-            FontProject().run_from_designspace(str(ds), output=("variable",), output_path=str(vf_path))
-            vf = TTFont(vf_path)
-            vf["post"].isFixedPitch = 1
-            stamp(vf)
-            vf.save(OUT / f"{stem}[wght].ttf")
-            vf.flavor = "woff2"
-            vf.save(OUT / f"{stem}.woff2")
-            variable[key] = OUT / f"{stem}[wght].ttf"
-            print(f"CSL_Terminal: 02_Internal/{stem}[wght].ttf, {stem}.woff2")
+            # The Bold statics are instanced from a build without v1 chunks (they don't hold
+            # up at Bold yet); the variable fonts and the Regular statics carry them.
+            for chunked in (True, False):
+                work = tmp / f"{key}-{chunked}"
+                work.mkdir()
+                ds = prepare(UPSTREAM / src, work, chunked)
+                vf_path = tmp / f"{stem}-{chunked}[wght].ttf"
+                FontProject().run_from_designspace(str(ds), output=("variable",), output_path=str(vf_path))
+                vf = TTFont(vf_path)
+                vf["post"].isFixedPitch = 1
+                stamp(vf)
+                if chunked:
+                    vf.save(OUT / f"{stem}[wght].ttf")
+                    vf.flavor = "woff2"
+                    vf.save(OUT / f"{stem}.woff2")
+                    vf.flavor = None
+                    print(f"CSL_Terminal: 02_Internal/{stem}[wght].ttf, {stem}.woff2")
+                vf.save(vf_path)
+                variable[(key, chunked)] = vf_path
 
         for suffix, (key, wght, subfamily, bold, italic) in STATICS.items():
-            vf = TTFont(variable[key])
+            vf = TTFont(variable[(key, not bold)])
             static = instantiateVariableFont(vf, {"wght": wght}, overlap=OverlapMode.REMOVE)
             name_static(static, subfamily, bold, italic, wght)
             stamp(static)
