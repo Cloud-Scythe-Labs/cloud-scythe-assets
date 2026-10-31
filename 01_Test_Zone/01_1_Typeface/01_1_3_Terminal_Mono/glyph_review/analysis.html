@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CSL Terminal: base vs CSL V4, before chunking</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @font-face { font-family: "CSL v2"; font-weight: 100 800; src: url("../../../../03_Branding_Assets/03_02_Typefaces/02_Internal/CSL_Terminal.woff2") format("woff2"); }
+  :root { --bg: #08090c; --panel: #0f1116; --line: #23262e; --fg: #e6e8ee; --muted: #8a90a0; --gold: #f5b432; --red: #ff6b6b; --blue: #7aa8ff; --ok: #5fd38d; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.55 "CSL v2", ui-monospace, monospace; }
+  main { max-width: 1400px; margin: 0 auto; padding: 22px 24px 80px; }
+  h1 { font-size: 16px; font-weight: 500; letter-spacing: .05em; margin: 0 0 10px; }
+  h2 { font-size: 13px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 34px 0 10px; }
+  p, li { color: #c9cdd6; max-width: 1000px; }
+  code { color: #9aa8ff; }
+  .key span { display: inline-block; width: 12px; height: 12px; vertical-align: -1px; margin: 0 6px 0 14px; }
+  table { border-collapse: collapse; width: 100%; }
+  th { text-align: left; font-weight: 500; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; padding: 6px 8px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg); }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  td.c { font-size: 30px; width: 54px; }
+  td img { height: 120px; display: block; background: #08090c; border: 1px solid var(--line); }
+  .bar { height: 8px; background: var(--red); border-radius: 1px; }
+  .num { color: var(--muted); font-size: 12px; }
+  .tag { display: inline-block; padding: 1px 6px; margin: 1px 3px 1px 0; border: 1px solid var(--line); border-radius: 2px; font-size: 12px; }
+  .tag.ok { border-color: var(--ok); color: var(--ok); }
+  .tag.no { border-color: #6b3a3a; color: var(--red); }
+  .tier { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  .tier.first { color: var(--ok); } .tier.after { color: var(--gold); } .tier.base { color: var(--red); } .tier.skip { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>CSL TERMINAL · BASE VS CSL V4, BEFORE CHUNKING</h1>
+  <p>Every character both fonts draw was rendered at the same size, reduced to its centre line, and measured for stroke width along that line (stroke ends and joins excluded). The heatmaps colour each stroke by its width against that glyph's typical stroke:
+    <span class="key"><span style="background:#e2e6ee"></span>even<span style="background:var(--red)"></span>thinner (taper)<span style="background:var(--blue)"></span>thicker</span>.
+    In CSL V4 almost all of the red is its chunks: the deliberate thin diagonal necks. In v2 the red is JetBrains Mono's taper, which is what has to go before chunks can look like CSL's.</p>
+
+  <h2>1 · Stroke width: where v2 still tapers</h2>
+  <p id="strokeSummary"></p>
+  <table><thead><tr><th>char</th><th>CSL V4</th><th>v2 now</th><th>v2 taper</th><th>stroke (v2 / CSL)</th><th>what it is</th></tr></thead><tbody id="strokeRows"></tbody></table>
+
+  <h2>2 · Chunks: where CSL V4 cuts, and whether v2 is ready there</h2>
+  <p>A chunk is the square where two strokes overlap at an outer corner, cut out so the strokes meet through a thin neck. v2 can take one cleanly only where that corner is one of the rebuilt CSL corner pairs (outer corner + counter corner, even stroke). Tiers are my proposal for being reserved: <span class="tier first">first</span> = ready, simple round shapes where the cut doesn't change what the letter is; <span class="tier after">after</span> = ready or nearly, but digits and busy shapes where a cut costs more legibility in code; <span class="tier base">base work first</span> = the corner isn't there yet (JetBrains Mono curves, joins or diagonal tails); <span class="tier skip">skip</span> = symbols, left for their own pass.</p>
+  <table><thead><tr><th>char</th><th>CSL V4</th><th>v2 now</th><th>V4 cuts</th><th>tier</th></tr></thead><tbody id="chunkRows"></tbody></table>
+</main>
+<script>
+const NOTES = {
+  b: "bowl meets stem: JetBrains Mono thins the join (kept JBM curves)", d: "same join thinning as b", p: "same join thinning as b", q: "same join thinning as b",
+  r: "arch thins where it leaves the stem", n: "arch thins where it leaves the stem", h: "arch thins where it leaves the stem", m: "both arches thin at the stems; middle stem thinner",
+  M: "diagonals and the vertex are thinner than the stems", W: "four strokes in one cell: diagonals ~20% thinner", w: "four strokes in one cell: whole letter ~30% lighter",
+  x: "diagonals thinner, thinnest at the crossing", X: "diagonals thinner, thinnest at the crossing", k: "arm and leg thinner than the stem", K: "arm and leg thinner than the stem",
+  a: "bowl thins where it joins the stem (top and bottom right)", g: "tail and bowl thin where they join the stem", "8": "waist: the two bowls thin where they cross",
+  "9": "tail thins where it leaves the bowl", "6": "bowl thins where it joins the stem", B: "bowls thin where they join the stem", "$": "vertical bar is thinner than the S",
+  "@": "inner a and outer ring thinner than the stem", "&": "crossing and tail thinner", "%": "slash and rings lighter", z: "diagonal slightly thinner", y: "tail thinner",
+  Y: "arms meet thinly", v: "vertex thins", V: "vertex thins", A: "apex thins", "4": "diagonal thinner", Z: "diagonal slightly thinner", "1": "flag thinner", "3": "waist join", "7": "diagonal slightly thinner",
+};
+async function init() {
+  const strokes = await (await fetch("strokes.json", { cache: "no-store" })).json();
+  const chunks = await (await fetch("chunks.json", { cache: "no-store" })).json();
+  const relevant = strokes.filter((r) => r.v2 && r.csl && (r.v2.taper >= 0.02 || r.v2.median < 0.9 * r.csl.median));
+  const letter = (r) => ["lowercase", "uppercase", "digits"].includes(r.category);
+  relevant.sort((a, b) => letter(b) - letter(a) || b.v2.taper - a.v2.taper);
+  const thinLetters = relevant.filter((r) => letter(r) && r.v2.taper >= 0.05).map((r) => r.char).join(" ");
+  const symbols = relevant.filter((r) => !letter(r)).length;
+  document.getElementById("strokeSummary").textContent =
+    `${relevant.length - symbols} letters and digits still taper or run light (listed first; ${symbols} symbols follow, for their own pass). Worst, with 5%+ of the stroke tapering: ${thinLetters}. ` +
+    "Two causes: JetBrains Mono thins strokes where a bowl or arch joins a stem (b d p q r n h m a g 8 9 6 B), and draws diagonals lighter than stems (M W w x X k K and the V/Y/Z family).";
+  const sr = document.getElementById("strokeRows");
+  for (const r of relevant) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td class="c"></td><td><img src="heat/${r.code}-csl.png"></td><td><img src="heat/${r.code}-v2.png"></td>
+      <td><div class="bar" style="width:${Math.min(100, r.v2.taper * 250)}px"></div><span class="num">${Math.round(r.v2.taper * 100)}% of the stroke</span></td>
+      <td class="num">${r.v2.median} / ${r.csl.median}<br>thinnest ${r.v2.p05} / ${r.csl.p05}</td><td class="num"></td>`;
+    tr.children[0].textContent = r.char; tr.children[5].textContent = NOTES[r.char] || "";
+    sr.append(tr);
+  }
+  const order = { first: 0, after: 1, "base work first": 2, skip: 3 };
+  chunks.sort((a, b) => order[a.tier] - order[b.tier] || a.char.localeCompare(b.char));
+  const cr = document.getElementById("chunkRows");
+  for (const r of chunks) {
+    const tr = document.createElement("tr");
+    const tags = r.v4.map((t) => `<span class="tag ${r.ready.includes(t) ? "ok" : "no"}">${t}${r.ready.includes(t) ? " ✓" : " ✗"}</span>`).join("");
+    const cls = r.tier === "base work first" ? "base" : r.tier;
+    tr.innerHTML = `<td class="c"></td><td><img src="heat/${r.code}-csl.png"></td><td><img src="heat/${r.code}-v2.png"></td><td>${tags}<div class="num">B/M/T = bottom/middle/top, L/R = side; ✓ ready in v2</div></td><td class="tier ${cls}">${r.tier}</td>`;
+    tr.children[0].textContent = r.char;
+    cr.append(tr);
+  }
+}
+init();
+</script>
+</body>
+</html>

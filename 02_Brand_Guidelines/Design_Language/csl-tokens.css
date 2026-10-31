@@ -1,0 +1,206 @@
+/*
+ * Cloud Scythe Labs — design tokens
+ * Source of truth for color, type, spacing and shape. Documented in CSL_Design_Language.md.
+ *
+ * Usage: link this file, then set data-theme="ps2" | "ps1" | "ps5" on <html> (or any container).
+ * Without a data-theme attribute the dark "PS2" theme applies.
+ * JetBrains Mono (body copy) is NOT bundled; load it separately (Google Fonts or self-hosted, OFL).
+ */
+
+/* ── Brand fonts ─────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: "CSL Display";
+  src: url("../../03_Branding_Assets/03_02_Typefaces/01_Branding/CSL_Display.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "CSL Mono";
+  src: url("../../03_Branding_Assets/03_02_Typefaces/01_Branding/CSL_Mono.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "CSL Dot Display";
+  src: url("../../03_Branding_Assets/03_02_Typefaces/01_Branding/CSL_Dot_Display.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "CSL Dot Mono";
+  src: url("../../03_Branding_Assets/03_02_Typefaces/01_Branding/CSL_Dot_Mono.woff2") format("woff2");
+  font-display: swap;
+}
+/* CSL Terminal: variable, weight 100–800, upright and italic (a modified JetBrains Mono, SIL OFL 1.1). */
+@font-face {
+  font-family: "CSL Terminal";
+  src: url("../../03_Branding_Assets/03_02_Typefaces/02_Internal/CSL_Terminal.woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "CSL Terminal";
+  src: url("../../03_Branding_Assets/03_02_Typefaces/02_Internal/CSL_Terminal-Italic.woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* ── Primitive palette: neutrals ───────────────────────────────────────── */
+  --csl-pure-black: #000000;
+  --csl-dark-accent: #0a0a0a;
+  --csl-faded-black: #141414;
+  --csl-gray-accent: #7d7d7d;
+  --csl-ps1-gray: #878787;
+  --csl-light-gray: #adadad;
+  --csl-light-accent: #bbbbbb;
+  --csl-faded-white: #e6e6e6;
+
+  /* ── Primitive palette: extended colors, dark context (PS2, PS1) ───────── */
+  --csl-red-darkcon: #ef4b46;
+  --csl-orange-darkcon: #f5863d;
+  --csl-yellow-darkcon: #f4e854;
+  --csl-green-darkcon: #0ed6a2;
+  --csl-blue-darkcon: #63a7e8;
+  --csl-purple-darkcon: #be63e3;
+  --csl-pink-darkcon: #ea78c8;
+
+  /* ── Primitive palette: extended colors, light context (PS5) ───────────── */
+  --csl-red-lightcon: #e03631;
+  --csl-orange-lightcon: #ea642d;
+  --csl-yellow-lightcon: #d3c439;
+  --csl-green-lightcon: #0fbd7d;
+  --csl-blue-lightcon: #4784d8;
+  --csl-purple-lightcon: #a046d2;
+  --csl-pink-lightcon: #d956ad;
+
+  /* ── Typefaces ─────────────────────────────────────────────────────────── */
+  --font-display: "CSL Display", "CSL Mono", ui-monospace, monospace;   /* one-line large titles */
+  --font-brand: "CSL Mono", ui-monospace, monospace;                    /* titles, buttons, labels */
+  --font-dot-display: "CSL Dot Display", "CSL Display", ui-monospace, monospace;
+  --font-dot-mono: "CSL Dot Mono", "CSL Mono", ui-monospace, monospace;
+  --font-body: "JetBrains Mono", ui-monospace, monospace;               /* paragraphs, copy */
+  --font-terminal: "CSL Terminal", "JetBrains Mono", ui-monospace, monospace; /* code, logs, dev tools */
+
+  /*
+   * Type scale. Brand fonts are drawn on a 100-unit pixel grid:
+   *   CSL Mono / Dot Mono      UPM 1000 → one font pixel = 0.1em    → crisp at multiples of 10px
+   *   CSL Display / Dot Display  UPM 1100 → 1/11em    → crisp at multiples of 11px
+   * CSL Terminal is an outline font (JetBrains Mono based, UPM 1000): any size works.
+   */
+  --type-hero: 132px;       /* CSL Display, one line only */
+  --type-display: 88px;     /* CSL Display, one line only */
+  --type-display-s: 44px;   /* CSL Display, one line only */
+  --type-title-l: 60px;     /* CSL Mono */
+  --type-title: 40px;       /* CSL Mono */
+  --type-title-s: 30px;     /* CSL Mono */
+  --type-label: 20px;       /* CSL Mono: buttons, nav, eyebrows, chips */
+  --type-body: 16px;        /* JetBrains Mono */
+  --type-body-s: 14px;      /* JetBrains Mono */
+  --type-code: 22px;        /* CSL Terminal: terminal panes, code blocks */
+  --type-code-s: 13px;      /* CSL Terminal: dense logs, status bars */
+
+  --leading-title: 1.2;
+  --leading-body: 1.6;
+  --tracking-brand: 0;      /* spacing is built into the fonts; never track brand type */
+
+  /* ── Spacing: 10px base, mirrors the font pixel grid ───────────────────── */
+  --space-1: 5px;
+  --space-2: 10px;
+  --space-3: 20px;
+  --space-4: 30px;
+  --space-5: 40px;
+  --space-6: 60px;
+  --space-7: 80px;
+  --space-8: 120px;
+
+  /* ── Shape ─────────────────────────────────────────────────────────────── */
+  --radius: 10px;           /* blocks, sections, buttons */
+  --radius-s: 5px;          /* small elements nested inside a block (chips, swatches) */
+  --measure: 70ch;          /* max line length for body copy */
+
+  /* ── Motion ────────────────────────────────────────────────────────────── */
+  --ticker-angle: -30deg;
+  --ticker-cycle: 5.667s;   /* loop length of the master ticker renders */
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --duration: 150ms;
+}
+
+/* ── Themes ──────────────────────────────────────────────────────────────── */
+/* Role tokens. Components read only these, never primitives. */
+
+:root,
+[data-theme="ps2"] {
+  color-scheme: dark;
+  --bg-primary: var(--csl-pure-black);   /* backgrounds, canvases, garments */
+  --bg-text: var(--csl-faded-black);     /* sections, text backgrounds, secondary buttons */
+  --bg-texture: var(--csl-dark-accent);  /* decorative only */
+  --fg: var(--csl-faded-white);          /* text, graphics, icons, logotypes, emblems */
+  --cta-bg: var(--csl-faded-white);
+  --cta-fg: var(--csl-pure-black);
+  --duo2-idle: var(--csl-ps1-gray);
+  --bg-inset: var(--csl-pure-black);     /* surfaces nested inside --bg-text: inputs, rows, secondary buttons */
+  --fg-on-primary: var(--csl-faded-white); /* brand marks / hero title placed directly on --bg-primary */
+}
+
+[data-theme="ps1"] {
+  color-scheme: dark;
+  --bg-primary: var(--csl-ps1-gray);
+  --bg-text: var(--csl-faded-black);
+  --bg-texture: var(--csl-gray-accent);
+  --fg: var(--csl-faded-white);
+  --cta-bg: var(--csl-faded-white);
+  --cta-fg: var(--csl-pure-black);
+  --duo2-idle: var(--csl-ps1-gray);
+  --bg-inset: var(--csl-pure-black);     /* not PS1 Gray: Faded White on #878787 is 2.88:1 */
+  --fg-on-primary: var(--csl-pure-black);  /* 5.85:1 on PS1 Gray; Faded White would be 2.88:1 */
+}
+
+[data-theme="ps5"] {
+  color-scheme: light;
+  --bg-primary: var(--csl-light-gray);
+  --bg-text: var(--csl-faded-white);
+  --bg-texture: var(--csl-light-accent);
+  --fg: var(--csl-pure-black);
+  --cta-bg: var(--csl-faded-black);
+  --cta-fg: var(--csl-faded-white);
+  --duo2-idle: var(--csl-ps1-gray);
+  --bg-inset: var(--csl-light-gray);
+  --fg-on-primary: var(--csl-pure-black);
+}
+
+/* Extended colors follow the context: PS2 + PS1 are dark context, PS5 is light context. */
+:root,
+[data-theme="ps2"],
+[data-theme="ps1"] {
+  --red: var(--csl-red-darkcon);
+  --orange: var(--csl-orange-darkcon);
+  --yellow: var(--csl-yellow-darkcon);
+  --green: var(--csl-green-darkcon);
+  --blue: var(--csl-blue-darkcon);
+  --purple: var(--csl-purple-darkcon);
+  --pink: var(--csl-pink-darkcon);
+}
+
+[data-theme="ps5"] {
+  --red: var(--csl-red-lightcon);
+  --orange: var(--csl-orange-lightcon);
+  --yellow: var(--csl-yellow-lightcon);
+  --green: var(--csl-green-lightcon);
+  --blue: var(--csl-blue-lightcon);
+  --purple: var(--csl-purple-lightcon);
+  --pink: var(--csl-pink-lightcon);
+}
+
+/* Color logic: status meaning → hue. Text placed ON these colors is always Pure Black. */
+:root,
+[data-theme] {
+  --status-success: var(--green);   /* positive: completions, submissions, uploads done */
+  --status-neutral: var(--blue);    /* passive: connected, idle, working as usual */
+  --status-caution: var(--yellow);  /* low priority: slow connection, paused */
+  --status-warning: var(--orange);  /* high priority, resolvable: wrong password */
+  --status-critical: var(--red);    /* errors, failures, destructive actions */
+  --status-progress: var(--purple); /* proposed: in progress (undefined in v1.0.2) */
+  --status-notify: var(--pink);     /* proposed: notifications (undefined in v1.0.2) */
+  --status-idle: var(--duo2-idle);  /* proposed: offline / inactive / no state */
+  --on-status: var(--csl-pure-black);
+}

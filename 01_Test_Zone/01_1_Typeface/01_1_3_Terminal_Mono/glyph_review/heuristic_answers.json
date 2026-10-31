@@ -1,0 +1,191 @@
+{
+ "0": {
+  "pick": "A"
+ },
+ "1": {
+  "pick": "A"
+ },
+ "2": {
+  "pick": "B"
+ },
+ "3": {
+  "pick": "A"
+ },
+ "4": {
+  "pick": "A"
+ },
+ "5": {
+  "pick": "A"
+ },
+ "6": {
+  "pick": "A"
+ },
+ "7": {
+  "pick": "A"
+ },
+ "8": {
+  "pick": "neither",
+  "note": "A - radius 1.5 but the interior ratio is wrong, it needs to be the one from CSL V4"
+ },
+ "9": {
+  "pick": "A"
+ },
+ "s": {
+  "pick": "A"
+ },
+ "R": {
+  "pick": "A"
+ },
+ "i": {
+  "pick": "A"
+ },
+ "Q": {
+  "pick": "neither",
+  "note": "I think the radius could still be more like CSL V4, but again I think the tail of the Q is what's holding it back"
+ },
+ "g": {
+  "pick": "A"
+ },
+ "e": {
+  "pick": "A"
+ },
+ "M": {
+  "pick": "A"
+ },
+ "a": {
+  "pick": "A"
+ },
+ "b": {
+  "pick": "current"
+ },
+ "d": {
+  "pick": "current"
+ },
+ "r": {
+  "pick": "current"
+ },
+ "c": {
+  "pick": "A"
+ },
+ "p": {
+  "pick": "current"
+ },
+ "q": {
+  "pick": "current"
+ },
+ "f": {
+  "pick": "A"
+ },
+ "K": {
+  "pick": "A"
+ },
+ "X": {
+  "pick": "A"
+ },
+ "l": {
+  "pick": "A"
+ },
+ "t": {
+  "pick": "A"
+ },
+ "w": {
+  "pick": "A"
+ },
+ "W": {
+  "pick": "A"
+ },
+ "Y": {
+  "pick": "A"
+ },
+ "m": {
+  "pick": "current"
+ },
+ "j": {
+  "pick": "A"
+ },
+ "z": {
+  "pick": "A"
+ },
+ "S": {
+  "pick": "neither",
+  "note": "A would have been fine but it left a weird artifact on in the middle of the S"
+ },
+ "y": {
+  "pick": "A"
+ },
+ "A": {
+  "pick": "A"
+ },
+ "Z": {
+  "pick": "A"
+ },
+ "v": {
+  "pick": "A"
+ },
+ "k": {
+  "pick": "A"
+ },
+ "J": {
+  "pick": "A"
+ },
+ "G": {
+  "pick": "A"
+ },
+ "B": {
+  "pick": "A"
+ },
+ "V": {
+  "pick": "A"
+ },
+ "h": {
+  "pick": "current"
+ },
+ "o": {
+  "pick": "A"
+ },
+ "C": {
+  "pick": "A"
+ },
+ "E": {
+  "pick": "A"
+ },
+ "x": {
+  "pick": "A"
+ },
+ "u": {
+  "pick": "A"
+ },
+ "P": {
+  "pick": "A"
+ },
+ "n": {
+  "pick": "current"
+ },
+ "I": {
+  "pick": "A"
+ },
+ "F": {
+  "pick": "A"
+ },
+ "T": {
+  "pick": "A"
+ },
+ "O": {
+  "pick": "A"
+ },
+ "N": {
+  "pick": "A"
+ },
+ "U": {
+  "pick": "A"
+ },
+ "D": {
+  "pick": "A"
+ },
+ "L": {
+  "pick": "A"
+ },
+ "H": {
+  "pick": "A"
+ }
+}

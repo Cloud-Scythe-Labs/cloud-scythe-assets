@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReaCloud — App mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="mockups.css">
+  <script src="mockups.js"></script>
+  <style>
+    /* ── App frame: 1440×900 artboard, panels scroll inside ───────────────── */
+    .x-app {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr) 320px;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: var(--space-3);
+      height: 100vh;
+      padding: var(--space-3);
+    }
+    .x-col {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: var(--space-3);
+      min-height: 0;
+    }
+    .x-panel {                 /* block whose body scrolls */
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      min-height: 0;
+    }
+    .x-panel__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+    .x-scroll {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--fg) transparent;
+    }
+    :where(.x-list) { list-style: none; margin: 0; padding: 0; } /* zero specificity: .stack-* gaps still apply */
+    .x-ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* Title bar */
+    .x-titlebar {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .x-titlebar__end {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-3);
+      margin-left: auto;
+    }
+    .x-titlebar__end .actions { flex-wrap: nowrap; }
+    .x-avatar {
+      display: grid;
+      place-items: center;
+      width: var(--space-5);
+      height: var(--space-5);
+      border-radius: var(--radius-s);
+      background: var(--bg-inset);
+    }
+
+    /* Sidebar nav: secondary-button rows, selected row takes the CTA fill */
+    .x-nav { display: grid; align-content: start; gap: var(--space-2); }
+    .x-nav__item { width: 100%; justify-content: space-between; }
+    .x-nav__item[aria-current="true"] { background: var(--cta-bg); color: var(--cta-fg); }
+
+    /* Version history: short id (Terminal) + author/time, message beneath */
+    .x-history { display: grid; align-content: start; gap: var(--space-3); }
+    .x-commit {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: baseline;
+      column-gap: var(--space-2);
+      row-gap: var(--space-1);
+    }
+    .x-commit__meta { text-align: right; }
+    .x-commit__msg { grid-column: 1 / -1; }
+
+    /* Readouts: labels share a top line, Dot-font values share the bottom line */
+    .x-readouts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+    }
+    .x-readout {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+    .x-readout__value { font-size: var(--type-label); line-height: 1; }
+    .x-readout__value--l { font-size: var(--type-title); }
+    .x-readout--grow { flex: 1; min-width: 200px; }
+
+    /* Progress / meter bar: track one surface step away from its container */
+    .x-progress {
+      height: var(--space-2);
+      border-radius: var(--radius-s);
+      background: var(--bg-inset);
+      overflow: hidden;
+    }
+    .block--inset .x-progress { background: var(--bg-text); }
+    .x-progress > span {
+      display: block;
+      height: 100%;
+      width: var(--value);
+      background: var(--status, var(--fg));
+    }
+
+    /* Track table */
+    .x-table__head,
+    .x-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 60px 70px 280px;
+      gap: var(--space-3);
+      align-items: center;
+    }
+    .x-table__head { padding: 0 var(--space-3); }
+    .x-rows { display: grid; align-content: start; gap: var(--space-2); }
+    .x-row { padding: var(--space-2) var(--space-3); }
+    .x-row__status { display: flex; align-items: center; gap: var(--space-2); }
+    .x-row__status > .btn { margin-left: auto; }
+    .x-row__status > .x-progress { flex: 1; }
+
+    /* Status mark: pip + label in dark contexts, chip in light context (PS5) */
+    [data-theme="ps5"] .x-status {
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-s);
+      background: var(--status, var(--status-idle));
+      color: var(--on-status);
+    }
+    [data-theme="ps5"] .x-status::before { display: none; }
+
+    .x-people { display: grid; gap: var(--space-2); }
+    .x-people > li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      min-height: var(--space-4);
+    }
+
+    /* Daemon log: newest at the bottom, scrolled to the end */
+    .x-log {
+      display: flex;
+      flex-direction: column-reverse;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    /* ── Artboard 02: destructive confirm, no scrim ──────────────────────── */
+    .x-artboard {
+      display: grid;
+      align-content: start;
+      gap: var(--space-6);
+      padding: var(--space-6) var(--space-3) var(--space-8);
+    }
+    .x-artboard__caption { justify-self: start; }
+    .x-modal { justify-self: center; width: 100%; max-width: 560px; }
+
+    /* ── Narrow: stack, let the page scroll ──────────────────────────────── */
+    @media (max-width: 1100px) {
+      .x-app { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; height: auto; }
+      .x-col { grid-template-rows: none; }
+      .x-panel { max-height: 640px; }
+      .x-table__head { display: none; }
+      .x-row {
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        grid-template-areas: "name name name" "owner size ." "status status status";
+        row-gap: var(--space-2);
+      }
+      .x-row__track { grid-area: name; }
+      .x-row__owner { grid-area: owner; }
+      .x-row__size { grid-area: size; }
+      .x-row__status { grid-area: status; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="x-app">
+    <!-- Title bar -->
+    <header class="block block--tight x-titlebar">
+      <span class="mark" role="img" aria-label="ReaCloud" style="--mark:url('../../04_Product_Assets/04_01_ReaCloud/04_01_03_Lockups/Lockup2_NoPadding.svg'); --mark-ratio: 3430/512; height: 40px"></span>
+      <span class="t-label">Night Drive</span>
+      <div class="x-titlebar__end">
+        <span class="chip s-neutral">Daemon online</span>
+        <span class="x-avatar x-edge t-label" role="img" aria-label="Signed in as Eli Kane">EK</span>
+        <div class="actions">
+          <button class="btn btn--secondary" type="button">Commit</button>
+          <button class="btn btn--primary" type="button">Push</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Left: projects + version history -->
+    <div class="x-col">
+      <nav class="block block--tight stack-3" aria-label="Projects">
+        <div class="x-panel__head">
+          <h2 class="t-label">Projects</h2>
+          <button class="btn btn--secondary" type="button">New</button>
+        </div>
+        <ul class="x-list x-nav">
+          <li><button class="btn btn--secondary x-nav__item" type="button" aria-current="true">Night Drive</button></li>
+          <li><button class="btn btn--secondary x-nav__item" type="button">B-Sides <span class="chip s-notify">3 new</span></button></li>
+          <li><button class="btn btn--secondary x-nav__item" type="button">Live at Koko</button></li>
+          <li><button class="btn btn--secondary x-nav__item" type="button">Vox Stems</button></li>
+          <li><button class="btn btn--secondary x-nav__item" type="button">Arcade Score</button></li>
+        </ul>
+      </nav>
+
+      <section class="block block--tight x-panel" aria-label="Version history">
+        <h2 class="t-label">History</h2>
+        <ol class="x-list x-history x-scroll">
+          <li class="x-commit">
+            <span class="t-code-s">7c1e9a4</span>
+            <span class="t-body-s x-commit__meta">Eli · 14:02</span>
+            <p class="t-body-s x-commit__msg">Tighten drums, new kick</p>
+          </li>
+          <li class="x-commit">
+            <span class="t-code-s">f02b6d8</span>
+            <span class="t-body-s x-commit__meta">Mara · 13:41</span>
+            <p class="t-body-s x-commit__msg">Comp lead vocal, take 4</p>
+          </li>
+          <li class="x-commit">
+            <span class="t-code-s">9a4e110</span>
+            <span class="t-body-s x-commit__meta">Eli · 12:15</span>
+            <p class="t-body-s x-commit__msg">Synth arp, first pass</p>
+          </li>
+          <li class="x-commit">
+            <span class="t-code-s">3d7c2fa</span>
+            <span class="t-body-s x-commit__meta">Jonah · Yesterday</span>
+            <p class="t-body-s x-commit__msg">Re-amp bass DI</p>
+          </li>
+          <li class="x-commit">
+            <span class="t-code-s">b81f0c3</span>
+            <span class="t-body-s x-commit__meta">Eli · Yesterday</span>
+            <p class="t-body-s x-commit__msg">Snapshot before mix</p>
+          </li>
+          <li class="x-commit">
+            <span class="t-code-s">0e55a97</span>
+            <span class="t-body-s x-commit__meta">Eli · Oct 26</span>
+            <p class="t-body-s x-commit__msg">Initial session</p>
+          </li>
+        </ol>
+      </section>
+    </div>
+
+    <!-- Main: transport + tracks -->
+    <main class="x-col">
+      <section class="block block--tight" aria-label="Transport">
+        <div class="x-readouts">
+          <div class="x-readout">
+            <span class="t-label">Position</span>
+            <span class="t-dot x-readout__value x-readout__value--l">00:03:42:17</span>
+          </div>
+          <div class="x-readout">
+            <span class="t-label">Tempo</span>
+            <span class="t-dot x-readout__value">124 BPM</span>
+          </div>
+          <div class="x-readout">
+            <span class="t-label">Meter</span>
+            <span class="t-dot x-readout__value">4/4</span>
+          </div>
+          <div class="x-readout x-readout--grow">
+            <span class="t-label">Storage</span>
+            <div class="stack">
+              <span class="t-dot x-readout__value">48.6 GB / 200 GB</span>
+              <div class="x-progress x-edge" role="meter" aria-label="Cloud storage used" aria-valuemin="0" aria-valuemax="200" aria-valuenow="48.6"><span style="--value: 24.3%"></span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block block--tight x-panel" aria-label="Tracks">
+        <div class="x-table__head" aria-hidden="true">
+          <span class="t-label">Track</span>
+          <span class="t-label">Owner</span>
+          <span class="t-label">Size</span>
+          <span class="t-label">Status</span>
+        </div>
+        <ul class="x-list x-rows x-scroll">
+          <li class="block--inset x-row">
+            <div class="x-row__track"><p class="t-body x-ellipsis">drums_v3.wav</p><p class="t-body-s x-ellipsis">In 7c1e9a4</p></div>
+            <span class="t-body-s x-row__owner">Eli</span>
+            <span class="t-body-s x-row__size">412 MB</span>
+            <div class="x-row__status"><span class="chip s-success">Pushed</span></div>
+          </li>
+          <li class="block--inset x-row">
+            <div class="x-row__track"><p class="t-body x-ellipsis">bass_di.wav</p><p class="t-body-s x-ellipsis">No changes</p></div>
+            <span class="t-body-s x-row__owner">Jonah</span>
+            <span class="t-body-s x-row__size">188 MB</span>
+            <div class="x-row__status"><span class="chip s-neutral">Up to date</span></div>
+          </li>
+          <li class="block--inset x-row">
+            <div class="x-row__track"><p class="t-body x-ellipsis">synth_arp.wav</p><p class="t-body-s x-ellipsis">1.2 MB/s, 40 s left</p></div>
+            <span class="t-body-s x-row__owner">Eli</span>
+            <span class="t-body-s x-row__size">96 MB</span>
+            <div class="x-row__status">
+              <span class="chip s-progress">Pushing</span>
+              <div class="x-progress x-edge s-progress" role="progressbar" aria-label="Push progress" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"><span style="--value: 64%"></span></div>
+              <span class="t-dot x-readout__value">64%</span>
+            </div>
+          </li>
+          <li class="block--inset x-row">
+            <div class="x-row__track"><p class="t-body x-ellipsis">keys_pad.wav</p><p class="t-body-s x-ellipsis">Slow connection</p></div>
+            <span class="t-body-s x-row__owner">Jonah</span>
+            <span class="t-body-s x-row__size">254 MB</span>
+            <div class="x-row__status"><span class="chip s-caution">Paused</span></div>
+          </li>
+          <li class="block--inset x-row">
+            <div class="x-row__track"><p class="t-body x-ellipsis">vox_lead.wav</p><p class="t-body-s x-ellipsis">You and Mara edited</p></div>
+            <span class="t-body-s x-row__owner">Mara</span>
+            <span class="t-body-s x-row__size">331 MB</span>
+            <div class="x-row__status"><span class="chip s-warning">Conflict</span><button class="btn btn--secondary" type="button">Resolve</button></div>
+          </li>
+          <li class="block--inset x-row">
+            <div class="x-row__track"><p class="t-body x-ellipsis">fx_riser.wav</p><p class="t-body-s x-ellipsis">Server error 503</p></div>
+            <span class="t-body-s x-row__owner">Eli</span>
+            <span class="t-body-s x-row__size">12 MB</span>
+            <div class="x-row__status"><span class="chip s-critical">Push failed</span><button class="btn btn--secondary" type="button">Retry</button></div>
+          </li>
+          <li class="block--inset x-row">
+            <div class="x-row__track"><p class="t-body x-ellipsis">gtr_room.wav</p><p class="t-body-s x-ellipsis">2 takes from Jonah</p></div>
+            <span class="t-body-s x-row__owner">Jonah</span>
+            <span class="t-body-s x-row__size">230 MB</span>
+            <div class="x-row__status"><span class="chip s-notify">New versions</span><button class="btn btn--secondary" type="button">Pull</button></div>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- Right: collaborators + daemon log -->
+    <aside class="x-col">
+      <section class="block block--tight stack-3" aria-label="Collaborators">
+        <h2 class="t-label">Collaborators</h2>
+        <ul class="x-list x-people">
+          <li><span class="t-body-s">Eli Kane (you)</span><span class="pip x-status s-neutral">In session</span></li>
+          <li><span class="t-body-s">Mara Ruiz</span><span class="pip x-status s-progress">Pushing</span></li>
+          <li><span class="t-body-s">Jonah Lee</span><span class="pip x-status s-notify">Mentioned you</span></li>
+          <li><span class="t-body-s">Sam Ortiz</span><span class="pip x-status s-idle">Offline</span></li>
+        </ul>
+      </section>
+
+      <section class="block block--tight x-panel" aria-label="Daemon log">
+        <h2 class="t-label">Daemon log</h2>
+        <ol class="x-log x-scroll t-code-s">
+          <li>[14:03:41] push synth_arp.wav 64%</li>
+          <li>[14:03:38] fetch gtr_room.wav: 2 new</li>
+          <li>[14:03:29] push fx_riser.wav failed 503</li>
+          <li>[14:03:15] conflict vox_lead.wav</li>
+          <li>[14:03:02] push keys_pad.wav paused</li>
+          <li>[14:02:57] link 0.4 MB/s, throttling</li>
+          <li>[14:02:12] push drums_v3.wav ok</li>
+          <li>[14:02:11] $ reacloud push</li>
+          <li>[14:02:10] commit 7c1e9a4 tighten drums</li>
+          <li>[14:01:52] mara joined night_drive</li>
+          <li>[14:01:30] lock vox_lead.wav by mara</li>
+          <li>[14:00:06] fetch f02b6d8 from mara</li>
+          <li>[13:58:21] pull drums_v2.wav ok</li>
+          <li>[13:58:20] $ reacloud pull</li>
+          <li>[13:57:03] watch night_drive.rpp</li>
+          <li>[13:57:01] auth eli@cloudscythe ok</li>
+          <li>[13:57:00] connect eu-west-2 ok</li>
+          <li>[13:56:58] reacloudd 0.9.4 started</li>
+        </ol>
+      </section>
+    </aside>
+  </div>
+
+  <!-- Artboard 02: destructive confirm -->
+  <section class="x-artboard" aria-label="Artboard 02">
+    <p class="block block--tight t-label x-artboard__caption">Artboard 02 — delete confirm</p>
+    <div class="block stack-3 x-modal" role="alertdialog" aria-labelledby="del-title" aria-describedby="del-copy">
+      <div class="stack">
+        <h2 class="t-title-s" id="del-title">Delete project?</h2>
+        <p class="t-body" id="del-copy">Removes Night Drive and all 214 versions from the cloud for 4 collaborators. Local copies in REAPER are kept. This can't be undone.</p>
+      </div>
+      <div class="actions">
+        <button class="btn btn--secondary" type="button">Cancel</button>
+        <button class="btn btn--danger" type="button">Delete</button>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

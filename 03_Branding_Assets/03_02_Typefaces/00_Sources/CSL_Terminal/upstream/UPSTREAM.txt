@@ -1,0 +1,7 @@
+JetBrains Mono sources, vendored unmodified.
+
+Repository: https://github.com/JetBrains/JetBrainsMono
+Commit:     19371302b95d218af43299bce79ddbddd0bc364d (2025-01-31, font version 2.305)
+Files:      sources/JetBrainsMono.glyphs, sources/JetBrainsMono-Italic.glyphs, OFL.txt, AUTHORS.txt, CONTRIBUTORS.txt
+
+Do not edit these files. All CSL changes are applied at build time by ../terminal.py.

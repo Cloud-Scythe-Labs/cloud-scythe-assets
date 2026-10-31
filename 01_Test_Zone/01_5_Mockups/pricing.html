@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pricing + checkout mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="mockups.css">
+  <script src="mockups.js"></script>
+  <style>
+    /* ── Page frame ──────────────────────────────────────────────────────── */
+    .x-page {
+      display: grid;
+      gap: var(--space-6);
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: var(--space-3) var(--space-6) var(--space-8);
+    }
+    .x-section { display: grid; gap: var(--space-3); }
+    .x-list { list-style: none; margin: 0; padding: 0; }
+
+    /* ── Top nav ─────────────────────────────────────────────────────────── */
+    .x-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .x-nav__brand { width: 220px; margin-right: auto; }
+    .x-nav__links { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+    /* ── Intro: product mark eyebrow, title, one line of copy ────────────── */
+    .x-intro__mark { height: 40px; }
+
+    /* ── Tier cards: rows aligned across cards with subgrid ──────────────── */
+    .x-tiers {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: var(--space-3);
+    }
+    .x-tier {
+      display: grid;
+      grid-row: span 6;
+      grid-template-rows: subgrid;
+      row-gap: var(--space-3);
+      align-content: start;
+    }
+    .x-tier__head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      min-height: var(--space-4);
+    }
+    .x-tier .actions { align-self: end; }
+
+    /* Price readout: Dot Mono value over its billing label */
+    .x-price { display: grid; gap: var(--space-2); align-content: start; }
+    .x-price__value { font-size: var(--type-title-l); line-height: 1; }
+
+    /* Storage: amount chip + caption */
+    .x-storage { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+
+    /* Feature list: "+" marks an included item */
+    .x-features { display: grid; gap: var(--space-1); align-content: start; }
+    .x-features > li { display: flex; gap: var(--space-2); }
+    .x-features > li::before { content: "+"; }
+
+    /* Full-width button row at the bottom of a card */
+    .x-fill > .btn { flex: 1; justify-content: center; }
+
+    /* ── Altair one-time license ─────────────────────────────────────────── */
+    .x-license {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-4);
+    }
+    .x-license__buy { display: grid; gap: var(--space-3); align-content: start; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    .x-footer { display: grid; gap: var(--space-5); }
+    .x-footer__cols {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-3);
+    }
+    .x-footer__cols a { color: var(--fg); text-underline-offset: 4px; }
+    .x-footer__base {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    /* Status mark: pip + label in dark contexts, chip in light context (PS5) */
+    [data-theme="ps5"] .x-status {
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-s);
+      background: var(--status, var(--duo2-idle));
+      color: var(--on-status);
+    }
+    [data-theme="ps5"] .x-status::before { display: none; }
+
+    /* ── Artboard 02: checkout ───────────────────────────────────────────── */
+    .x-artboard {
+      display: grid;
+      align-content: start;
+      gap: var(--space-6);
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: var(--space-6) var(--space-6) var(--space-8);
+    }
+    .x-artboard__caption { justify-self: start; }
+    .x-checkout {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      gap: var(--space-3);
+      align-items: start;
+      width: 100%;
+      max-width: 1100px;
+      justify-self: center;
+    }
+
+    /* Order summary lines: label left, Dot Mono amount right */
+    .x-lines { display: grid; gap: var(--space-3); margin: 0; }
+    .x-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      column-gap: var(--space-3);
+      row-gap: var(--space-1);
+    }
+    .x-line > dd { margin: 0; }
+    .x-line > .t-body-s { flex-basis: 100%; }
+    .x-line__amount { font-size: var(--type-label); line-height: 1; }
+    .x-total { align-items: center; padding: var(--space-2) var(--space-3) 0; }
+    .x-total .x-line__amount { font-size: var(--type-title); }
+
+    /* Payment form */
+    .x-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-3);
+      align-items: start;
+    }
+    .x-form > .x-span { grid-column: 1 / -1; }
+    .x-form .input { width: 100%; }
+    .x-field__head {             /* label + optional validation chip; fixed height keeps rows aligned */
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      min-height: var(--space-4);
+    }
+
+    /* ── Narrow: stack, step type down one size per family ───────────────── */
+    @media (max-width: 1100px) {
+      .x-page, .x-artboard { padding-left: var(--space-3); padding-right: var(--space-3); }
+      .x-tiers { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-3); }
+      .x-tier { display: flex; flex-direction: column; gap: var(--space-3); }
+      .x-tier .actions { align-self: stretch; }
+      .x-license, .x-checkout { grid-template-columns: minmax(0, 1fr); }
+      .x-intro__title { font-size: var(--type-title); }
+      .x-footer__tagline { font-size: var(--type-display-s); }
+    }
+    @media (max-width: 700px) {
+      .block { padding: var(--space-3); }
+      .x-nav__links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+      .x-nav__links > .btn { justify-content: center; }
+      .x-intro__mark { height: 30px; }
+      .x-intro__title { font-size: var(--type-title-s); }
+      .x-license__title { font-size: var(--type-display-s); }
+      .x-footer__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--space-4); }
+      .x-price__value { font-size: var(--type-title); }
+      /* Display may not wrap: swap to Mono once one line is no longer guaranteed. */
+      .x-footer__tagline { font-family: var(--font-brand); font-size: var(--type-title-s); white-space: normal; }
+      .x-form { grid-template-columns: minmax(0, 1fr); }
+      /* Stacked buttons: reading order, primary last, each full width. */
+      .x-checkout .actions > .btn { flex: 1 1 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <main class="x-page">
+    <!-- Top nav -->
+    <header class="block block--tight x-nav">
+      <a class="x-nav__brand" href="#" aria-label="Cloud Scythe Labs home">
+        <span class="mark" role="img" aria-label="Cloud Scythe Labs" style="--mark:url('../../03_Branding_Assets/03_05_Lockups/03_05_01_Mono/Lockup2_NoPadding_Mono.svg'); --mark-ratio: 655/122"></span>
+      </a>
+      <nav class="x-nav__links" aria-label="Primary">
+        <a class="btn btn--secondary" href="#reacloud">ReaCloud</a>
+        <a class="btn btn--secondary" href="#altair">Altair</a>
+        <a class="btn btn--secondary" href="#contact">Contact</a>
+        <a class="btn btn--primary" href="#login">Log in</a>
+      </nav>
+    </header>
+
+    <!-- ReaCloud subscription tiers -->
+    <section class="x-section" id="reacloud" aria-labelledby="tiers-title">
+      <header class="block stack x-intro">
+        <span class="mark x-intro__mark" role="img" aria-label="ReaCloud" style="--mark:url('../../04_Product_Assets/04_01_ReaCloud/04_01_03_Lockups/Lockup2_NoPadding.svg'); --mark-ratio: 3430/512"></span>
+        <h1 class="t-title-l x-intro__title" id="tiers-title">Subscription tiers</h1>
+        <p class="t-body">Choose the plan that fits your workflow. Upgrade or cancel anytime.</p>
+      </header>
+
+      <div class="x-tiers">
+        <article class="block x-tier" aria-labelledby="tier-basic">
+          <div class="x-tier__head">
+            <h2 class="t-title-s" id="tier-basic">Basic</h2>
+          </div>
+          <p class="t-body">Good for solo use and getting started.</p>
+          <div class="block--inset x-price">
+            <p class="t-dot x-price__value">$10</p>
+            <p class="t-label">Per month + tax</p>
+          </div>
+          <p class="x-storage"><span class="chip">10 GB</span><span>cloud storage</span></p>
+          <ul class="x-list x-features">
+            <li>Core features</li>
+            <li>Standard support</li>
+          </ul>
+          <div class="actions x-fill">
+            <a class="btn btn--secondary" href="#checkout">Select plan</a>
+          </div>
+        </article>
+
+        <article class="block x-tier" aria-labelledby="tier-pro">
+          <div class="x-tier__head">
+            <h2 class="t-title-s" id="tier-pro">Pro</h2>
+            <span class="chip s-neutral">Recommended</span>
+          </div>
+          <p class="t-body">For power users who need more room.</p>
+          <div class="block--inset x-price">
+            <p class="t-dot x-price__value">$100</p>
+            <p class="t-label">Per month + tax</p>
+          </div>
+          <p class="x-storage"><span class="chip">200 GB</span><span>cloud storage</span></p>
+          <ul class="x-list x-features">
+            <li>Priority processing</li>
+            <li>Faster support response</li>
+          </ul>
+          <div class="actions x-fill">
+            <a class="btn btn--primary" href="#checkout">Select plan</a>
+          </div>
+        </article>
+
+        <article class="block x-tier" aria-labelledby="tier-enterprise">
+          <div class="x-tier__head">
+            <h2 class="t-title-s" id="tier-enterprise">Enterprise</h2>
+          </div>
+          <p class="t-body">Custom storage and support for teams.</p>
+          <div class="block--inset x-price">
+            <p class="t-dot x-price__value">Custom</p>
+            <p class="t-label">Contact us for pricing</p>
+          </div>
+          <p class="x-storage"><span class="chip">Custom</span><span>storage limits</span></p>
+          <ul class="x-list x-features">
+            <li>Team billing &amp; admin controls</li>
+            <li>Dedicated support</li>
+          </ul>
+          <div class="actions x-fill">
+            <a class="btn btn--secondary" href="#contact">Select plan</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Altair one-time license -->
+    <section class="x-section" id="altair" aria-labelledby="altair-title">
+      <article class="block x-license">
+        <div class="stack-3">
+          <p class="t-label">One-time license</p>
+          <h2 class="t-display x-license__title" id="altair-title">Altair</h2>
+          <div class="stack">
+            <p class="t-label">Massive metal tones</p>
+            <p class="t-body">A modern metal guitar library for Native Instruments Kontakt. Mix-ready out of the box.</p>
+          </div>
+        </div>
+        <div class="x-license__buy">
+          <div class="block--inset x-price">
+            <p class="t-dot x-price__value">$150</p>
+            <p class="t-label">One-time + tax</p>
+          </div>
+          <p class="t-body">Buy it once and own it. Every future update included.</p>
+          <ul class="x-list x-features">
+            <li>Full access to every feature</li>
+            <li>Free updates for life</li>
+            <li>Yours to keep, forever</li>
+          </ul>
+          <div class="actions">
+            <a class="btn btn--primary" href="#checkout">Buy license</a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Footer -->
+    <footer class="block x-footer" id="contact">
+      <p class="t-display x-footer__tagline">Live in the DAW</p>
+      <div class="x-footer__cols">
+        <nav class="stack" aria-label="Products">
+          <h2 class="t-label">Products</h2>
+          <ul class="x-list stack t-body-s">
+            <li><a href="#reacloud">ReaCloud</a></li>
+            <li><a href="#altair">Altair</a></li>
+          </ul>
+        </nav>
+        <nav class="stack" aria-label="Company">
+          <h2 class="t-label">Company</h2>
+          <ul class="x-list stack t-body-s">
+            <li><a href="#about">About</a></li>
+            <li><a href="#technology">Technology</a></li>
+          </ul>
+        </nav>
+        <nav class="stack" aria-label="Connect">
+          <h2 class="t-label">Connect</h2>
+          <ul class="x-list stack t-body-s">
+            <li><a href="#github">GitHub</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="x-footer__base">
+        <span class="pip s-success x-status">All systems online</span>
+        <p class="t-body-s">© 2026 Cloud Scythe Labs</p>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Artboard 02: checkout -->
+  <section class="x-artboard" id="checkout" aria-label="Artboard 02">
+    <p class="block block--tight t-label x-artboard__caption">Artboard 02 — checkout</p>
+    <div class="x-checkout">
+      <aside class="block stack-3 x-summary" aria-labelledby="summary-title">
+        <h2 class="t-title-s" id="summary-title">Order summary</h2>
+        <dl class="block--inset x-lines">
+          <div class="x-line">
+            <dt class="t-label">ReaCloud Basic</dt>
+            <dd class="t-dot x-line__amount">$10.00</dd>
+            <dd class="t-body-s">10 GB cloud storage, billed monthly. Upgrade or cancel anytime.</dd>
+          </div>
+          <div class="x-line">
+            <dt class="t-label">Tax</dt>
+            <dd class="t-dot x-line__amount">$0.00</dd>
+            <dd class="t-body-s">Set by your billing country.</dd>
+          </div>
+        </dl>
+        <dl class="x-lines">
+          <div class="x-line x-total">
+            <dt class="t-label">Total today</dt>
+            <dd class="t-dot x-line__amount">$10.00</dd>
+          </div>
+        </dl>
+      </aside>
+
+      <form class="block stack-3 x-pay" aria-labelledby="pay-title" novalidate>
+        <h2 class="t-title-s" id="pay-title">Payment</h2>
+        <div class="x-form">
+          <div class="field x-span">
+            <div class="x-field__head">
+              <label class="t-label" for="cc-number">Card number</label>
+              <span class="chip s-critical">Declined</span>
+            </div>
+            <input class="input" id="cc-number" name="cc-number" inputmode="numeric" autocomplete="cc-number" value="4000 0000 0000 0002" aria-invalid="true" aria-describedby="cc-number-help">
+            <p class="t-body-s" id="cc-number-help">Your bank declined this card. Use another card or contact your bank.</p>
+          </div>
+          <div class="field">
+            <div class="x-field__head">
+              <label class="t-label" for="cc-exp">Expiry</label>
+            </div>
+            <input class="input" id="cc-exp" name="cc-exp" inputmode="numeric" autocomplete="cc-exp" placeholder="MM / YY" value="08 / 28">
+          </div>
+          <div class="field">
+            <div class="x-field__head">
+              <label class="t-label" for="cc-csc">CVC</label>
+              <span class="chip s-warning">Re-enter</span>
+            </div>
+            <input class="input" id="cc-csc" name="cc-csc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" aria-invalid="true" aria-describedby="cc-csc-help">
+            <p class="t-body-s" id="cc-csc-help">Cleared after the decline. Enter it again.</p>
+          </div>
+          <div class="field x-span">
+            <div class="x-field__head">
+              <label class="t-label" for="cc-name">Name on card</label>
+            </div>
+            <input class="input" id="cc-name" name="cc-name" autocomplete="cc-name" value="Eli Kane">
+          </div>
+        </div>
+        <div class="actions">
+          <a class="btn btn--secondary" href="#reacloud">Back</a>
+          <button class="btn btn--primary" type="submit">Pay $10.00</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</body>
+</html>

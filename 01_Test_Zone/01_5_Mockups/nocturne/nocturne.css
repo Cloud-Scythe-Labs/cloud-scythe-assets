@@ -1,0 +1,601 @@
+/*
+ * NOCTURNE — proposed direction (round 3).
+ * Fast, dark, intimidating, ethereal, exciting: PS2-era boot screens and menus, Forza-style tickers.
+ * Brand marks and fonts are unchanged; color, surfaces, layout and motion are new.
+ * Self-contained: only the @font-face rules come from csl-tokens.css.
+ */
+@import url("../../../02_Brand_Guidelines/Design_Language/csl-tokens.css");
+
+/* ── Palette ─────────────────────────────────────────────────────────────── */
+:root,
+[data-theme="ps2"] {
+  color-scheme: dark;
+  /* Neutrals carry a faint cold tint (OKLCH hue ≈ 268, chroma ≤ 0.02). */
+  --void: #000000;          /* page; the PS2 boot black */
+  --abyss: #07080b;         /* full-bleed section bands */
+  --surface: #0d0f14;       /* panels */
+  --raise: #141720;         /* hover, nested rows */
+  --line: #262b38;          /* hairline structure (decorative, 1.36:1) */
+  --line-strong: #5d667d;   /* form-control boundaries, ≥ 3:1 on --surface */
+  --fg: #e3e6ec;            /* text, marks */
+  --fg-dim: #9097a6;        /* secondary text, 6.5:1 on --surface */
+  --fg-faint: #4a5060;      /* decorative type only (ticker shadows, wordmark) */
+  --ether: #b4c4ff;         /* luminous cold light: focus, active, glow source */
+  --ether-glow: #6f86e059;  /* bloom around emblem and active states */
+  --fog: #2b3a7a;           /* atmosphere gradients */
+
+  /* Status, muted ("nocturne"): equal-ish lightness, low chroma, red kept sharper. */
+  --red: #d8625c;
+  --orange: #d59466;
+  --yellow: #d7cc8b;
+  --green: #78bfa6;
+  --blue: #79a6d1;
+  --purple: #9f84bf;
+  --pink: #cd94b3;
+  --on-status: #000000;
+}
+
+[data-theme="ps1"] {
+  color-scheme: dark;
+  /* Fog: the gray era, cold and hazy. */
+  --void: #1b1e25;
+  --abyss: #20242c;
+  --surface: #272b35;
+  --raise: #30353f;
+  --line: #3b414e;
+  --line-strong: #7a8297;
+  --fg: #e3e6ec;
+  --fg-dim: #a3a9b6;
+  --fg-faint: #555c6c;
+  --ether: #c3d0ff;
+  --ether-glow: #8fa3f04d;
+  --fog: #3d4a80;
+  --red: #e07069;
+  --orange: #dc9d70;
+  --yellow: #dcd293;
+  --green: #83c8af;
+  --blue: #85b0da;
+  --purple: #ad93cc;
+  --pink: #d59fbd;
+  --on-status: #000000;
+}
+
+[data-theme="ps5"] {
+  color-scheme: light;
+  /* White-out: overexposed, airy, still cold. */
+  --void: #dfe2e9;
+  --abyss: #e6e9ef;
+  --surface: #eceef3;
+  --raise: #f4f5f8;
+  --line: #c9cdd6;
+  --line-strong: #727a8c;
+  --fg: #07080b;
+  --fg-dim: #4b5262;
+  --fg-faint: #b4b9c4;
+  --ether: #3c55c8;
+  --ether-glow: #3c55c833;
+  --fog: #8ea0ec;           /* cold haze; reads as light through mist on the pale void */
+  --red: #a43b38;
+  --orange: #9d5c36;
+  --yellow: #807636;
+  --green: #35775d;
+  --blue: #416593;
+  --purple: #6b4e8b;
+  --pink: #8d5375;
+  --on-status: #e6e6e6;
+}
+
+
+:root {
+  --status-success: var(--green);
+  --status-neutral: var(--blue);
+  --status-caution: var(--yellow);
+  --status-warning: var(--orange);
+  --status-critical: var(--red);
+  --status-progress: var(--purple);
+  --status-notify: var(--pink);
+
+  /* Shape: near-sharp. Speed reads in straight edges; softness lives in light, not corners. */
+  --r: 2px;
+  --gutter: 24px;
+  --page: 1440px;
+  --pad: clamp(20px, 5vw, 80px);
+
+  /* Motion: snap in, drift out. */
+  --snap: cubic-bezier(0.16, 1, 0.3, 1);   /* ease-out-expo */
+  --t-fast: 120ms;
+  --t-med: 320ms;
+  --t-slow: 900ms;
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--void); }
+body {
+  margin: 0;
+  background: transparent;  /* .n-atmos (z-index -1) paints between html and body */
+  color: var(--fg);
+  font: 15px/1.65 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+::selection { background: var(--ether); color: var(--void); }
+:focus-visible { outline: 1px solid var(--ether); outline-offset: 3px; box-shadow: 0 0 0 4px var(--ether-glow); }
+[id], [data-stop] { scroll-margin-top: 96px; }   /* in-page links and tour stops land below the 72px sticky header */
+
+/* ── Atmosphere: living fog, grain, scanlines (fixed, behind everything) ──── */
+/* Three fog banks (injected by nocturne.js as <i class="n-fog n-fog-a|b|c">) drift and breathe.
+   They move only by transform and opacity, so the compositor animates them without repainting
+   the page — scrolling stays smooth. Periods are co-prime-ish so the pattern never repeats. */
+.n-atmos {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  --fog-k: 1;               /* page-level density multiplier (the app tones it down) */
+  background: var(--void);
+}
+.n-fog {
+  position: absolute;
+  will-change: transform, opacity;
+  background: radial-gradient(closest-side, var(--fog-c), transparent);
+}
+.n-fog-a {                  /* large bank, upper right; breathes */
+  --fog-c: color-mix(in srgb, var(--fog) calc(48% * var(--fog-k)), transparent);
+  left: 34.5vw; top: -20.5vh; width: 87vw; height: 77vh;
+  animation: n-fog-a 37s ease-in-out infinite alternate, n-fog-pulse 11s ease-in-out infinite;
+}
+.n-fog-b {                  /* low bank, lower left */
+  --fog-c: color-mix(in srgb, var(--fog) calc(30% * var(--fog-k)), transparent);
+  left: -24.5vw; top: 56.5vh; width: 73vw; height: 63vh;
+  animation: n-fog-b 53s ease-in-out infinite alternate;
+}
+.n-fog-c {                  /* faint ether glow, centre; breathes */
+  --fog-c: color-mix(in srgb, var(--ether) calc(10% * var(--fog-k)), transparent);
+  left: 18.5vw; top: 31vh; width: 53vw; height: 48vh;
+  animation: n-fog-c 29s ease-in-out infinite alternate, n-fog-pulse 11s ease-in-out -5.5s infinite;
+}
+@keyframes n-fog-a {
+  33% { transform: translate(-14vw, 12vh); }
+  66% { transform: translate(8vw, -10vh); }
+  100% { transform: translate(-8vw, 8vh); }
+}
+@keyframes n-fog-b {
+  50% { transform: translate(18vw, -16vh); }
+  100% { transform: translate(-6vw, 8vh); }
+}
+@keyframes n-fog-c {
+  50% { transform: translate(17vw, -15vh); }
+  100% { transform: translate(-13vw, 11vh); }
+}
+@keyframes n-fog-pulse { 50% { opacity: 0.55; } }
+/* Embedded screens hold their atmosphere still: the host page already moves. */
+[data-embed] .n-fog, [data-embed] .n-atmos::before { animation: none; }
+.n-atmos::before {            /* film grain */
+  content: "";
+  position: absolute;
+  inset: -50%;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: n-grain 0.6s steps(4) infinite;
+}
+.n-atmos::after {             /* CRT scanlines */
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.25;
+  background: repeating-linear-gradient(to bottom, transparent 0 2px, color-mix(in srgb, var(--void) 60%, transparent) 2px 3px);
+}
+[data-theme="ps5"] .n-atmos::after { opacity: 0.08; }
+[data-theme="ps5"] .n-atmos::before { opacity: 0.05; }
+@keyframes n-grain {
+  25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); }
+  75% { transform: translate(-2%, -2%); }
+}
+
+/* ── Layout ──────────────────────────────────────────────────────────────── */
+.n-wrap { width: min(100%, var(--page)); margin-inline: auto; padding-inline: var(--pad); }
+.n-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
+.n-section { position: relative; padding-block: clamp(80px, 12vw, 160px); }
+.n-rule { height: 1px; background: var(--line); border: 0; margin: 0; }
+
+/* ── Brand: emblem + logotype composed with breathing room ───────────────── */
+/* The shipped CSL Lockup2 sets the emblem-to-text gap at ~10% of emblem height (narrower than its
+   own word space). Composing from the separate files lets the gap scale with the emblem. */
+.n-brand {
+  --h: 40px;                /* emblem height */
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--h) * var(--gap-k));
+  text-decoration: none;
+}
+.n-brand > .n-mark { height: var(--h); flex: none; }
+.n-brand > .n-brand__type { height: calc(var(--h) * var(--type-k)); }
+.n-brand--csl { --type-k: 0.36; --gap-k: 0.42; }       /* text = ring height, as in the shipped lockup */
+.n-brand--reacloud { --type-k: 0.62; --gap-k: 0.5; }
+
+/* ── Screen: a live product UI embedded as the product shot ──────────────── */
+/* nocturne.js sets --scale = container width / 1440 and keeps the iframe's theme in sync. */
+.n-screen {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r);
+  aspect-ratio: 16 / 10;
+  -webkit-mask: linear-gradient(to right, #000 60%, transparent 100%);
+          mask: linear-gradient(to right, #000 60%, transparent 100%);
+}
+.n-screen iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1440px;
+  height: 900px;
+  border: 0;
+  transform: scale(var(--scale, 0.5));
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+
+/* ── Type ────────────────────────────────────────────────────────────────── */
+.n-hud {                      /* HUD micro-label: 10px CSL Mono = 1 device px per font pixel */
+  font: 10px/1 var(--font-brand);
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+.n-hud--fg { color: var(--fg); }
+.n-hud .n-idx { color: var(--ether); }
+.n-mega, .n-display, .n-display-s, .n-title, .n-title-s, .n-label {
+  margin: 0;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-synthesis: none;
+}
+.n-mega      { font: 176px/0.9 var(--font-display); white-space: nowrap; }
+.n-display   { font: 88px/0.95 var(--font-display); white-space: nowrap; }
+.n-display-s { font: 44px/1 var(--font-display); white-space: nowrap; }
+.n-title     { font: 40px/1.1 var(--font-brand); }
+.n-title-s   { font: 20px/1.2 var(--font-brand); }
+.n-label     { font: 20px/1 var(--font-brand); }
+.n-dot       { font-family: var(--font-dot-mono); }
+.n-dot-display { font-family: var(--font-dot-display); }
+.n-body   { margin: 0; color: var(--fg-dim); max-width: 56ch; }
+.n-body--fg { color: var(--fg); }
+.n-small  { margin: 0; font-size: 13px; line-height: 1.6; color: var(--fg-dim); }
+.n-code   { font: 22px/1.3 var(--font-terminal); }
+.n-code-s { font: 11px/1.6 var(--font-terminal); }
+
+/* ── Actions ─────────────────────────────────────────────────────────────── */
+.n-btn {
+  --btn-bg: transparent;
+  --btn-fg: var(--fg);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font: 20px/1 var(--font-brand);
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  transition: border-color var(--t-fast) var(--snap), color var(--t-fast) var(--snap);
+}
+.n-btn::before {              /* speed sweep */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--raise);
+  transform: translateX(-101%);
+  transition: transform var(--t-med) var(--snap);
+}
+.n-btn:hover::before { transform: translateX(0); }
+.n-btn:hover { border-color: var(--fg); }
+.n-btn .n-arrow { transition: transform var(--t-fast) var(--snap); }
+.n-btn:hover .n-arrow { transform: translateX(6px); }
+.n-btn--primary { --btn-bg: var(--fg); --btn-fg: var(--void); border-color: var(--fg); }
+.n-btn--primary::before { background: var(--ether); }
+.n-btn--danger { --btn-bg: var(--status-critical); --btn-fg: var(--on-status); border-color: var(--status-critical); }
+.n-btn--s { height: 28px; padding: 0 10px; gap: 8px; font-size: 10px; }   /* dense tool chrome, table rows */
+.n-link {                     /* tertiary: text + arrow, no box */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: 20px/1 var(--font-brand);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--fg);
+}
+.n-link:hover .n-arrow { transform: translateX(6px); }
+.n-link .n-arrow { transition: transform var(--t-fast) var(--snap); }
+
+/* ── Surfaces ────────────────────────────────────────────────────────────── */
+.n-panel {
+  position: relative;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 24px;
+}
+.n-panel--edge { border: 1px solid var(--line); }
+.n-row {                      /* list rows separated by hairlines, no boxes */
+  display: grid;
+  align-items: center;
+  gap: var(--gutter);
+  padding-block: 14px;
+  border-bottom: 1px solid var(--line);
+  transition: background var(--t-fast) var(--snap);
+}
+.n-row:hover { background: var(--raise); }
+.n-row--pad { padding-inline: 12px; }        /* when hover fill must not touch the content edge */
+
+/* ── Status: a lit pixel + label. Color never fills a pill except critical actions. */
+.n-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: 10px/1 var(--font-brand);
+  text-transform: uppercase;
+  color: var(--fg);
+  white-space: nowrap;
+}
+.n-status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--status, var(--fg-dim));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--status, transparent) 70%, transparent);
+}
+.n-status--live::before { animation: n-pulse 1.6s var(--snap) infinite; }
+@keyframes n-pulse { 50% { opacity: 0.35; box-shadow: none; } }
+.s-success  { --status: var(--status-success); }
+.s-neutral  { --status: var(--status-neutral); }
+.s-caution  { --status: var(--status-caution); }
+.s-warning  { --status: var(--status-warning); }
+.s-critical { --status: var(--status-critical); }
+.s-progress { --status: var(--status-progress); }
+.s-notify   { --status: var(--status-notify); }
+.s-idle     { --status: var(--fg-faint); }  /* offline / inactive: a dark square, no glow */
+.n-status:not(:has(*)):empty { gap: 0; }    /* square-only status: give it role="img" + aria-label */
+
+.n-meter { height: 2px; background: var(--line); position: relative; }
+.n-meter > i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--v, 50%);
+  background: var(--status, var(--fg));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--status, var(--ether)) 60%, transparent);
+}
+
+/* ── Marks (shipped SVGs recolored through masks) ────────────────────────── */
+.n-mark {
+  display: block;
+  background: var(--mark-color, var(--fg));
+  -webkit-mask: var(--mark) center / contain no-repeat;
+          mask: var(--mark) center / contain no-repeat;
+  aspect-ratio: var(--mark-ratio, 1);
+}
+.n-glow { filter: drop-shadow(0 0 28px var(--ether-glow)) drop-shadow(0 0 2px var(--ether-glow)); }
+
+/* ── Bleed emblem: oversized atmospheric emblem cropped off the right edge ── */
+/* The offset is a fraction of the emblem's OWN width (translate %), not of the container,
+   so the crop looks the same at every window size. Size follows the viewport's smaller
+   proportion so wide screens don't shrink it and short windows don't blow it up. */
+.n-bleed {
+  --shift: 36%;             /* share of the emblem pushed past the right edge */
+  --y: 50%;                 /* vertical centre within the section */
+  position: absolute;
+  right: 0;
+  top: var(--y);
+  width: clamp(900px, min(150vh, 95vw), 2400px);
+  aspect-ratio: 1;
+  translate: var(--shift) -50%;
+  pointer-events: none;
+  will-change: transform;   /* own layer: scrolling and floating never re-rasterise the glow */
+  animation: n-bleed-in 2.4s var(--snap) both, n-bleed-float 23s ease-in-out 2.4s infinite alternate;
+}
+.n-bleed > .n-mark { position: absolute; inset: 0; }
+/* Breathing animates opacity only. Animating the glow filter repaints a ~1400px layer every frame
+   and halves the frame rate while scrolling. */
+.n-bleed .ring { --mark-color: var(--ether); opacity: 0.32; animation: n-ring-breathe 11s ease-in-out infinite; }
+.n-bleed .blade { --mark-color: var(--fg); opacity: 0.14; }
+@keyframes n-bleed-in { from { opacity: 0; filter: blur(40px); scale: 1.1; } }
+@keyframes n-bleed-float { to { translate: calc(var(--shift) - 2%) calc(-50% + 18px); rotate: -1.5deg; } }
+@keyframes n-ring-breathe { 50% { opacity: 0.2; } }
+@media (max-width: 720px) {
+  .n-bleed { --shift: 50%; width: 160vw; opacity: 0.45; }
+}
+
+/* ── Forza-style ticker (kept from round 2, the user likes it) ───────────── */
+.n-ticker { position: relative; overflow: hidden; isolation: isolate; }
+.n-ticker__field {
+  position: absolute;
+  inset: -60% -20%;
+  display: grid;
+  align-content: center;
+  gap: 0.18em;
+  transform: rotate(var(--ticker-angle));
+  font: var(--ticker-size, 96px)/1 var(--font-brand);
+  text-transform: uppercase;
+  color: var(--ticker-color, var(--fg));
+  white-space: nowrap;
+  pointer-events: none;
+}
+.n-ticker__row {
+  justify-self: start;
+  width: max-content;
+  animation: n-tick var(--ticker-time, 22s) linear infinite;
+}
+.n-ticker__row:nth-child(even) { animation-direction: reverse; }
+.n-ticker__row--fast { animation-duration: calc(var(--ticker-time, 22s) * 0.6); }
+@keyframes n-tick { to { transform: translateX(-50%); } }
+
+/* ── Imagery: monochrome, fades into the void ────────────────────────────── */
+.n-plate { position: relative; overflow: hidden; border-radius: var(--r); }
+.n-plate img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Muted color at 45% saturation: between mono (too flat) and full color (too candy). */
+  filter: saturate(0.45) contrast(1.08) brightness(1.16);
+  -webkit-mask: linear-gradient(to right, #000 55%, transparent 100%);
+          mask: linear-gradient(to right, #000 55%, transparent 100%);
+  transform: scale(1.04);
+  transition: transform var(--t-slow) var(--snap), filter var(--t-slow) var(--snap);
+}
+.n-plate:hover img { transform: scale(1); filter: saturate(0.55) contrast(1.12) brightness(1.32); }
+.n-plate--left img {
+  -webkit-mask: linear-gradient(to left, #000 55%, transparent 100%);
+          mask: linear-gradient(to left, #000 55%, transparent 100%);
+}
+
+/* ── Scroll cue + back to top ─────────────────────────────────────────────── */
+/* Both scroll with nocturne.js's slow eased scroll (≈1.4 s), not the browser's quick smooth scroll. */
+.n-scroll {
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--t-fast) var(--snap);
+}
+.n-scroll:hover { color: var(--fg); }
+.n-scroll .n-arrow { display: inline-block; animation: n-bob 2.4s var(--snap) infinite; }
+@keyframes n-bob { 50% { translate: 0 4px; } }
+.n-top {
+  --p: 0;                   /* scroll progress 0–1, set by nocturne.js */
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: blur(12px);
+  color: var(--fg);
+  font: 10px/1 var(--font-brand);
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0;
+  translate: 0 12px;
+  pointer-events: none;
+  transition: opacity var(--t-med) var(--snap), translate var(--t-med) var(--snap), border-color var(--t-fast) var(--snap);
+}
+.n-top.is-shown { opacity: 1; translate: 0 0; pointer-events: auto; }
+.n-top:hover { border-color: var(--fg); }
+.n-top .n-arrow { transition: translate var(--t-fast) var(--snap); }
+.n-top:hover .n-arrow { translate: 0 -3px; }
+.n-top::after {             /* page progress along the bottom edge */
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: calc(var(--p) * 100%);
+  background: var(--ether);
+  box-shadow: 0 0 8px var(--ether);
+}
+
+/* ── Tour: glides through [data-stop] sections and ends on the last (nocturne.js) ── */
+/* Tour button: a normal .n-btn whose label flips while the tour runs. */
+.n-tour-btn__on { display: none; }
+.n-tour-btn[aria-pressed="true"] .n-tour-btn__off { display: none; }
+.n-tour-btn[aria-pressed="true"] .n-tour-btn__on { display: inline; }
+.n-tourbar {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 40px;
+  padding: 0 6px 0 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: blur(12px);
+  color: var(--fg);
+  font: 10px/1 var(--font-brand);
+  opacity: 0;
+  translate: -50% 12px;
+  transition: opacity var(--t-med) var(--snap), translate var(--t-med) var(--snap);
+}
+.n-tourbar.is-shown { opacity: 1; translate: -50% 0; }
+.n-tourbar__count { color: var(--fg-dim); font-variant-numeric: tabular-nums; }
+.n-tourbar__dwell { width: 80px; height: 1px; background: var(--line); }
+.n-tourbar__dwell i { display: block; width: 0; height: 100%; background: var(--ether); box-shadow: 0 0 8px var(--ether); }
+.n-tourbar__stop {
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.n-tourbar__stop:hover { border-color: var(--fg); }
+
+/* ── Reveal on scroll (nocturne.js adds .is-in) ──────────────────────────── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  filter: blur(6px);
+  transition: opacity var(--t-slow) var(--snap), transform var(--t-slow) var(--snap), filter var(--t-slow) var(--snap);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+[data-reveal].is-in { opacity: 1; transform: none; filter: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  [data-reveal] { opacity: 1; transform: none; filter: none; }
+}
+
+/* ── Review chrome (not part of the direction) ───────────────────────────── */
+.n-review {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 100;
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  background: #0d0f14ee;
+  color: #e3e6ec;
+  border: 1px solid #262b38;
+  border-radius: 2px;
+  font: 10px/1 var(--font-brand);
+}
+.n-review[data-open="false"] > div { display: none; }
+.n-review > div { display: flex; align-items: center; gap: 6px; }
+.n-review span { width: 7ch; color: #9097a6; }
+.n-review button {
+  border: 1px solid #262b38;
+  border-radius: 2px;
+  padding: 6px 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.n-review button[aria-pressed="true"] { background: #e3e6ec; color: #000; }
+.n-review > button { justify-self: end; border: 0; color: #9097a6; }

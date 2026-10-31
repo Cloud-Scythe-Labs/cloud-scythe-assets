@@ -1,0 +1,899 @@
+[
+ {
+  "char": "!",
+  "code": "U+0021",
+  "name": "Exclamation Mark",
+  "shape_diff": 0.389,
+  "decision": "jbm"
+ },
+ {
+  "char": "\"",
+  "code": "U+0022",
+  "name": "Quotation Mark",
+  "shape_diff": 0.252,
+  "decision": "jbm"
+ },
+ {
+  "char": "#",
+  "code": "U+0023",
+  "name": "Number Sign",
+  "shape_diff": 0.565,
+  "decision": "jbm"
+ },
+ {
+  "char": "$",
+  "code": "U+0024",
+  "name": "Dollar Sign",
+  "shape_diff": 0.412,
+  "decision": "jbm"
+ },
+ {
+  "char": "%",
+  "code": "U+0025",
+  "name": "Percent Sign",
+  "shape_diff": 0.632,
+  "decision": "jbm",
+  "notes": "The \"circles\" on each side of the percent sign don't have the same stroke width the entire way through, which gives it a bit of a wonky look. I think it looks pretty good but that should be fixed. It can keep that semi-circular squarish look, just fix the stroke width to be even."
+ },
+ {
+  "char": "&",
+  "code": "U+0026",
+  "name": "Ampersand",
+  "shape_diff": 0.445,
+  "decision": "jbm",
+  "notes": "Not even a contest. This is one of the few characters where the line width doesn't look wonky, so we should keep an eye on it to see how it changes once we select a heuristic for the stroke width of letters."
+ },
+ {
+  "char": "'",
+  "code": "U+0027",
+  "name": "Apostrophe",
+  "shape_diff": 0.095,
+  "decision": "jbm"
+ },
+ {
+  "char": "(",
+  "code": "U+0028",
+  "name": "Left Parenthesis",
+  "shape_diff": 0.404,
+  "decision": "jbm"
+ },
+ {
+  "char": ")",
+  "code": "U+0029",
+  "name": "Right Parenthesis",
+  "shape_diff": 0.401,
+  "decision": "jbm"
+ },
+ {
+  "char": "*",
+  "code": "U+002A",
+  "name": "Asterisk",
+  "shape_diff": 0.676,
+  "decision": "jbm"
+ },
+ {
+  "char": "+",
+  "code": "U+002B",
+  "name": "Plus Sign",
+  "shape_diff": 0.3,
+  "decision": "jbm"
+ },
+ {
+  "char": ",",
+  "code": "U+002C",
+  "name": "Comma",
+  "shape_diff": 0.09,
+  "decision": "jbm"
+ },
+ {
+  "char": "-",
+  "code": "U+002D",
+  "name": "Hyphen-Minus",
+  "shape_diff": 0.002,
+  "decision": "jbm"
+ },
+ {
+  "char": ".",
+  "code": "U+002E",
+  "name": "Full Stop",
+  "shape_diff": 0.001,
+  "decision": "jbm"
+ },
+ {
+  "char": "/",
+  "code": "U+002F",
+  "name": "Solidus",
+  "shape_diff": 0.039,
+  "decision": "jbm"
+ },
+ {
+  "char": "0",
+  "code": "U+0030",
+  "name": "Digit Zero",
+  "shape_diff": 0.336,
+  "decision": "mix",
+  "notes": "Another example of where the CSL curvature may work well. Also, we should refer to the strike through of the normal CSL font for position and stroke width of the `0`."
+ },
+ {
+  "char": "1",
+  "code": "U+0031",
+  "name": "Digit One",
+  "shape_diff": 0.236,
+  "decision": "jbm"
+ },
+ {
+  "char": "2",
+  "code": "U+0032",
+  "name": "Digit Two",
+  "shape_diff": 0.464,
+  "decision": "mix",
+  "notes": "We may decide to change this later. Keep in mind the stroke width here as well, you can definitely see how it changes during the curve where CSL does not."
+ },
+ {
+  "char": "3",
+  "code": "U+0033",
+  "name": "Digit Three",
+  "shape_diff": 0.523,
+  "notes": "Again what I think is important to take from CSL is the stroke width and curve. You can see if you compare the bottom curve of JBM against the top curve of CSL that CSL is slightly more squared off, so where the line starts to curve is a bit later than where it curves in JBM, giving it a more square look while retaining the curve. This is essential to making the chunks look good for other characters, though I'm not sure if it's necessary for this number.",
+  "decision": "jbm"
+ },
+ {
+  "char": "4",
+  "code": "U+0034",
+  "name": "Digit Four",
+  "shape_diff": 0.617,
+  "decision": "jbm"
+ },
+ {
+  "char": "5",
+  "code": "U+0035",
+  "name": "Digit Five",
+  "shape_diff": 0.318,
+  "decision": "mix",
+  "notes": "Stroke width, curvature"
+ },
+ {
+  "char": "6",
+  "code": "U+0036",
+  "name": "Digit Six",
+  "shape_diff": 0.475,
+  "decision": "jbm",
+  "notes": "Same issues as `9`, CSL can be mistaken for a `g` or `b` or `d` for dyslexic people like myself. The JBM `6` is better in this case, but again, the stroke width may need to be adjusted as well as adjusting the curve so it is more squared off, taking from CSL."
+ },
+ {
+  "char": "7",
+  "code": "U+0037",
+  "name": "Digit Seven",
+  "shape_diff": 0.331,
+  "decision": "jbm"
+ },
+ {
+  "char": "8",
+  "code": "U+0038",
+  "name": "Digit Eight",
+  "shape_diff": 0.289,
+  "notes": "Probably the biggest example of how if the curvature were more like CSL it would instantly look better. This is entering comic sans territory, but I don't think that this number would benefit from having chunks so I'm going with JBM. ",
+  "decision": "mix"
+ },
+ {
+  "char": "9",
+  "code": "U+0039",
+  "name": "Digit Nine",
+  "shape_diff": 0.53,
+  "decision": "jbm",
+  "notes": "You can see here that the bottom right hand side of the number has a tapered stroke width, whereas the CSL one does not. This is actually sort of important to achieve the structured look of CSL. However, you can see that because of how the CSL 9 is designed, it actually could easily be confused for a lowercase `g`. We need some kind of middle ground where we don't have too much taper to keep the structured look."
+ },
+ {
+  "char": ":",
+  "code": "U+003A",
+  "name": "Colon",
+  "shape_diff": 0.18,
+  "decision": "jbm"
+ },
+ {
+  "char": ";",
+  "code": "U+003B",
+  "name": "Semicolon",
+  "shape_diff": 0.333,
+  "decision": "jbm"
+ },
+ {
+  "char": "<",
+  "code": "U+003C",
+  "name": "Less-Than Sign",
+  "shape_diff": 0.24,
+  "decision": "jbm"
+ },
+ {
+  "char": "=",
+  "code": "U+003D",
+  "name": "Equals Sign",
+  "shape_diff": 0.273,
+  "decision": "jbm"
+ },
+ {
+  "char": ">",
+  "code": "U+003E",
+  "name": "Greater-Than Sign",
+  "shape_diff": 0.245,
+  "decision": "jbm"
+ },
+ {
+  "char": "?",
+  "code": "U+003F",
+  "name": "Question Mark",
+  "shape_diff": 0.499,
+  "notes": "Similar to the upside down one, keep the CSL one but the dot is too small and it may need to be adjusted to accommodate for the width constraints of JBM. This is another great example of the squarish curvature though.",
+  "decision": "csl"
+ },
+ {
+  "char": "@",
+  "code": "U+0040",
+  "name": "Commercial At",
+  "shape_diff": 0.418,
+  "decision": "jbm"
+ },
+ {
+  "char": "A",
+  "code": "U+0041",
+  "name": "Latin Capital Letter A",
+  "shape_diff": 0.297,
+  "decision": "jbm"
+ },
+ {
+  "char": "B",
+  "code": "U+0042",
+  "name": "Latin Capital Letter B",
+  "shape_diff": 0.178,
+  "decision": "jbm"
+ },
+ {
+  "char": "C",
+  "code": "U+0043",
+  "name": "Latin Capital Letter C",
+  "shape_diff": 0.151,
+  "decision": "jbm"
+ },
+ {
+  "char": "D",
+  "code": "U+0044",
+  "name": "Latin Capital Letter D",
+  "shape_diff": 0.086,
+  "decision": "jbm"
+ },
+ {
+  "char": "E",
+  "code": "U+0045",
+  "name": "Latin Capital Letter E",
+  "shape_diff": 0.148,
+  "decision": "jbm"
+ },
+ {
+  "char": "F",
+  "code": "U+0046",
+  "name": "Latin Capital Letter F",
+  "shape_diff": 0.115,
+  "decision": "jbm"
+ },
+ {
+  "char": "G",
+  "code": "U+0047",
+  "name": "Latin Capital Letter G",
+  "shape_diff": 0.18,
+  "decision": "jbm"
+ },
+ {
+  "char": "H",
+  "code": "U+0048",
+  "name": "Latin Capital Letter H",
+  "shape_diff": 0.054,
+  "decision": "jbm"
+ },
+ {
+  "char": "I",
+  "code": "U+0049",
+  "name": "Latin Capital Letter I",
+  "shape_diff": 0.119,
+  "decision": "jbm"
+ },
+ {
+  "char": "J",
+  "code": "U+004A",
+  "name": "Latin Capital Letter J",
+  "shape_diff": 0.187,
+  "decision": "jbm"
+ },
+ {
+  "char": "K",
+  "code": "U+004B",
+  "name": "Latin Capital Letter K",
+  "shape_diff": 0.433,
+  "decision": "jbm"
+ },
+ {
+  "char": "L",
+  "code": "U+004C",
+  "name": "Latin Capital Letter L",
+  "shape_diff": 0.067,
+  "decision": "jbm"
+ },
+ {
+  "char": "M",
+  "code": "U+004D",
+  "name": "Latin Capital Letter M",
+  "shape_diff": 0.231,
+  "decision": "mix",
+  "notes": "Another one where it's hard to say if stroke width from CSL would hurt, but we should try it."
+ },
+ {
+  "char": "N",
+  "code": "U+004E",
+  "name": "Latin Capital Letter N",
+  "shape_diff": 0.103,
+  "decision": "jbm"
+ },
+ {
+  "char": "O",
+  "code": "U+004F",
+  "name": "Latin Capital Letter O",
+  "shape_diff": 0.11,
+  "decision": "jbm"
+ },
+ {
+  "char": "P",
+  "code": "U+0050",
+  "name": "Latin Capital Letter P",
+  "shape_diff": 0.137,
+  "decision": "jbm"
+ },
+ {
+  "char": "Q",
+  "code": "U+0051",
+  "name": "Latin Capital Letter Q",
+  "shape_diff": 0.255,
+  "decision": "mix",
+  "notes": "Stroke width here and curvature, I also think this would look cooler if the stem of the character were vertical instead of slanted."
+ },
+ {
+  "char": "R",
+  "code": "U+0052",
+  "name": "Latin Capital Letter R",
+  "shape_diff": 0.319,
+  "decision": "mix",
+  "notes": "Stoke width, curvature "
+ },
+ {
+  "char": "S",
+  "code": "U+0053",
+  "name": "Latin Capital Letter S",
+  "shape_diff": 0.308,
+  "decision": "jbm"
+ },
+ {
+  "char": "T",
+  "code": "U+0054",
+  "name": "Latin Capital Letter T",
+  "shape_diff": 0.113,
+  "decision": "jbm"
+ },
+ {
+  "char": "U",
+  "code": "U+0055",
+  "name": "Latin Capital Letter U",
+  "shape_diff": 0.103,
+  "decision": "jbm"
+ },
+ {
+  "char": "V",
+  "code": "U+0056",
+  "name": "Latin Capital Letter V",
+  "shape_diff": 0.17,
+  "decision": "jbm"
+ },
+ {
+  "char": "W",
+  "code": "U+0057",
+  "name": "Latin Capital Letter W",
+  "shape_diff": 0.385,
+  "decision": "jbm"
+ },
+ {
+  "char": "X",
+  "code": "U+0058",
+  "name": "Latin Capital Letter X",
+  "shape_diff": 0.424,
+  "decision": "jbm"
+ },
+ {
+  "char": "Y",
+  "code": "U+0059",
+  "name": "Latin Capital Letter Y",
+  "shape_diff": 0.378,
+  "decision": "jbm"
+ },
+ {
+  "char": "Z",
+  "code": "U+005A",
+  "name": "Latin Capital Letter Z",
+  "shape_diff": 0.279,
+  "decision": "jbm"
+ },
+ {
+  "char": "[",
+  "code": "U+005B",
+  "name": "Left Square Bracket",
+  "shape_diff": 0.238,
+  "decision": "jbm"
+ },
+ {
+  "char": "\\",
+  "code": "U+005C",
+  "name": "Reverse Solidus",
+  "shape_diff": 0.039,
+  "decision": "jbm"
+ },
+ {
+  "char": "]",
+  "code": "U+005D",
+  "name": "Right Square Bracket",
+  "shape_diff": 0.231,
+  "decision": "jbm"
+ },
+ {
+  "char": "^",
+  "code": "U+005E",
+  "name": "Circumflex Accent",
+  "shape_diff": 0.294,
+  "decision": "jbm"
+ },
+ {
+  "char": "_",
+  "code": "U+005F",
+  "name": "Low Line",
+  "shape_diff": 0,
+  "decision": "jbm"
+ },
+ {
+  "char": "`",
+  "code": "U+0060",
+  "name": "Grave Accent",
+  "shape_diff": 0.532,
+  "decision": "jbm"
+ },
+ {
+  "char": "a",
+  "code": "U+0061",
+  "name": "Latin Small Letter A",
+  "shape_diff": 0.23,
+  "decision": "mix",
+  "notes": "Stroke width and curvature. The taper would be fine at the bottom, but you can see how it negatively impacts the style at the top of the JBM version as where the CSL variant looks _fast_."
+ },
+ {
+  "char": "b",
+  "code": "U+0062",
+  "name": "Latin Small Letter B",
+  "shape_diff": 0.227,
+  "decision": "mix",
+  "notes": "Hard to say if stroke width from CSL would hurt here, but we could try it."
+ },
+ {
+  "char": "c",
+  "code": "U+0063",
+  "name": "Latin Small Letter C",
+  "shape_diff": 0.213,
+  "decision": "mix",
+  "notes": "Curvature"
+ },
+ {
+  "char": "d",
+  "code": "U+0064",
+  "name": "Latin Small Letter D",
+  "shape_diff": 0.227,
+  "decision": "mix",
+  "notes": "Same as `b`."
+ },
+ {
+  "char": "e",
+  "code": "U+0065",
+  "name": "Latin Small Letter E",
+  "shape_diff": 0.232,
+  "decision": "mix",
+  "notes": "Stroke width and curvature "
+ },
+ {
+  "char": "f",
+  "code": "U+0066",
+  "name": "Latin Small Letter F",
+  "shape_diff": 0.633,
+  "decision": "jbm"
+ },
+ {
+  "char": "g",
+  "code": "U+0067",
+  "name": "Latin Small Letter G",
+  "shape_diff": 0.255,
+  "decision": "mix",
+  "notes": "It's hard to tell if stroke width from CSL would hurt here, but we should try it first and see."
+ },
+ {
+  "char": "h",
+  "code": "U+0068",
+  "name": "Latin Small Letter H",
+  "shape_diff": 0.17,
+  "decision": "jbm"
+ },
+ {
+  "char": "i",
+  "code": "U+0069",
+  "name": "Latin Small Letter I",
+  "shape_diff": 0.263,
+  "decision": "mix",
+  "notes": "Stroke width here from CSL, the dot is better sized on JBM though so we should keep that"
+ },
+ {
+  "char": "j",
+  "code": "U+006A",
+  "name": "Latin Small Letter J",
+  "shape_diff": 0.326,
+  "decision": "jbm"
+ },
+ {
+  "char": "k",
+  "code": "U+006B",
+  "name": "Latin Small Letter K",
+  "shape_diff": 0.198,
+  "decision": "jbm"
+ },
+ {
+  "char": "l",
+  "code": "U+006C",
+  "name": "Latin Small Letter L",
+  "shape_diff": 0.42,
+  "decision": "jbm"
+ },
+ {
+  "char": "m",
+  "code": "U+006D",
+  "name": "Latin Small Letter M",
+  "shape_diff": 0.328,
+  "decision": "jbm"
+ },
+ {
+  "char": "n",
+  "code": "U+006E",
+  "name": "Latin Small Letter N",
+  "shape_diff": 0.133,
+  "decision": "jbm"
+ },
+ {
+  "char": "o",
+  "code": "U+006F",
+  "name": "Latin Small Letter O",
+  "shape_diff": 0.155,
+  "decision": "jbm"
+ },
+ {
+  "char": "p",
+  "code": "U+0070",
+  "name": "Latin Small Letter P",
+  "shape_diff": 0.205,
+  "decision": "mix",
+  "notes": "Same as `b`."
+ },
+ {
+  "char": "q",
+  "code": "U+0071",
+  "name": "Latin Small Letter Q",
+  "shape_diff": 0.203,
+  "decision": "mix",
+  "notes": "Same as `b`."
+ },
+ {
+  "char": "r",
+  "code": "U+0072",
+  "name": "Latin Small Letter R",
+  "shape_diff": 0.217,
+  "decision": "mix",
+  "notes": "curvature."
+ },
+ {
+  "char": "s",
+  "code": "U+0073",
+  "name": "Latin Small Letter S",
+  "shape_diff": 0.321,
+  "decision": "mix",
+  "notes": "Curvature on the top right of the letter, this again has to do with stroke width and curvature. "
+ },
+ {
+  "char": "t",
+  "code": "U+0074",
+  "name": "Latin Small Letter T",
+  "shape_diff": 0.393,
+  "decision": "jbm"
+ },
+ {
+  "char": "u",
+  "code": "U+0075",
+  "name": "Latin Small Letter U",
+  "shape_diff": 0.14,
+  "decision": "jbm"
+ },
+ {
+  "char": "v",
+  "code": "U+0076",
+  "name": "Latin Small Letter V",
+  "shape_diff": 0.212,
+  "decision": "jbm"
+ },
+ {
+  "char": "w",
+  "code": "U+0077",
+  "name": "Latin Small Letter W",
+  "shape_diff": 0.389,
+  "decision": "jbm"
+ },
+ {
+  "char": "x",
+  "code": "U+0078",
+  "name": "Latin Small Letter X",
+  "shape_diff": 0.143,
+  "decision": "jbm"
+ },
+ {
+  "char": "y",
+  "code": "U+0079",
+  "name": "Latin Small Letter Y",
+  "shape_diff": 0.299,
+  "decision": "jbm"
+ },
+ {
+  "char": "z",
+  "code": "U+007A",
+  "name": "Latin Small Letter Z",
+  "shape_diff": 0.31,
+  "decision": "jbm"
+ },
+ {
+  "char": "{",
+  "code": "U+007B",
+  "name": "Left Curly Bracket",
+  "shape_diff": 0.423,
+  "decision": "jbm"
+ },
+ {
+  "char": "|",
+  "code": "U+007C",
+  "name": "Vertical Line",
+  "shape_diff": 0,
+  "decision": "jbm"
+ },
+ {
+  "char": "}",
+  "code": "U+007D",
+  "name": "Right Curly Bracket",
+  "shape_diff": 0.477,
+  "decision": "jbm",
+  "notes": "CSL didn't stand out here, it's not different enough from other brackets so we'll keep the JBM here for now."
+ },
+ {
+  "char": "~",
+  "code": "U+007E",
+  "name": "Tilde",
+  "shape_diff": 0.451,
+  "decision": "jbm"
+ },
+ {
+  "char": "¡",
+  "code": "U+00A1",
+  "name": "Inverted Exclamation Mark",
+  "shape_diff": 0.39,
+  "decision": "jbm",
+  "notes": "May need to keep an eye on this one to see how it looks against the upside down question mark."
+ },
+ {
+  "char": "¢",
+  "code": "U+00A2",
+  "name": "Cent Sign",
+  "shape_diff": 0.451,
+  "decision": "jbm",
+  "notes": "I do think this could be better if it were to be a slanted line instead of vertical. We also see the warp effect where the line width is affected. Compared to CSL it's not as polished looking in that regard, but JBM is more legible so we will go with that."
+ },
+ {
+  "char": "£",
+  "code": "U+00A3",
+  "name": "Pound Sign",
+  "shape_diff": 0.285,
+  "decision": "jbm"
+ },
+ {
+  "char": "¤",
+  "code": "U+00A4",
+  "name": "Currency Sign",
+  "shape_diff": 0.459,
+  "decision": "mix",
+  "notes": "Stoke width is not even, again, but it may be less consequential here. I think once a proper heuristic is defined for the letters, it can apply to symbols as well and we can do another pass to see if they look good."
+ },
+ {
+  "char": "¥",
+  "code": "U+00A5",
+  "name": "Yen Sign",
+  "shape_diff": 0.375,
+  "decision": "jbm"
+ },
+ {
+  "char": "¦",
+  "code": "U+00A6",
+  "name": "Broken Bar",
+  "shape_diff": 0,
+  "decision": "jbm"
+ },
+ {
+  "char": "§",
+  "code": "U+00A7",
+  "name": "Section Sign",
+  "shape_diff": 0.283,
+  "decision": "jbm"
+ },
+ {
+  "char": "¨",
+  "code": "U+00A8",
+  "name": "Diaeresis",
+  "shape_diff": 0.072,
+  "decision": "jbm"
+ },
+ {
+  "char": "©",
+  "code": "U+00A9",
+  "name": "Copyright Sign",
+  "shape_diff": 0.745,
+  "decision": "jbm"
+ },
+ {
+  "char": "«",
+  "code": "U+00AB",
+  "name": "Left-Pointing Double Angle Quotation Mark",
+  "shape_diff": 0.421,
+  "decision": "jbm"
+ },
+ {
+  "char": "¬",
+  "code": "U+00AC",
+  "name": "Not Sign",
+  "shape_diff": 0.047,
+  "decision": "jbm"
+ },
+ {
+  "char": "®",
+  "code": "U+00AE",
+  "name": "Registered Sign",
+  "shape_diff": 0.661,
+  "decision": "jbm"
+ },
+ {
+  "char": "¯",
+  "code": "U+00AF",
+  "name": "Macron",
+  "shape_diff": 0,
+  "decision": "jbm"
+ },
+ {
+  "char": "°",
+  "code": "U+00B0",
+  "name": "Degree Sign",
+  "shape_diff": 0.458,
+  "decision": "jbm"
+ },
+ {
+  "char": "±",
+  "code": "U+00B1",
+  "name": "Plus-Minus Sign",
+  "shape_diff": 0.356,
+  "decision": "jbm"
+ },
+ {
+  "char": "»",
+  "code": "U+00BB",
+  "name": "Right-Pointing Double Angle Quotation Mark",
+  "shape_diff": 0.411,
+  "decision": "jbm"
+ },
+ {
+  "char": "¿",
+  "code": "U+00BF",
+  "name": "Inverted Question Mark",
+  "shape_diff": 0.502,
+  "decision": "csl",
+  "notes": "CSL actually nailed this one. We should keep it, but lower it to match the line height of JBM. I do think the dot may be slightly too small and since it's a bit wider it may need to be refitted to match JBM's width and height conditions."
+ },
+ {
+  "char": "÷",
+  "code": "U+00F7",
+  "name": "Division Sign",
+  "shape_diff": 0.466,
+  "decision": "jbm"
+ },
+ {
+  "char": "–",
+  "code": "U+2013",
+  "name": "En Dash",
+  "shape_diff": 0,
+  "decision": "jbm"
+ },
+ {
+  "char": "—",
+  "code": "U+2014",
+  "name": "Em Dash",
+  "shape_diff": 0,
+  "decision": "jbm"
+ },
+ {
+  "char": "←",
+  "code": "U+2190",
+  "name": "Leftwards Arrow",
+  "shape_diff": 0.458,
+  "decision": "jbm"
+ },
+ {
+  "char": "↑",
+  "code": "U+2191",
+  "name": "Upwards Arrow",
+  "shape_diff": 0.618,
+  "decision": "jbm"
+ },
+ {
+  "char": "→",
+  "code": "U+2192",
+  "name": "Rightwards Arrow",
+  "shape_diff": 0.458,
+  "decision": "jbm"
+ },
+ {
+  "char": "↓",
+  "code": "U+2193",
+  "name": "Downwards Arrow",
+  "shape_diff": 0.627,
+  "decision": "jbm"
+ },
+ {
+  "char": "↔",
+  "code": "U+2194",
+  "name": "Left Right Arrow",
+  "shape_diff": 0.562,
+  "decision": "jbm"
+ },
+ {
+  "char": "↕",
+  "code": "U+2195",
+  "name": "Up Down Arrow",
+  "shape_diff": 0.678,
+  "decision": "jbm"
+ },
+ {
+  "char": "↖",
+  "code": "U+2196",
+  "name": "North West Arrow",
+  "shape_diff": 0.321,
+  "decision": "jbm"
+ },
+ {
+  "char": "↗",
+  "code": "U+2197",
+  "name": "North East Arrow",
+  "shape_diff": 0.319,
+  "decision": "jbm"
+ },
+ {
+  "char": "↘",
+  "code": "U+2198",
+  "name": "South East Arrow",
+  "shape_diff": 0.319,
+  "decision": "jbm"
+ },
+ {
+  "char": "↙",
+  "code": "U+2199",
+  "name": "South West Arrow",
+  "shape_diff": 0.318,
+  "decision": "jbm"
+ }
+]

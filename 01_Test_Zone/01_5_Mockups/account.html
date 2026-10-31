@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cloud Scythe Labs — Account mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="mockups.css">
+  <script src="mockups.js"></script>
+  <style>
+    /* ── Page frame ───────────────────────────────────────────────────────── */
+    .x-page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--space-3) var(--space-3) var(--space-8);
+    }
+    .x-list { list-style: none; margin: 0; padding: 0; }
+    .x-sr {                       /* visually hidden, still announced */
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    /* Inline links: --fg, underlined, never colored */
+    a:not(.btn) {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    /* ── Site nav ─────────────────────────────────────────────────────────── */
+    .x-site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .x-site-nav__brand { margin-right: auto; text-decoration: none; }
+    .x-site-nav__lockup { width: 220px; }
+    .x-site-nav__links { display: flex; gap: var(--space-2); }
+    .x-menu { display: none; }
+    .x-menu > summary { list-style: none; }
+    .x-menu > summary::-webkit-details-marker { display: none; }
+    .x-menu__panel { display: none; }
+
+    /* ── Artboards ────────────────────────────────────────────────────────── */
+    .x-artboard {
+      display: grid;
+      align-content: start;
+      gap: var(--space-5);
+      margin-top: var(--space-7);
+    }
+    .x-artboard__caption { justify-self: start; }
+
+    /* ── Auth (log in / create account) ───────────────────────────────────── */
+    .x-auth {
+      justify-self: center;
+      width: 100%;
+      max-width: 480px;
+      display: grid;
+      gap: var(--space-5);
+    }
+    .x-auth--wide { max-width: 560px; }
+    .x-auth__mark { justify-self: center; width: 200px; }
+    .x-form { display: grid; gap: var(--space-4); }
+    .x-fields { display: grid; gap: var(--space-3); }
+    .x-cols-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-3);
+    }
+    .field > .input { width: 100%; min-width: 0; }
+    .x-field__msg {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    /* Checkbox: native input stays in the tree, square box draws the state */
+    .x-check {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font: var(--type-label)/1 var(--font-brand);
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .x-check > input {
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: var(--space-3);
+      height: var(--space-3);
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .x-check__box {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: var(--space-3);
+      height: var(--space-3);
+      border-radius: var(--radius-s);
+      background: var(--bg-inset);
+    }
+    .x-check__box::after {        /* pixel check on the 2px font-pixel grid (8 × 5 cells) */
+      content: "";
+      width: 16px;
+      height: 10px;
+      background: var(--fg);
+      visibility: hidden;
+      clip-path: polygon(75% 0, 100% 0, 100% 20%, 87.5% 20%, 87.5% 40%, 75% 40%, 75% 60%, 62.5% 60%, 62.5% 80%, 50% 80%, 50% 100%, 25% 100%, 25% 80%, 12.5% 80%, 12.5% 60%, 0 60%, 0 40%, 25% 40%, 25% 60%, 50% 60%, 50% 40%, 62.5% 40%, 62.5% 20%, 75% 20%);
+    }
+    .x-check > input:checked + .x-check__box::after { visibility: visible; }
+    .x-check > input:focus-visible + .x-check__box {
+      outline: 2px solid var(--fg);
+      outline-offset: 2px;
+    }
+    .x-check:hover > input + .x-check__box + span {
+      text-decoration: underline 2px;
+      text-underline-offset: 4px;
+    }
+    .x-checks { display: grid; justify-items: start; gap: var(--space-3); }
+
+    /* Password strength: segments carry the status color, the chip carries the word */
+    .x-strength {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .x-strength__bar {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-1);
+    }
+    .x-strength__bar > span {
+      height: var(--space-2);
+      border-radius: var(--radius-s);
+      background: var(--bg-inset);
+    }
+    .block--inset .x-strength__bar > span { background: var(--bg-text); }
+    .x-strength__bar > span.is-on { background: var(--status); }
+    .x-strength > .chip { min-width: 9ch; justify-content: center; }
+    .x-strength-states { display: grid; gap: var(--space-2); }
+
+    /* ── Account overview ─────────────────────────────────────────────────── */
+    .x-account {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: var(--space-3);
+      align-items: start;
+    }
+    .x-side-nav { display: grid; gap: var(--space-3); }
+    .x-side-nav__items { display: grid; gap: var(--space-2); }
+    .x-side-nav__item { width: 100%; }
+    .x-side-nav__item[aria-current="page"] { background: var(--cta-bg); color: var(--cta-fg); }
+
+    .x-account__main {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-3);
+      align-items: start;
+    }
+    .x-span-all { grid-column: 1 / -1; }
+
+    .x-head {                     /* block title + its status chip */
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    .x-readouts { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+    .x-readout { display: grid; gap: var(--space-2); align-content: start; }
+    .x-readout--grow { flex: 1 1 240px; }
+    .x-readout__value { font-size: var(--type-label); line-height: 1; }
+
+    .x-bar {                      /* meter track one surface step from its container */
+      height: var(--space-2);
+      border-radius: var(--radius-s);
+      background: var(--bg-inset);
+      overflow: hidden;
+    }
+    .x-bar > span { display: block; height: 100%; width: var(--value); background: var(--fg); }
+
+    .x-key {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+    }
+
+    .x-rows { display: grid; gap: var(--space-2); }
+    .x-card {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2) var(--space-3);
+    }
+    .x-card__name { flex: 1 1 200px; }
+    .x-card__end { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-left: auto; }
+    .x-card--confirm .x-card__name { flex-basis: 100%; }
+    .x-card--confirm .actions { flex: 1; }
+
+    /* Invoices: header + rows share one grid */
+    .x-invoice-head,
+    .x-invoice {
+      display: grid;
+      grid-template-columns: 140px minmax(0, 1fr) 120px 120px auto;
+      gap: var(--space-3);
+      align-items: center;
+    }
+    .x-invoice-head { padding: 0 var(--space-3); }
+    .x-invoice { padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3); }
+    .x-invoice-head > :last-child { width: 15ch; }
+
+    /* Status mark: pip + label in dark contexts, chip in light context (PS5) */
+    [data-theme="ps5"] .x-status {
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-s);
+      background: var(--status, var(--duo2-idle));
+      color: var(--on-status);
+    }
+    [data-theme="ps5"] .x-status::before { display: none; }
+
+    /* ── Footer ───────────────────────────────────────────────────────────── */
+    .x-site-footer { margin-top: var(--space-8); display: grid; gap: var(--space-5); }
+    .x-site-footer__tagline { font-family: var(--font-display); font-size: var(--type-display); line-height: 1; white-space: nowrap; }
+    .x-site-footer__cols {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+    .x-site-footer__links { display: grid; gap: var(--space-1); }
+    .x-site-footer__cols a { text-decoration-color: transparent; }
+    .x-site-footer__cols a:hover { text-decoration-color: currentColor; }
+
+    /* ── Narrow ───────────────────────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .x-account, .x-account__main { grid-template-columns: minmax(0, 1fr); }
+      .x-invoice-head { display: none; }
+      .x-invoice {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas: "date amount" "desc desc" "status action";
+        row-gap: var(--space-2);
+      }
+      .x-invoice__date { grid-area: date; }
+      .x-invoice__desc { grid-area: desc; }
+      .x-invoice__amount { grid-area: amount; }
+      .x-invoice__status { grid-area: status; }
+      .x-invoice__action { grid-area: action; }
+    }
+    @media (max-width: 900px) {
+      .x-site-nav__links { display: none; }
+      .x-menu { display: block; }
+      .x-site-nav:has(.x-menu[open]) .x-menu__panel {
+        display: grid;
+        flex-basis: 100%;
+        order: 5;
+        gap: var(--space-2);
+      }
+      .x-site-footer__tagline { font-family: var(--font-brand); font-size: var(--type-title); white-space: normal; }
+    }
+    @media (max-width: 600px) {
+      .x-page { padding-inline: var(--space-2); }
+      .x-site-nav__brand { flex-basis: 100%; }
+      .x-site-nav__lockup { width: 180px; }
+      .x-menu { margin-right: auto; }
+      .x-cols-2, .x-site-footer__cols { grid-template-columns: minmax(0, 1fr); }
+      .x-auth .t-title, .x-site-footer__tagline { font-size: var(--type-title-s); }
+      .actions > .btn { flex: 1 1 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="x-page">
+    <!-- ── Shared nav ─────────────────────────────────────────────────────── -->
+    <header class="block block--tight x-site-nav">
+      <a class="x-site-nav__brand" href="#">
+        <span class="mark x-site-nav__lockup" role="img" aria-label="Cloud Scythe Labs" style="--mark:url('../../03_Branding_Assets/03_05_Lockups/03_05_01_Mono/Lockup2_NoPadding_Mono.svg'); --mark-ratio: 655/122"></span>
+      </a>
+      <nav class="x-site-nav__links" aria-label="Primary">
+        <a class="btn btn--secondary" href="#">ReaCloud</a>
+        <a class="btn btn--secondary" href="#">Altair</a>
+        <a class="btn btn--secondary" href="#">Contact</a>
+      </nav>
+      <details class="x-menu">
+        <summary class="btn btn--secondary" aria-controls="site-menu">Menu</summary>
+      </details>
+      <a class="btn btn--primary" href="#login">Log in</a>
+      <nav class="x-menu__panel" id="site-menu" aria-label="Menu">
+        <a class="btn btn--secondary" href="#">ReaCloud</a>
+        <a class="btn btn--secondary" href="#">Altair</a>
+        <a class="btn btn--secondary" href="#">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- ── 01 LOG IN ───────────────────────────────────────────────────── -->
+      <section class="x-artboard" id="login" aria-labelledby="login-title">
+        <p class="block block--tight t-label x-artboard__caption">01 Log in</p>
+        <div class="x-auth">
+          <span class="mark on-primary x-auth__mark" role="img" aria-label="Cloud Scythe Labs" style="--mark:url('../../03_Branding_Assets/03_05_Lockups/03_05_01_Mono/Lockup1_NoPadding_Mono.svg'); --mark-ratio: 634/275"></span>
+          <form class="block x-form" action="#" onsubmit="return false">
+            <div class="stack">
+              <h1 class="t-title" id="login-title">Log in</h1>
+              <p class="t-body">No account? <a href="#create">Create one here</a></p>
+            </div>
+            <div class="x-fields">
+              <label class="field">
+                <span>Email address</span>
+                <input class="input" type="email" name="email" autocomplete="email" placeholder="you@example.com" value="eli.kane@example.com">
+              </label>
+              <div class="stack">
+                <label class="field">
+                  <span>Password</span>
+                  <input class="input" type="password" id="login-pw" name="password" autocomplete="current-password" value="nightdrive" aria-invalid="true" aria-describedby="login-pw-msg">
+                </label>
+                <div class="x-field__msg" id="login-pw-msg" role="alert">
+                  <span class="chip s-warning">Incorrect password</span>
+                  <p class="t-body-s">Try again or <a href="#">reset it</a>.</p>
+                </div>
+              </div>
+            </div>
+            <div class="x-checks">
+              <label class="x-check">
+                <input type="checkbox" data-reveal="login-pw">
+                <span class="x-check__box x-edge" aria-hidden="true"></span>
+                <span>Show password</span>
+              </label>
+              <label class="x-check">
+                <input type="checkbox" name="remember" checked>
+                <span class="x-check__box x-edge" aria-hidden="true"></span>
+                <span>Stay logged in</span>
+              </label>
+            </div>
+            <div class="actions">
+              <button class="btn btn--primary" type="submit">Log in</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ── 02 CREATE ACCOUNT ───────────────────────────────────────────── -->
+      <section class="x-artboard" id="create" aria-labelledby="create-title">
+        <p class="block block--tight t-label x-artboard__caption">02 Create account</p>
+        <div class="x-auth x-auth--wide">
+          <span class="mark on-primary x-auth__mark" role="img" aria-label="Cloud Scythe Labs" style="--mark:url('../../03_Branding_Assets/03_05_Lockups/03_05_01_Mono/Lockup1_NoPadding_Mono.svg'); --mark-ratio: 634/275"></span>
+          <form class="block x-form" action="#" onsubmit="return false">
+            <div class="stack">
+              <h2 class="t-title" id="create-title">Create account</h2>
+              <p class="t-body">Already have one? <a href="#login">Log in here</a></p>
+            </div>
+            <div class="x-fields">
+              <div class="x-cols-2">
+                <label class="field">
+                  <span>First name</span>
+                  <input class="input" type="text" name="given-name" autocomplete="given-name" value="Eli">
+                </label>
+                <label class="field">
+                  <span>Last name</span>
+                  <input class="input" type="text" name="family-name" autocomplete="family-name" value="Kane">
+                </label>
+              </div>
+              <label class="field">
+                <span>Phone number (optional)</span>
+                <input class="input" type="tel" name="tel" autocomplete="tel" placeholder="+44 20 7946 0000">
+              </label>
+              <label class="field">
+                <span>Email address</span>
+                <input class="input" type="email" name="email" autocomplete="email" placeholder="you@example.com" value="eli.kane@example.com">
+              </label>
+              <div class="stack">
+                <label class="field">
+                  <span>Password</span>
+                  <input class="input" type="password" id="create-pw" name="new-password" autocomplete="new-password" value="nightdrive" aria-describedby="create-pw-strength create-pw-hint" data-strength="create-pw-strength">
+                </label>
+                <div class="x-strength s-caution" id="create-pw-strength" role="status">
+                  <div class="x-strength__bar" aria-hidden="true"><span class="x-edge is-on"></span><span class="x-edge is-on"></span><span class="x-edge"></span></div>
+                  <span class="chip"><span class="x-sr">Password strength: </span><span data-strength-label>OK</span></span>
+                </div>
+                <p class="t-body-s" id="create-pw-hint">12 characters or more with a number or symbol makes it strong.</p>
+              </div>
+            </div>
+            <div class="x-checks">
+              <label class="x-check">
+                <input type="checkbox" data-reveal="create-pw">
+                <span class="x-check__box x-edge" aria-hidden="true"></span>
+                <span>Show password</span>
+              </label>
+            </div>
+            <div class="actions">
+              <button class="btn btn--primary" type="submit">Create account</button>
+            </div>
+          </form>
+
+          <!-- Review aid: the three meter states -->
+          <section class="block block--tight stack-3" aria-label="Password strength states">
+            <h3 class="t-label">Meter states</h3>
+            <div class="x-strength-states">
+              <div class="x-strength s-critical">
+                <div class="x-strength__bar" aria-hidden="true"><span class="x-edge is-on"></span><span class="x-edge"></span><span class="x-edge"></span></div>
+                <span class="chip">Weak</span>
+              </div>
+              <div class="x-strength s-caution">
+                <div class="x-strength__bar" aria-hidden="true"><span class="x-edge is-on"></span><span class="x-edge is-on"></span><span class="x-edge"></span></div>
+                <span class="chip">OK</span>
+              </div>
+              <div class="x-strength s-success">
+                <div class="x-strength__bar" aria-hidden="true"><span class="x-edge is-on"></span><span class="x-edge is-on"></span><span class="x-edge is-on"></span></div>
+                <span class="chip">Strong</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ── 03 ACCOUNT OVERVIEW ─────────────────────────────────────────── -->
+      <section class="x-artboard" id="account" aria-label="Account overview">
+        <p class="block block--tight t-label x-artboard__caption">03 Account overview</p>
+        <div class="x-account">
+          <nav class="block block--tight x-side-nav" aria-label="Account">
+            <div class="stack">
+              <h2 class="t-label">Eli Kane</h2>
+              <p class="t-body-s">eli.kane@example.com</p>
+            </div>
+            <ul class="x-list x-side-nav__items">
+              <li><a class="btn btn--secondary x-side-nav__item" href="#account" aria-current="page">Overview</a></li>
+              <li><a class="btn btn--secondary x-side-nav__item" href="#subscription">Manage subscription</a></li>
+              <li><a class="btn btn--secondary x-side-nav__item" href="#payment">Payment methods</a></li>
+              <li><a class="btn btn--secondary x-side-nav__item" href="#invoices">Invoices</a></li>
+            </ul>
+            <a class="btn btn--secondary x-side-nav__item" href="#login">Log out</a>
+          </nav>
+
+          <div class="x-account__main">
+            <!-- Subscription, with the inline cancel confirm open -->
+            <section class="block stack-5 x-span-all" id="subscription" aria-labelledby="sub-title">
+                <div class="stack">
+                  <div class="x-head">
+                    <h2 class="t-title-s" id="sub-title">ReaCloud Pro</h2>
+                    <span class="chip s-success">Active</span>
+                  </div>
+                  <p class="t-body">Upgrade or cancel anytime.</p>
+                </div>
+                <div class="x-readouts">
+                  <div class="x-readout">
+                    <span class="t-label">Price</span>
+                    <span class="t-dot x-readout__value">$100 / month</span>
+                  </div>
+                  <div class="x-readout">
+                    <span class="t-label">Renews</span>
+                    <span class="t-dot x-readout__value">30 Nov 2026</span>
+                  </div>
+                  <div class="x-readout x-readout--grow">
+                    <span class="t-label">Storage</span>
+                    <span class="t-dot x-readout__value">128.4 GB / 200 GB</span>
+                    <div class="x-bar x-edge" role="meter" aria-label="Cloud storage used" aria-valuemin="0" aria-valuemax="200" aria-valuenow="128.4" aria-valuetext="128.4 GB of 200 GB"><span style="--value: 64.2%"></span></div>
+                  </div>
+                </div>
+                <div class="actions">
+                  <button class="btn btn--secondary" type="button" aria-controls="cancel-confirm" aria-expanded="true">Cancel subscription</button>
+                  <button class="btn btn--primary" type="button">Change plan</button>
+                </div>
+              <div class="block--inset stack-3" id="cancel-confirm" role="alertdialog" aria-labelledby="cancel-title" aria-describedby="cancel-copy">
+                <div class="stack">
+                  <h3 class="t-label" id="cancel-title">Cancel ReaCloud Pro?</h3>
+                  <p class="t-body" id="cancel-copy">Pro runs until 30 Nov 2026, then cloud push stops. Local sessions stay.</p>
+                </div>
+                <div class="actions">
+                  <button class="btn btn--secondary" type="button">Keep plan</button>
+                  <button class="btn btn--danger" type="button">Cancel subscription</button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Altair license -->
+              <section class="block stack-5" aria-labelledby="altair-title">
+                <div class="stack">
+                  <div class="x-head">
+                    <h2 class="t-title-s" id="altair-title">Altair</h2>
+                    <span class="chip s-success">Owned</span>
+                  </div>
+                  <p class="t-body">One-time license, bought 12 Aug 2026. Every future update included.</p>
+                </div>
+                <div class="stack">
+                  <span class="t-label" id="key-label">License key</span>
+                  <div class="block--inset x-key">
+                    <code class="t-code" aria-labelledby="key-label">ALTR-7F3K-92QD-LM4X</code>
+                    <button class="btn btn--secondary" type="button">Copy</button>
+                  </div>
+                </div>
+                <div class="actions">
+                  <button class="btn btn--primary" type="button">Download</button>
+                </div>
+              </section>
+
+              <!-- Payment methods -->
+              <section class="block stack-3" id="payment" aria-labelledby="pay-title">
+                <h2 class="t-title-s" id="pay-title">Payment methods</h2>
+                <ul class="x-list x-rows">
+                  <li class="block--inset x-card">
+                    <div class="x-card__name">
+                      <p class="t-body">Visa ending 4242</p>
+                      <p class="t-body-s">Expires 08/2028</p>
+                    </div>
+                    <div class="x-card__end">
+                      <span class="chip s-neutral">Default</span>
+                      <button class="btn btn--secondary" type="button">Remove</button>
+                    </div>
+                  </li>
+                  <li class="block--inset x-card x-card--confirm" role="group" aria-labelledby="rm-card">
+                    <div class="x-card__name">
+                      <p class="t-body" id="rm-card">Remove Mastercard ending 5100?</p>
+                      <p class="t-body-s">You can add it again later.</p>
+                    </div>
+                    <div class="actions">
+                      <button class="btn btn--secondary" type="button">Keep card</button>
+                      <button class="btn btn--danger" type="button">Remove card</button>
+                    </div>
+                  </li>
+                </ul>
+                <div class="actions">
+                  <button class="btn btn--primary" type="button">Add card</button>
+                </div>
+              </section>
+
+            <!-- Invoices -->
+            <section class="block stack-3 x-span-all" id="invoices" aria-labelledby="inv-title">
+              <h2 class="t-title-s" id="inv-title">Invoices</h2>
+              <div class="x-invoice-head" aria-hidden="true">
+                <span class="t-label">Date</span>
+                <span class="t-label">Item</span>
+                <span class="t-label">Amount</span>
+                <span class="t-label">Status</span>
+                <span></span>
+              </div>
+              <ul class="x-list x-rows">
+                <li class="block--inset x-invoice">
+                  <span class="t-body x-invoice__date">30 Oct 2026</span>
+                  <span class="t-body x-invoice__desc">ReaCloud Pro, monthly</span>
+                  <span class="t-dot x-readout__value x-invoice__amount">$100.00</span>
+                  <span class="x-invoice__status"><span class="chip s-success">Paid</span></span>
+                  <button class="btn btn--secondary x-invoice__action" type="button">Download</button>
+                </li>
+                <li class="block--inset x-invoice">
+                  <span class="t-body x-invoice__date">30 Sep 2026</span>
+                  <span class="t-body x-invoice__desc">ReaCloud Pro, monthly</span>
+                  <span class="t-dot x-readout__value x-invoice__amount">$100.00</span>
+                  <span class="x-invoice__status"><span class="chip s-critical">Failed</span></span>
+                  <button class="btn btn--secondary x-invoice__action" type="button">Download</button>
+                </li>
+                <li class="block--inset x-invoice">
+                  <span class="t-body x-invoice__date">30 Aug 2026</span>
+                  <span class="t-body x-invoice__desc">ReaCloud Pro, monthly</span>
+                  <span class="t-dot x-readout__value x-invoice__amount">$100.00</span>
+                  <span class="x-invoice__status"><span class="chip s-success">Paid</span></span>
+                  <button class="btn btn--secondary x-invoice__action" type="button">Download</button>
+                </li>
+                <li class="block--inset x-invoice">
+                  <span class="t-body x-invoice__date">12 Aug 2026</span>
+                  <span class="t-body x-invoice__desc">Altair license</span>
+                  <span class="t-dot x-readout__value x-invoice__amount">$150.00</span>
+                  <span class="x-invoice__status"><span class="chip s-success">Paid</span></span>
+                  <button class="btn btn--secondary x-invoice__action" type="button">Download</button>
+                </li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ── Shared footer ──────────────────────────────────────────────────── -->
+    <footer class="block x-site-footer">
+      <p class="t-label x-site-footer__tagline">Live in the DAW</p>
+      <div class="x-site-footer__cols">
+        <nav class="stack" aria-label="Products">
+          <h2 class="t-label">Products</h2>
+          <ul class="x-list x-site-footer__links t-body-s">
+            <li><a href="#">ReaCloud</a></li>
+            <li><a href="#">Altair</a></li>
+          </ul>
+        </nav>
+        <nav class="stack" aria-label="Company">
+          <h2 class="t-label">Company</h2>
+          <ul class="x-list x-site-footer__links t-body-s">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Technology</a></li>
+          </ul>
+        </nav>
+        <nav class="stack" aria-label="Connect">
+          <h2 class="t-label">Connect</h2>
+          <ul class="x-list x-site-footer__links t-body-s">
+            <li><a href="#">GitHub</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div><span class="pip x-status s-success">All systems online</span></div>
+    </footer>
+  </div>
+
+  <script>
+    // SHOW PASSWORD: toggle the target input between password and text.
+    for (const box of document.querySelectorAll("[data-reveal]")) {
+      const input = document.getElementById(box.dataset.reveal);
+      box.addEventListener("change", () => { input.type = box.checked ? "text" : "password"; });
+    }
+    // Strength meter: WEAK < 8 chars; STRONG ≥ 12 chars with a number or symbol; else OK.
+    const LEVELS = [
+      { label: "Weak", status: "s-critical", on: 1 },
+      { label: "OK", status: "s-caution", on: 2 },
+      { label: "Strong", status: "s-success", on: 3 },
+    ];
+    for (const input of document.querySelectorAll("[data-strength]")) {
+      const meter = document.getElementById(input.dataset.strength);
+      const label = meter.querySelector("[data-strength-label]");
+      const segments = meter.querySelectorAll(".x-strength__bar > span");
+      input.addEventListener("input", () => {
+        const v = input.value;
+        const level = v.length < 8 ? LEVELS[0] : v.length >= 12 && /[^a-z]/i.test(v) ? LEVELS[2] : LEVELS[1];
+        meter.classList.remove(...LEVELS.map((l) => l.status));
+        meter.classList.add(level.status);
+        label.textContent = level.label;
+        segments.forEach((s, i) => s.classList.toggle("is-on", i < level.on));
+      });
+    }
+  </script>
+</body>
+</html>

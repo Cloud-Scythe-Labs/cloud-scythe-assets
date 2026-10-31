@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CSL Terminal: glyph review</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @font-face { font-family: "CSL V4"; src: url("../CSL4_TERMINAL_0011.ttf") format("truetype"); }
+  @font-face {
+    font-family: "CSL v2"; font-weight: 100 800;
+    src: url("../../../../03_Branding_Assets/03_02_Typefaces/02_Internal/CSL_Terminal.woff2") format("woff2");
+  }
+  :root {
+    --bg: #08090c; --panel: #0f1116; --line: #23262e; --fg: #e6e8ee; --muted: #8a90a0;
+    --gold: #f5b432; --blue: #4696ff; --ok: #5fd38d; --warn: #f0b44c; --accent: #9aa8ff;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.5 "CSL v2", ui-monospace, monospace; }
+  header { display: flex; gap: 16px; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--line);
+           position: sticky; top: 0; background: var(--bg); z-index: 2; flex-wrap: wrap; }
+  header h1 { font-size: 15px; font-weight: 500; margin: 0; letter-spacing: .04em; }
+  header .grow { flex: 1; }
+  select, button, textarea { font: inherit; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 2px; }
+  select, button { padding: 4px 10px; cursor: pointer; }
+  button:hover { border-color: var(--muted); }
+  #status { color: var(--muted); font-size: 12px; min-width: 160px; text-align: right; }
+  #strip { display: flex; flex-wrap: wrap; gap: 3px; padding: 10px 20px; border-bottom: 1px solid var(--line); }
+  #strip button { width: 30px; height: 30px; padding: 0; font: 16px "CSL v2"; position: relative; }
+  #strip button.cur { outline: 2px solid var(--accent); outline-offset: 1px; }
+  #strip button[data-d="jbm"] { background: #12324f; }
+  #strip button[data-d="csl"] { background: #4a3510; }
+  #strip button[data-d="mix"] { background: #2d2350; }
+  #strip button[data-d="unsure"] { background: #3a3a3a; }
+  main { padding: 18px 20px 60px; max-width: 1500px; margin: 0 auto; }
+  .title { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .title .big { font: 44px "CSL v2"; min-width: 50px; }
+  .title .meta { color: var(--muted); }
+  .badge { padding: 2px 8px; border-radius: 2px; font-size: 12px; border: 1px solid var(--line); }
+  .panels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 2px; padding: 10px; }
+  .panel h2 { font-size: 12px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; margin: 0 0 6px; color: var(--muted); }
+  .panel h2 .sw { display: inline-block; width: 10px; height: 10px; margin-right: 6px; vertical-align: -1px; }
+  canvas { width: 100%; height: auto; display: block; }
+  .ctx { margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ctx .panel div { white-space: pre; overflow: hidden; }
+  .ctx .l { font-size: 34px; line-height: 1.3; }
+  .ctx .s { font-size: 15pt; line-height: 1.35; margin-top: 8px; color: #cfd3dc; }
+  .csl { font-family: "CSL V4"; }
+  .v2 { font-family: "CSL v2"; }
+  .decide { margin-top: 16px; display: grid; grid-template-columns: auto 1fr; gap: 12px 16px; align-items: start; }
+  .choices { display: flex; flex-direction: column; gap: 6px; }
+  .choices button { text-align: left; padding: 8px 12px; min-width: 330px; }
+  .choices button kbd { color: var(--muted); margin-right: 8px; }
+  .choices button.on { border-color: var(--fg); background: #1c2030; }
+  textarea { width: 100%; min-height: 112px; padding: 8px; resize: vertical; }
+  .help { color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .nav { display: flex; gap: 8px; margin-top: 12px; }
+  #summary { display: none; }
+  #summary table { border-collapse: collapse; width: 100%; }
+  #summary td, #summary th { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+  #summary td.g { font: 26px "CSL v2"; width: 50px; }
+  #summary td.g2 { font: 26px "CSL V4"; width: 50px; color: var(--gold); }
+</style>
+</head>
+<body>
+<header>
+  <h1>CSL TERMINAL · GLYPH REVIEW</h1>
+  <label>Order <select id="order">
+    <option value="shape">most different first</option>
+    <option value="cat">by category</option>
+    <option value="todo">undecided first</option>
+  </select></label>
+  <label>v2 weight <select id="weight">
+    <option>100</option><option>300</option><option selected>400</option><option>700</option><option>800</option>
+  </select></label>
+  <span id="progress"></span>
+  <span class="grow"></span>
+  <button id="toSummary">Summary</button>
+  <span id="status">loading…</span>
+</header>
+<div id="strip"></div>
+<main>
+  <section id="card">
+    <div class="title">
+      <span class="big" id="gChar"></span>
+      <span class="meta" id="gMeta"></span>
+      <span class="badge" id="gDiff"></span>
+    </div>
+    <div class="panels">
+      <div class="panel"><h2><span class="sw" style="background:var(--gold)"></span>CSL Terminal V4 (designer, V11 build)</h2><canvas id="cCsl" width="600" height="600"></canvas></div>
+      <div class="panel"><h2><span class="sw" style="background:var(--blue)"></span>CSL Terminal v2 (modified JetBrains Mono)</h2><canvas id="cV2" width="600" height="600"></canvas></div>
+      <div class="panel"><h2>Overlay · gold = CSL only, blue = v2 only, white = both</h2><canvas id="cOv" width="600" height="600"></canvas></div>
+    </div>
+    <div class="ctx">
+      <div class="panel"><h2>CSL V4 in context</h2><div class="l csl" id="xCslL"></div><div class="s csl" id="xCslS"></div></div>
+      <div class="panel"><h2>v2 in context</h2><div class="l v2" id="xV2L"></div><div class="s v2" id="xV2S"></div></div>
+    </div>
+    <div class="decide">
+      <div class="choices" id="choices">
+        <button data-v="jbm"><kbd>1</kbd>Keep v2 (JetBrains Mono) shape</button>
+        <button data-v="csl"><kbd>2</kbd>Port the CSL shape into v2's style</button>
+        <button data-v="mix"><kbd>3</kbd>Mix: keep v2, borrow a CSL detail (say which)</button>
+        <button data-v="unsure"><kbd>4</kbd>Unsure / discuss</button>
+      </div>
+      <div>
+        <textarea id="notes" placeholder="Notes for this character (optional): what to keep, what to borrow, what bothers you…"></textarea>
+        <div class="help">Keys: 1–4 choose · ← → or J / K previous / next · N focuses notes (Esc leaves) · answers save automatically.</div>
+        <div class="nav"><button id="prev">← Previous</button><button id="next">Next →</button></div>
+      </div>
+    </div>
+  </section>
+  <section id="summary">
+    <h2>Summary</h2>
+    <p class="help">Saved to <code>glyph_review/answers.json</code> in the repo (and in this browser).</p>
+    <table><thead><tr><th>CSL</th><th>v2</th><th>Char</th><th>Decision</th><th>Notes</th></tr></thead><tbody id="sumBody"></tbody></table>
+    <div class="nav"><button id="backToCard">← Back to review</button></div>
+  </section>
+</main>
+<script>
+const KEY = "csl-glyph-review-v1";
+const LABEL = { jbm: "Keep v2", csl: "Port CSL", mix: "Mix", unsure: "Unsure" };
+let glyphs = [], order = [], pos = 0, answers = {};
+const $ = (id) => document.getElementById(id);
+
+function sample(ch) {
+  const big = `H${ch}H o${ch}o 0${ch}1`;
+  const code = `let x${ch}y = f(${ch}) ${ch}${ch} "${ch}" // ${ch}`;
+  return { big, code };
+}
+
+function drawGlyph(canvas, family, weight, ch, color, metrics) {
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height, size = 400, base = 450, x0 = (W - size * 0.6) / 2;
+  ctx.clearRect(0, 0, W, H);
+  ctx.strokeStyle = "#2a2e38"; ctx.lineWidth = 1;
+  const guide = (y, c) => { ctx.strokeStyle = c; ctx.beginPath(); ctx.moveTo(0, y + .5); ctx.lineTo(W, y + .5); ctx.stroke(); };
+  if (metrics) {
+    guide(base, "#3a3f4c");
+    guide(base - metrics.x * size, "#2c3a52");
+    guide(base - metrics.cap * size, "#2c3a52");
+    ctx.strokeStyle = "#20232b";
+    ctx.strokeRect(x0 + .5, 20.5, size * 0.6, H - 40);
+  }
+  ctx.font = `${weight} ${size}px "${family}"`;
+  ctx.fillStyle = color; ctx.textBaseline = "alphabetic";
+  ctx.fillText(ch, x0, base);
+}
+
+function drawOverlay(canvas, ch, weight) {
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height, size = 400, base = 450, x0 = (W - size * 0.6) / 2;
+  ctx.globalCompositeOperation = "source-over";
+  ctx.fillStyle = "#08090c"; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = "#3a3f4c"; ctx.beginPath(); ctx.moveTo(0, base + .5); ctx.lineTo(W, base + .5); ctx.stroke();
+  ctx.globalCompositeOperation = "lighter";
+  ctx.textBaseline = "alphabetic";
+  ctx.font = `400 ${size}px "CSL V4"`; ctx.fillStyle = "rgb(245,180,50)"; ctx.fillText(ch, x0, base);
+  ctx.font = `${weight} ${size}px "CSL v2"`; ctx.fillStyle = "rgb(10,75,205)"; ctx.fillText(ch, x0, base);
+  ctx.globalCompositeOperation = "source-over";
+}
+
+function current() { return glyphs[order[pos]]; }
+
+function render() {
+  const g = current(), w = $("weight").value, a = answers[g.char] || {};
+  $("gChar").textContent = g.char;
+  $("gMeta").textContent = `${g.code} · ${g.name} · ${g.category} · ${pos + 1} / ${order.length}`;
+  const level = g.shape_diff >= 0.4 ? "very different" : g.shape_diff >= 0.25 ? "different" : g.shape_diff >= 0.12 ? "similar" : "near identical";
+  $("gDiff").textContent = `shape difference ${(g.shape_diff * 100).toFixed(0)}% · ${level}`;
+  drawGlyph($("cCsl"), "CSL V4", 400, g.char, "#f5b432", { x: 550 / 1100, cap: 800 / 1100 });
+  drawGlyph($("cV2"), "CSL v2", w, g.char, "#e6e8ee", { x: 0.55, cap: 0.73 });
+  drawOverlay($("cOv"), g.char, w);
+  const s = sample(g.char);
+  $("xCslL").textContent = s.big; $("xCslS").textContent = s.code;
+  $("xV2L").textContent = s.big; $("xV2S").textContent = s.code;
+  for (const el of [$("xV2L"), $("xV2S")]) el.style.fontWeight = w;
+  for (const b of $("choices").children) b.classList.toggle("on", b.dataset.v === a.decision);
+  $("notes").value = a.notes || "";
+  for (const b of $("strip").children) b.classList.toggle("cur", b.dataset.c === g.char);
+  progress();
+}
+
+function progress() {
+  const done = glyphs.filter((g) => answers[g.char]?.decision).length;
+  $("progress").textContent = `${done} / ${glyphs.length} decided`;
+}
+
+function buildStrip() {
+  const strip = $("strip"); strip.innerHTML = "";
+  order.forEach((gi, i) => {
+    const g = glyphs[gi], b = document.createElement("button");
+    b.textContent = g.char; b.dataset.c = g.char; b.title = `${g.name} (${(g.shape_diff * 100).toFixed(0)}%)`;
+    b.dataset.d = answers[g.char]?.decision || "";
+    b.onclick = () => { pos = i; showCard(); render(); };
+    strip.appendChild(b);
+  });
+}
+
+function sortOrder() {
+  const idx = glyphs.map((_, i) => i), cats = ["lowercase", "uppercase", "digits", "punctuation", "symbols"];
+  const mode = $("order").value;
+  if (mode === "shape") idx.sort((a, b) => glyphs[b].shape_diff - glyphs[a].shape_diff);
+  if (mode === "cat") idx.sort((a, b) => cats.indexOf(glyphs[a].category) - cats.indexOf(glyphs[b].category) || a - b);
+  if (mode === "todo") idx.sort((a, b) => !!answers[glyphs[a].char]?.decision - !!answers[glyphs[b].char]?.decision || glyphs[b].shape_diff - glyphs[a].shape_diff);
+  const cur = order.length ? current().char : null;
+  order = idx; pos = cur ? Math.max(0, order.findIndex((i) => glyphs[i].char === cur)) : 0;
+  buildStrip();
+}
+
+let saveTimer = null;
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(answers));
+  $("status").textContent = "saving…";
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    const out = glyphs.map((g) => ({ char: g.char, code: g.code, name: g.name, shape_diff: g.shape_diff, ...(answers[g.char] || {}) }));
+    try {
+      const r = await fetch("answers.json", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(out, null, 1) });
+      $("status").textContent = r.ok ? `saved ${new Date().toLocaleTimeString()}` : `browser only (server ${r.status})`;
+    } catch { $("status").textContent = "saved in browser only"; }
+  }, 400);
+}
+
+function decide(v) {
+  const g = current();
+  answers[g.char] = { ...(answers[g.char] || {}), decision: v };
+  const b = [...$("strip").children].find((x) => x.dataset.c === g.char); if (b) b.dataset.d = v;
+  save(); render();
+}
+
+function move(d) { pos = (pos + d + order.length) % order.length; render(); }
+function showCard() { $("card").style.display = ""; $("summary").style.display = "none"; }
+
+function showSummary() {
+  $("card").style.display = "none"; $("summary").style.display = "block";
+  const body = $("sumBody"); body.innerHTML = "";
+  for (const gi of order) {
+    const g = glyphs[gi], a = answers[g.char] || {}, tr = document.createElement("tr");
+    tr.innerHTML = `<td class="g2"></td><td class="g"></td><td></td><td></td><td></td>`;
+    tr.children[0].textContent = g.char; tr.children[1].textContent = g.char;
+    tr.children[2].textContent = `${g.code} ${g.name}`;
+    tr.children[3].textContent = LABEL[a.decision] || "—"; tr.children[4].textContent = a.notes || "";
+    tr.style.cursor = "pointer"; tr.onclick = () => { pos = order.indexOf(gi); showCard(); render(); };
+    body.appendChild(tr);
+  }
+}
+
+async function init() {
+  glyphs = await (await fetch("glyphs.json", { cache: "no-store" })).json();
+  try {
+    const r = await fetch("answers.json", { cache: "no-store" });
+    if (r.ok) for (const a of await r.json()) if (a.decision || a.notes) answers[a.char] = { decision: a.decision, notes: a.notes };
+  } catch {}
+  Object.assign(answers, JSON.parse(localStorage.getItem(KEY) || "{}"));
+  await document.fonts.load('300px "CSL V4"', "Ag"); await document.fonts.load('400 300px "CSL v2"', "Ag");
+  await document.fonts.load('700 300px "CSL v2"', "Ag");
+  sortOrder(); render();
+  $("status").textContent = "ready";
+}
+
+$("choices").onclick = (e) => { const b = e.target.closest("button"); if (b) decide(b.dataset.v); };
+$("notes").oninput = () => { const g = current(); answers[g.char] = { ...(answers[g.char] || {}), notes: $("notes").value }; save(); };
+$("prev").onclick = () => move(-1); $("next").onclick = () => move(1);
+$("order").onchange = () => { sortOrder(); render(); };
+$("weight").onchange = render;
+$("toSummary").onclick = showSummary; $("backToCard").onclick = () => { showCard(); render(); };
+document.addEventListener("keydown", (e) => {
+  if (e.target === $("notes")) { if (e.key === "Escape") $("notes").blur(); return; }
+  if (e.target.tagName === "SELECT") return;
+  const k = e.key.toLowerCase();
+  if (k === "arrowright" || k === "k") move(1);
+  else if (k === "arrowleft" || k === "j") move(-1);
+  else if (["1", "2", "3", "4"].includes(k)) decide(["jbm", "csl", "mix", "unsure"][+k - 1]);
+  else if (k === "n") { e.preventDefault(); $("notes").focus(); }
+});
+init();
+</script>
+</body>
+</html>

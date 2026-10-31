@@ -1,0 +1,257 @@
+/*
+ * Review-only component layer for the design language mockups.
+ * Reads role tokens from csl-tokens.css only. Promote parts into the design language once approved.
+ */
+@import url("../../02_Brand_Guidelines/Design_Language/csl-tokens.css");
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { background: var(--bg-primary); }
+
+body {
+  margin: 0;
+  background: var(--bg-primary);
+  color: var(--fg);
+  font: var(--type-body)/var(--leading-body) var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg { display: block; }
+
+/* ── Type ─────────────────────────────────────────────────────────────────── */
+.t-hero, .t-display, .t-display-s,
+.t-title-l, .t-title, .t-title-s, .t-label,
+.t-dot, .t-dot-display {
+  margin: 0;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-brand);
+  line-height: var(--leading-title);
+  font-synthesis: none;
+}
+.t-hero      { font-family: var(--font-display); font-size: var(--type-hero); white-space: nowrap; line-height: 1; }
+.t-display   { font-family: var(--font-display); font-size: var(--type-display); white-space: nowrap; line-height: 1; }
+.t-display-s { font-family: var(--font-display); font-size: var(--type-display-s); white-space: nowrap; line-height: 1; }
+.t-title-l   { font-family: var(--font-brand); font-size: var(--type-title-l); }
+.t-title     { font-family: var(--font-brand); font-size: var(--type-title); }
+.t-title-s   { font-family: var(--font-brand); font-size: var(--type-title-s); }
+.t-label     { font-family: var(--font-brand); font-size: var(--type-label); line-height: 1; }
+.t-dot       { font-family: var(--font-dot-mono); }
+.t-dot-display { font-family: var(--font-dot-display); }
+
+.t-body   { margin: 0; font-size: var(--type-body); max-width: var(--measure); }
+.t-body-s { margin: 0; font-size: var(--type-body-s); max-width: var(--measure); }
+.t-code   { font-family: var(--font-terminal); font-size: var(--type-code); line-height: 1.25; }
+.t-code-s { font-family: var(--font-terminal); font-size: var(--type-code-s); line-height: 1.5; }
+
+/* Title directly followed by copy stays close (guideline: titles near their paragraph). */
+.stack > * + * { margin-top: var(--space-2); }
+.stack-3 > * + * { margin-top: var(--space-3); }
+.stack-5 > * + * { margin-top: var(--space-5); }
+
+/* ── Surfaces ─────────────────────────────────────────────────────────────── */
+.block {
+  background: var(--bg-text);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+}
+.block--tight { padding: var(--space-3); }
+.block--inset {                 /* nested surface inside a block */
+  background: var(--bg-inset);
+  border-radius: var(--radius-s);
+  padding: var(--space-3);
+}
+
+/* Decorative texture: emblem silhouette in --bg-texture. Never under text outside a block. */
+.texture {
+  position: absolute;
+  pointer-events: none;
+  background: var(--bg-texture);
+  -webkit-mask: var(--mark) center / contain no-repeat;
+          mask: var(--mark) center / contain no-repeat;
+}
+
+/* ── Marks: shipped SVGs recolored with masks (SVGs carry no fill) ───────── */
+.mark {
+  display: block;
+  background: var(--mark-color, var(--fg));
+  -webkit-mask: var(--mark) center / contain no-repeat;
+          mask: var(--mark) center / contain no-repeat;
+  aspect-ratio: var(--mark-ratio, 1);
+}
+/* Duo: Duo2 (ring) below, Duo1 (blade) above — z-order fixed by the guideline. */
+.duo { position: relative; aspect-ratio: var(--mark-ratio, 1); }
+.duo > .mark { position: absolute; inset: 0; }
+.duo > .mark--duo2 { --mark-color: var(--duo2, var(--duo2-idle)); }
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.btn {
+  appearance: none;
+  border: 0;
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+  font: var(--type-label)/1 var(--font-brand);
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  background: var(--bg-text);
+  color: var(--fg);
+  transition: text-decoration-color var(--duration) var(--ease);
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  text-decoration-color: transparent;
+}
+.btn:hover { text-decoration-color: currentColor; }
+.btn:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+.btn--primary { background: var(--cta-bg); color: var(--cta-fg); }
+.btn--danger  { background: var(--status-critical); color: var(--on-status); }
+/* Secondary buttons take the next surface step so they stay visible on their container. */
+.block .btn--secondary { background: var(--bg-inset); }
+.block--inset .btn--secondary { background: var(--bg-text); }
+
+.actions {               /* forward actions on the right */
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* ── Status ───────────────────────────────────────────────────────────────── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-s);
+  background: var(--status, var(--duo2-idle));
+  color: var(--on-status);
+  font: var(--type-label)/1 var(--font-brand);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.s-success  { --status: var(--status-success); }
+.s-neutral  { --status: var(--status-neutral); }
+.s-caution  { --status: var(--status-caution); }
+.s-warning  { --status: var(--status-warning); }
+.s-critical { --status: var(--status-critical); }
+.s-progress { --status: var(--status-progress); }
+.s-notify   { --status: var(--status-notify); }
+.s-idle     { --status: var(--status-idle); }
+
+/* Brand text or marks placed directly on --bg-primary (hero title, mono emblem, tickers). */
+.on-primary { color: var(--fg-on-primary); --mark-color: var(--fg-on-primary); --ticker-color: var(--fg-on-primary); }
+
+.pip {                   /* square status mark + label; dark contexts only */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: var(--type-label)/1 var(--font-brand);
+  text-transform: uppercase;
+}
+.pip::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--status, var(--duo2-idle));
+}
+
+/* ── Forms ────────────────────────────────────────────────────────────────── */
+.field { display: grid; gap: var(--space-1); }
+.field > span { font: var(--type-label)/1 var(--font-brand); text-transform: uppercase; }
+.input {
+  border: 0;
+  border-radius: var(--radius-s);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-inset);
+  color: var(--fg);
+  font: var(--type-body) var(--font-body);
+}
+.input::placeholder { color: var(--fg); opacity: 0.6; }
+
+/* ── Ticker: CSS rendition of the shipped ticker renders ─────────────────── */
+.ticker {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.ticker__field {
+  position: absolute;
+  inset: -50%;
+  display: grid;
+  align-content: center;
+  gap: 0.25em;
+  transform: rotate(var(--ticker-angle));
+  font: var(--ticker-size, 60px)/1 var(--font-brand);
+  text-transform: uppercase;
+  color: var(--ticker-color, var(--bg-texture));
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: -1;
+}
+/* Rows size to content so -50% equals exactly one copy of the duplicated text. End each copy with &nbsp;. */
+.ticker__row { justify-self: start; width: max-content; animation: ticker var(--ticker-cycle) linear infinite; }
+.ticker__row:nth-child(even) { animation-direction: reverse; }
+@keyframes ticker { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .ticker__row { animation: none; }
+}
+
+/* ── Review chrome (not part of the design language) ─────────────────────── */
+.review-bar {
+  position: fixed;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  z-index: 100;
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border-radius: 10px;
+  background: #141414;
+  color: #e6e6e6;
+  box-shadow: 0 0 0 1px #000;
+}
+.review-bar__group { display: flex; align-items: center; gap: var(--space-1); }
+.review-bar[data-open="false"] .review-bar__group { display: none; }
+.review-bar .review-bar__toggle { font-size: 10px; opacity: 0.7; justify-self: end; padding: 0 var(--space-1); }
+.review-bar__group > span {
+  width: 7ch;
+  font: 10px/1 var(--font-brand);
+  opacity: 0.7;
+}
+.review-bar button {
+  border: 0;
+  border-radius: 5px;
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  color: inherit;
+  font: 20px/1 var(--font-brand);
+  cursor: pointer;
+}
+.review-bar button[aria-pressed="true"] { background: #e6e6e6; color: #000; }
+
+/* ── Review variants for undecided surface treatments (see OPEN-10) ──────── */
+/* Each attribute works on <html> or on any nested wrapper; the nearest one wins. */
+/* PANEL: text-background color in the dark themes (PDF #141414 vs landing/site #1C1C1C). */
+:is([data-theme="ps2"], [data-theme="ps1"])[data-panel="1c1c1c"],
+:is([data-theme="ps2"], [data-theme="ps1"]) [data-panel="1c1c1c"] { --bg-text: #1c1c1c; }
+:is([data-theme="ps2"], [data-theme="ps1"])[data-panel="141414"],
+:is([data-theme="ps2"], [data-theme="ps1"]) [data-panel="141414"] { --bg-text: #141414; }
+/* RADIUS: PDF 10px vs landing/site 6px. */
+[data-radius="10"] { --radius: 10px; --radius-s: 5px; }
+[data-radius="6"] { --radius: 6px; --radius-s: 3px; }
+/* EDGE: landing/site hairline borders on surfaces (PDF forbids strokes). Inset shadow avoids layout shift. */
+[data-edge="none"] { --edge: none; }
+[data-edge="hairline"] { --edge: inset 0 0 0 1px color-mix(in srgb, var(--fg) 10%, transparent); }
+:is(.block, .block--inset, .btn--secondary, .input, .x-edge) { box-shadow: var(--edge, none); }

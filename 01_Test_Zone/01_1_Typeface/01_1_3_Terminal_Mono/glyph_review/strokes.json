@@ -1,0 +1,2110 @@
+[
+ {
+  "char": "!",
+  "code": "U+0021",
+  "category": "punctuation",
+  "csl": {
+   "median": 90.0,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 90.0,
+   "p05": 84.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "\"",
+  "code": "U+0022",
+  "category": "punctuation",
+  "csl": {
+   "median": 118.0,
+   "p05": 118.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 90.0,
+   "p05": 88.8,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "#",
+  "code": "U+0023",
+  "category": "punctuation",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 65.1,
+   "p05": 62.0,
+   "taper": 0.024,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "$",
+  "code": "U+0024",
+  "category": "symbols",
+  "csl": {
+   "median": 90.0,
+   "p05": 47.5,
+   "taper": 0.092,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 79.3,
+   "p05": 56.0,
+   "taper": 0.326,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "%",
+  "code": "U+0025",
+  "category": "punctuation",
+  "csl": {
+   "median": 87.7,
+   "p05": 39.4,
+   "taper": 0.076,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 62.1,
+   "p05": 56.9,
+   "taper": 0.018,
+   "bulge": 0.149
+  }
+ },
+ {
+  "char": "&",
+  "code": "U+0026",
+  "category": "punctuation",
+  "csl": {
+   "median": 86.0,
+   "p05": 38.2,
+   "taper": 0.343,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 75.3,
+   "p05": 64.0,
+   "taper": 0.067,
+   "bulge": 0.106
+  }
+ },
+ {
+  "char": "'",
+  "code": "U+0027",
+  "category": "punctuation",
+  "csl": {
+   "median": 118.0,
+   "p05": 118.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 90.0,
+   "p05": 88.8,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "(",
+  "code": "U+0028",
+  "category": "punctuation",
+  "csl": {
+   "median": 90.0,
+   "p05": 85.4,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 85.3,
+   "p05": 79.6,
+   "taper": 0.031,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": ")",
+  "code": "U+0029",
+  "category": "punctuation",
+  "csl": {
+   "median": 90.0,
+   "p05": 84.8,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 84.8,
+   "p05": 79.6,
+   "taper": 0.033,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "*",
+  "code": "U+002A",
+  "category": "punctuation",
+  "csl": {
+   "median": 41.2,
+   "p05": 37.2,
+   "taper": 0.0,
+   "bulge": 0.49
+  },
+  "v2": {
+   "median": 80.0,
+   "p05": 75.7,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "+",
+  "code": "U+002B",
+  "category": "symbols",
+  "csl": {
+   "median": 92.0,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.15
+  },
+  "v2": {
+   "median": 78.0,
+   "p05": 78.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": ",",
+  "code": "U+002C",
+  "category": "punctuation",
+  "csl": {
+   "median": 105.5,
+   "p05": 52.0,
+   "taper": 0.397,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 92.8,
+   "p05": 69.3,
+   "taper": 0.106,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "-",
+  "code": "U+002D",
+  "category": "punctuation",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 78.0,
+   "p05": 78.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": ".",
+  "code": "U+002E",
+  "category": "punctuation",
+  "csl": {
+   "median": 118.0,
+   "p05": 118.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 152.0,
+   "p05": 150.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "/",
+  "code": "U+002F",
+  "category": "punctuation",
+  "csl": {
+   "median": 86.8,
+   "p05": 80.0,
+   "taper": 0.041,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 85.9,
+   "p05": 82.0,
+   "taper": 0.041,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "0",
+  "code": "U+0030",
+  "category": "digits",
+  "csl": {
+   "median": 92.0,
+   "p05": 44.7,
+   "taper": 0.109,
+   "bulge": 0.01
+  },
+  "v2": {
+   "median": 82.8,
+   "p05": 75.6,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "1",
+  "code": "U+0031",
+  "category": "digits",
+  "csl": {
+   "median": 90.0,
+   "p05": 84.7,
+   "taper": 0.031,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 78.1,
+   "taper": 0.037,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "2",
+  "code": "U+0032",
+  "category": "digits",
+  "csl": {
+   "median": 92.0,
+   "p05": 46.5,
+   "taper": 0.111,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 84.4,
+   "p05": 76.4,
+   "taper": 0.011,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "3",
+  "code": "U+0033",
+  "category": "digits",
+  "csl": {
+   "median": 92.0,
+   "p05": 38.4,
+   "taper": 0.202,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 84.0,
+   "p05": 72.5,
+   "taper": 0.028,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "4",
+  "code": "U+0034",
+  "category": "digits",
+  "csl": {
+   "median": 92.0,
+   "p05": 91.8,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 84.1,
+   "p05": 76.0,
+   "taper": 0.031,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "5",
+  "code": "U+0035",
+  "category": "digits",
+  "csl": {
+   "median": 92.0,
+   "p05": 41.6,
+   "taper": 0.148,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 84.0,
+   "p05": 78.1,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "6",
+  "code": "U+0036",
+  "category": "digits",
+  "csl": {
+   "median": 92.0,
+   "p05": 47.6,
+   "taper": 0.101,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 82.3,
+   "p05": 64.0,
+   "taper": 0.072,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "7",
+  "code": "U+0037",
+  "category": "digits",
+  "csl": {
+   "median": 92.0,
+   "p05": 88.2,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.9,
+   "p05": 84.3,
+   "taper": 0.02,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "8",
+  "code": "U+0038",
+  "category": "digits",
+  "csl": {
+   "median": 92.0,
+   "p05": 38.4,
+   "taper": 0.226,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 84.0,
+   "p05": 51.1,
+   "taper": 0.157,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "9",
+  "code": "U+0039",
+  "category": "digits",
+  "csl": {
+   "median": 92.0,
+   "p05": 42.0,
+   "taper": 0.14,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 85.4,
+   "p05": 64.0,
+   "taper": 0.115,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": ":",
+  "code": "U+003A",
+  "category": "punctuation",
+  "csl": {
+   "median": 118.0,
+   "p05": 116.3,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 138.0,
+   "p05": 136.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": ";",
+  "code": "U+003B",
+  "category": "punctuation",
+  "csl": {
+   "median": 106.5,
+   "p05": 53.6,
+   "taper": 0.407,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 92.8,
+   "p05": 69.3,
+   "taper": 0.106,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "<",
+  "code": "U+003C",
+  "category": "symbols",
+  "csl": {
+   "median": 88.6,
+   "p05": 70.3,
+   "taper": 0.06,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 74.0,
+   "p05": 56.3,
+   "taper": 0.115,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "=",
+  "code": "U+003D",
+  "category": "symbols",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 78.0,
+   "p05": 78.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": ">",
+  "code": "U+003E",
+  "category": "symbols",
+  "csl": {
+   "median": 88.6,
+   "p05": 66.0,
+   "taper": 0.069,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 74.2,
+   "p05": 56.3,
+   "taper": 0.113,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "?",
+  "code": "U+003F",
+  "category": "punctuation",
+  "csl": {
+   "median": 89.3,
+   "p05": 82.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 88.0,
+   "p05": 84.2,
+   "taper": 0.0,
+   "bulge": 0.008
+  }
+ },
+ {
+  "char": "@",
+  "code": "U+0040",
+  "category": "punctuation",
+  "csl": {
+   "median": 92.0,
+   "p05": 69.6,
+   "taper": 0.057,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 76.0,
+   "p05": 58.0,
+   "taper": 0.192,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "A",
+  "code": "U+0041",
+  "category": "uppercase",
+  "csl": {
+   "median": 90.4,
+   "p05": 86.6,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 80.0,
+   "p05": 76.6,
+   "taper": 0.016,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "B",
+  "code": "U+0042",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 44.7,
+   "taper": 0.104,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 84.0,
+   "p05": 65.5,
+   "taper": 0.071,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "C",
+  "code": "U+0043",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 44.5,
+   "taper": 0.111,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 78.4,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "D",
+  "code": "U+0044",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 81.6,
+   "taper": 0.043,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 79.1,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "E",
+  "code": "U+0045",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 84.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "F",
+  "code": "U+0046",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 84.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "G",
+  "code": "U+0047",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 47.5,
+   "taper": 0.103,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 78.2,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "H",
+  "code": "U+0048",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 86.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "I",
+  "code": "U+0049",
+  "category": "uppercase",
+  "csl": {
+   "median": 90.0,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 88.0,
+   "p05": 86.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "J",
+  "code": "U+004A",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 40.5,
+   "taper": 0.187,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 77.9,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "K",
+  "code": "U+004B",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 80.0,
+   "taper": 0.038,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 78.0,
+   "taper": 0.046,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "L",
+  "code": "U+004C",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 86.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "M",
+  "code": "U+004D",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.029
+  },
+  "v2": {
+   "median": 80.0,
+   "p05": 63.2,
+   "taper": 0.356,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "N",
+  "code": "U+004E",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 80.4,
+   "p05": 75.3,
+   "taper": 0.0,
+   "bulge": 0.035
+  }
+ },
+ {
+  "char": "O",
+  "code": "U+004F",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 49.2,
+   "taper": 0.094,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 78.6,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "P",
+  "code": "U+0050",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 82.2,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 80.2,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "Q",
+  "code": "U+0051",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 43.9,
+   "taper": 0.096,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 78.4,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "R",
+  "code": "U+0052",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 50.2,
+   "taper": 0.076,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 81.5,
+   "taper": 0.016,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "S",
+  "code": "U+0053",
+  "category": "uppercase",
+  "csl": {
+   "median": 90.0,
+   "p05": 48.3,
+   "taper": 0.089,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 84.0,
+   "p05": 77.3,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "T",
+  "code": "U+0054",
+  "category": "uppercase",
+  "csl": {
+   "median": 90.0,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 86.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "U",
+  "code": "U+0055",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 44.7,
+   "taper": 0.123,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 78.2,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "V",
+  "code": "U+0056",
+  "category": "uppercase",
+  "csl": {
+   "median": 90.4,
+   "p05": 88.8,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 83.0,
+   "p05": 75.7,
+   "taper": 0.022,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "W",
+  "code": "U+0057",
+  "category": "uppercase",
+  "csl": {
+   "median": 91.8,
+   "p05": 82.5,
+   "taper": 0.0,
+   "bulge": 0.083
+  },
+  "v2": {
+   "median": 66.8,
+   "p05": 56.0,
+   "taper": 0.116,
+   "bulge": 0.048
+  }
+ },
+ {
+  "char": "X",
+  "code": "U+0058",
+  "category": "uppercase",
+  "csl": {
+   "median": 86.5,
+   "p05": 85.4,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 81.4,
+   "p05": 56.0,
+   "taper": 0.085,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "Y",
+  "code": "U+0059",
+  "category": "uppercase",
+  "csl": {
+   "median": 87.7,
+   "p05": 86.9,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 81.4,
+   "p05": 72.0,
+   "taper": 0.047,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "Z",
+  "code": "U+005A",
+  "category": "uppercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 82.5,
+   "p05": 73.3,
+   "taper": 0.031,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "[",
+  "code": "U+005B",
+  "category": "punctuation",
+  "csl": {
+   "median": 90.0,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 78.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "\\",
+  "code": "U+005C",
+  "category": "punctuation",
+  "csl": {
+   "median": 86.8,
+   "p05": 78.3,
+   "taper": 0.042,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 85.9,
+   "p05": 80.5,
+   "taper": 0.042,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "]",
+  "code": "U+005D",
+  "category": "punctuation",
+  "csl": {
+   "median": 90.0,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 78.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "^",
+  "code": "U+005E",
+  "category": "symbols",
+  "csl": {
+   "median": 81.4,
+   "p05": 60.0,
+   "taper": 0.081,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 68.0,
+   "p05": 58.9,
+   "taper": 0.047,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "_",
+  "code": "U+005F",
+  "category": "punctuation",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 72.0,
+   "p05": 72.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "`",
+  "code": "U+0060",
+  "category": "symbols",
+  "csl": {
+   "median": 118.0,
+   "p05": 118.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 52.0,
+   "p05": 22.0,
+   "taper": 0.39,
+   "bulge": 0.459
+  }
+ },
+ {
+  "char": "a",
+  "code": "U+0061",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 82.2,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 79.6,
+   "p05": 56.2,
+   "taper": 0.089,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "b",
+  "code": "U+0062",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 44.7,
+   "taper": 0.128,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 57.7,
+   "taper": 0.326,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "c",
+  "code": "U+0063",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 41.2,
+   "taper": 0.138,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 84.0,
+   "p05": 77.6,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "d",
+  "code": "U+0064",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 43.9,
+   "taper": 0.128,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 57.8,
+   "taper": 0.325,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "e",
+  "code": "U+0065",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 44.9,
+   "taper": 0.107,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 78.2,
+   "p05": 74.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "f",
+  "code": "U+0066",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 82.9,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 80.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "g",
+  "code": "U+0067",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 40.0,
+   "taper": 0.185,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 82.5,
+   "p05": 40.4,
+   "taper": 0.177,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "h",
+  "code": "U+0068",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 48.6,
+   "taper": 0.096,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 60.0,
+   "taper": 0.198,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "i",
+  "code": "U+0069",
+  "category": "lowercase",
+  "csl": {
+   "median": 90.0,
+   "p05": 40.1,
+   "taper": 0.18,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 86.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "j",
+  "code": "U+006A",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 48.7,
+   "taper": 0.096,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 80.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "k",
+  "code": "U+006B",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 89.4,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 60.0,
+   "taper": 0.066,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "l",
+  "code": "U+006C",
+  "category": "lowercase",
+  "csl": {
+   "median": 90.0,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 80.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "m",
+  "code": "U+006D",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 38.8,
+   "taper": 0.197,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 80.0,
+   "p05": 44.9,
+   "taper": 0.19,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "n",
+  "code": "U+006E",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 51.6,
+   "taper": 0.086,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 58.9,
+   "taper": 0.231,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "o",
+  "code": "U+006F",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 43.9,
+   "taper": 0.128,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 84.0,
+   "p05": 77.8,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "p",
+  "code": "U+0070",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 65.3,
+   "taper": 0.062,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 57.4,
+   "taper": 0.325,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "q",
+  "code": "U+0071",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 64.3,
+   "taper": 0.063,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 57.3,
+   "taper": 0.327,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "r",
+  "code": "U+0072",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 42.9,
+   "taper": 0.131,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 57.9,
+   "taper": 0.35,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "s",
+  "code": "U+0073",
+  "category": "lowercase",
+  "csl": {
+   "median": 90.0,
+   "p05": 44.7,
+   "taper": 0.107,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 82.0,
+   "p05": 75.3,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "t",
+  "code": "U+0074",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 82.2,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 79.6,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "u",
+  "code": "U+0075",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 40.5,
+   "taper": 0.187,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 77.2,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "v",
+  "code": "U+0076",
+  "category": "lowercase",
+  "csl": {
+   "median": 93.9,
+   "p05": 93.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 84.1,
+   "p05": 75.3,
+   "taper": 0.035,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "w",
+  "code": "U+0077",
+  "category": "lowercase",
+  "csl": {
+   "median": 91.1,
+   "p05": 86.6,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 60.5,
+   "p05": 54.6,
+   "taper": 0.006,
+   "bulge": 0.134
+  }
+ },
+ {
+  "char": "x",
+  "code": "U+0078",
+  "category": "lowercase",
+  "csl": {
+   "median": 84.9,
+   "p05": 58.0,
+   "taper": 0.104,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 79.9,
+   "p05": 48.0,
+   "taper": 0.132,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "y",
+  "code": "U+0079",
+  "category": "lowercase",
+  "csl": {
+   "median": 87.3,
+   "p05": 80.5,
+   "taper": 0.014,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 83.3,
+   "p05": 68.0,
+   "taper": 0.054,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "z",
+  "code": "U+007A",
+  "category": "lowercase",
+  "csl": {
+   "median": 92.0,
+   "p05": 86.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 72.1,
+   "taper": 0.067,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "{",
+  "code": "U+007B",
+  "category": "punctuation",
+  "csl": {
+   "median": 90.0,
+   "p05": 39.9,
+   "taper": 0.132,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 82.0,
+   "p05": 44.0,
+   "taper": 0.21,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "|",
+  "code": "U+007C",
+  "category": "symbols",
+  "csl": {
+   "median": 90.0,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 86.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "}",
+  "code": "U+007D",
+  "category": "punctuation",
+  "csl": {
+   "median": 90.0,
+   "p05": 39.9,
+   "taper": 0.134,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 82.0,
+   "p05": 60.5,
+   "taper": 0.091,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "~",
+  "code": "U+007E",
+  "category": "symbols",
+  "csl": {
+   "median": 46.5,
+   "p05": 38.2,
+   "taper": 0.26,
+   "bulge": 0.328
+  },
+  "v2": {
+   "median": 73.5,
+   "p05": 68.0,
+   "taper": 0.0,
+   "bulge": 0.101
+  }
+ },
+ {
+  "char": "¡",
+  "code": "U+00A1",
+  "category": "punctuation",
+  "csl": {
+   "median": 90.0,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 90.0,
+   "p05": 84.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "¢",
+  "code": "U+00A2",
+  "category": "symbols",
+  "csl": {
+   "median": 90.0,
+   "p05": 47.4,
+   "taper": 0.092,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 80.0,
+   "p05": 56.0,
+   "taper": 0.328,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "£",
+  "code": "U+00A3",
+  "category": "symbols",
+  "csl": {
+   "median": 92.0,
+   "p05": 43.9,
+   "taper": 0.138,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 78.0,
+   "p05": 64.6,
+   "taper": 0.098,
+   "bulge": 0.032
+  }
+ },
+ {
+  "char": "¤",
+  "code": "U+00A4",
+  "category": "symbols",
+  "csl": {
+   "median": 83.2,
+   "p05": 81.6,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 58.0,
+   "p05": 49.5,
+   "taper": 0.046,
+   "bulge": 0.077
+  }
+ },
+ {
+  "char": "¥",
+  "code": "U+00A5",
+  "category": "symbols",
+  "csl": {
+   "median": 91.0,
+   "p05": 82.3,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 79.6,
+   "p05": 72.0,
+   "taper": 0.041,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "¦",
+  "code": "U+00A6",
+  "category": "symbols",
+  "csl": {
+   "median": 90.0,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 86.0,
+   "p05": 86.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "§",
+  "code": "U+00A7",
+  "category": "punctuation",
+  "csl": {
+   "median": 90.0,
+   "p05": 47.5,
+   "taper": 0.113,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 78.0,
+   "p05": 59.8,
+   "taper": 0.084,
+   "bulge": 0.07
+  }
+ },
+ {
+  "char": "¨",
+  "code": "U+00A8",
+  "category": "symbols",
+  "csl": {
+   "median": 91.0,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 122.0,
+   "p05": 122.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "©",
+  "code": "U+00A9",
+  "category": "symbols",
+  "csl": {
+   "median": 84.0,
+   "p05": 38.2,
+   "taper": 0.433,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 52.0,
+   "p05": 47.5,
+   "taper": 0.0,
+   "bulge": 0.163
+  }
+ },
+ {
+  "char": "«",
+  "code": "U+00AB",
+  "category": "punctuation",
+  "csl": {
+   "median": 91.9,
+   "p05": 83.2,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 75.6,
+   "p05": 42.0,
+   "taper": 0.145,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "¬",
+  "code": "U+00AC",
+  "category": "symbols",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 78.0,
+   "p05": 78.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "®",
+  "code": "U+00AE",
+  "category": "symbols",
+  "csl": {
+   "median": 90.0,
+   "p05": 38.2,
+   "taper": 0.219,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 52.0,
+   "p05": 46.8,
+   "taper": 0.006,
+   "bulge": 0.007
+  }
+ },
+ {
+  "char": "¯",
+  "code": "U+00AF",
+  "category": "symbols",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 72.0,
+   "p05": 72.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "°",
+  "code": "U+00B0",
+  "category": "symbols",
+  "csl": {
+   "median": 84.8,
+   "p05": 81.2,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 60.0,
+   "p05": 52.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "±",
+  "code": "U+00B1",
+  "category": "symbols",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 78.0,
+   "p05": 68.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "»",
+  "code": "U+00BB",
+  "category": "punctuation",
+  "csl": {
+   "median": 91.9,
+   "p05": 82.5,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 76.8,
+   "p05": 44.0,
+   "taper": 0.138,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "¿",
+  "code": "U+00BF",
+  "category": "punctuation",
+  "csl": {
+   "median": 89.3,
+   "p05": 82.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 88.0,
+   "p05": 84.4,
+   "taper": 0.0,
+   "bulge": 0.008
+  }
+ },
+ {
+  "char": "÷",
+  "code": "U+00F7",
+  "category": "symbols",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 72.0,
+   "p05": 72.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "–",
+  "code": "U+2013",
+  "category": "punctuation",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 78.0,
+   "p05": 78.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "—",
+  "code": "U+2014",
+  "category": "punctuation",
+  "csl": {
+   "median": 92.0,
+   "p05": 92.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 78.0,
+   "p05": 78.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "←",
+  "code": "U+2190",
+  "category": "symbols",
+  "csl": {
+   "median": 90.7,
+   "p05": 83.3,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 78.8,
+   "p05": 50.0,
+   "taper": 0.137,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "↑",
+  "code": "U+2191",
+  "category": "symbols",
+  "csl": {
+   "median": 90.0,
+   "p05": 82.9,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 76.4,
+   "p05": 50.0,
+   "taper": 0.127,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "→",
+  "code": "U+2192",
+  "category": "symbols",
+  "csl": {
+   "median": 92.0,
+   "p05": 82.5,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 78.8,
+   "p05": 50.0,
+   "taper": 0.136,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "↓",
+  "code": "U+2193",
+  "category": "symbols",
+  "csl": {
+   "median": 90.0,
+   "p05": 82.6,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 76.4,
+   "p05": 48.0,
+   "taper": 0.131,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "↔",
+  "code": "U+2194",
+  "category": "symbols",
+  "csl": {
+   "median": 92.0,
+   "p05": 82.5,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 79.3,
+   "p05": 50.0,
+   "taper": 0.152,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "↕",
+  "code": "U+2195",
+  "category": "symbols",
+  "csl": {
+   "median": 90.0,
+   "p05": 82.5,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 76.4,
+   "p05": 47.3,
+   "taper": 0.146,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "↖",
+  "code": "U+2196",
+  "category": "symbols",
+  "csl": {
+   "median": 90.5,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 77.8,
+   "p05": 48.0,
+   "taper": 0.109,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "↗",
+  "code": "U+2197",
+  "category": "symbols",
+  "csl": {
+   "median": 90.5,
+   "p05": 90.0,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 77.0,
+   "p05": 48.0,
+   "taper": 0.105,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "↘",
+  "code": "U+2198",
+  "category": "symbols",
+  "csl": {
+   "median": 92.0,
+   "p05": 90.5,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 76.0,
+   "p05": 46.0,
+   "taper": 0.111,
+   "bulge": 0.0
+  }
+ },
+ {
+  "char": "↙",
+  "code": "U+2199",
+  "category": "symbols",
+  "csl": {
+   "median": 92.0,
+   "p05": 90.5,
+   "taper": 0.0,
+   "bulge": 0.0
+  },
+  "v2": {
+   "median": 76.0,
+   "p05": 48.0,
+   "taper": 0.106,
+   "bulge": 0.0
+  }
+ }
+]

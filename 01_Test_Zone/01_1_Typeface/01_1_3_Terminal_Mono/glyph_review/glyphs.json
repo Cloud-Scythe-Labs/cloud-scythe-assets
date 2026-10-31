@@ -1,0 +1,994 @@
+[
+ {
+  "char": "!",
+  "code": "U+0021",
+  "name": "Exclamation Mark",
+  "category": "punctuation",
+  "shape_diff": 0.389,
+  "size_diff": 0.204
+ },
+ {
+  "char": "\"",
+  "code": "U+0022",
+  "name": "Quotation Mark",
+  "category": "punctuation",
+  "shape_diff": 0.252,
+  "size_diff": 0.472
+ },
+ {
+  "char": "#",
+  "code": "U+0023",
+  "name": "Number Sign",
+  "category": "punctuation",
+  "shape_diff": 0.565,
+  "size_diff": 0.575
+ },
+ {
+  "char": "$",
+  "code": "U+0024",
+  "name": "Dollar Sign",
+  "category": "symbols",
+  "shape_diff": 0.412,
+  "size_diff": 0.347
+ },
+ {
+  "char": "%",
+  "code": "U+0025",
+  "name": "Percent Sign",
+  "category": "punctuation",
+  "shape_diff": 0.632,
+  "size_diff": 0.735
+ },
+ {
+  "char": "&",
+  "code": "U+0026",
+  "name": "Ampersand",
+  "category": "punctuation",
+  "shape_diff": 0.445,
+  "size_diff": 0.562
+ },
+ {
+  "char": "'",
+  "code": "U+0027",
+  "name": "Apostrophe",
+  "category": "punctuation",
+  "shape_diff": 0.095,
+  "size_diff": 0.457
+ },
+ {
+  "char": "(",
+  "code": "U+0028",
+  "name": "Left Parenthesis",
+  "category": "punctuation",
+  "shape_diff": 0.404,
+  "size_diff": 0.58
+ },
+ {
+  "char": ")",
+  "code": "U+0029",
+  "name": "Right Parenthesis",
+  "category": "punctuation",
+  "shape_diff": 0.401,
+  "size_diff": 0.584
+ },
+ {
+  "char": "*",
+  "code": "U+002A",
+  "name": "Asterisk",
+  "category": "punctuation",
+  "shape_diff": 0.676,
+  "size_diff": 0.681
+ },
+ {
+  "char": "+",
+  "code": "U+002B",
+  "name": "Plus Sign",
+  "category": "symbols",
+  "shape_diff": 0.3,
+  "size_diff": 0.446
+ },
+ {
+  "char": ",",
+  "code": "U+002C",
+  "name": "Comma",
+  "category": "punctuation",
+  "shape_diff": 0.09,
+  "size_diff": 0.633
+ },
+ {
+  "char": "-",
+  "code": "U+002D",
+  "name": "Hyphen-Minus",
+  "category": "punctuation",
+  "shape_diff": 0.002,
+  "size_diff": 0.611
+ },
+ {
+  "char": ".",
+  "code": "U+002E",
+  "name": "Full Stop",
+  "category": "punctuation",
+  "shape_diff": 0.001,
+  "size_diff": 0.46
+ },
+ {
+  "char": "/",
+  "code": "U+002F",
+  "name": "Solidus",
+  "category": "punctuation",
+  "shape_diff": 0.039,
+  "size_diff": 0.479
+ },
+ {
+  "char": "0",
+  "code": "U+0030",
+  "name": "Digit Zero",
+  "category": "digits",
+  "shape_diff": 0.336,
+  "size_diff": 0.384
+ },
+ {
+  "char": "1",
+  "code": "U+0031",
+  "name": "Digit One",
+  "category": "digits",
+  "shape_diff": 0.236,
+  "size_diff": 0.359
+ },
+ {
+  "char": "2",
+  "code": "U+0032",
+  "name": "Digit Two",
+  "category": "digits",
+  "shape_diff": 0.464,
+  "size_diff": 0.47
+ },
+ {
+  "char": "3",
+  "code": "U+0033",
+  "name": "Digit Three",
+  "category": "digits",
+  "shape_diff": 0.523,
+  "size_diff": 0.544
+ },
+ {
+  "char": "4",
+  "code": "U+0034",
+  "name": "Digit Four",
+  "category": "digits",
+  "shape_diff": 0.617,
+  "size_diff": 0.505
+ },
+ {
+  "char": "5",
+  "code": "U+0035",
+  "name": "Digit Five",
+  "category": "digits",
+  "shape_diff": 0.318,
+  "size_diff": 0.38
+ },
+ {
+  "char": "6",
+  "code": "U+0036",
+  "name": "Digit Six",
+  "category": "digits",
+  "shape_diff": 0.475,
+  "size_diff": 0.484
+ },
+ {
+  "char": "7",
+  "code": "U+0037",
+  "name": "Digit Seven",
+  "category": "digits",
+  "shape_diff": 0.331,
+  "size_diff": 0.332
+ },
+ {
+  "char": "8",
+  "code": "U+0038",
+  "name": "Digit Eight",
+  "category": "digits",
+  "shape_diff": 0.289,
+  "size_diff": 0.303
+ },
+ {
+  "char": "9",
+  "code": "U+0039",
+  "name": "Digit Nine",
+  "category": "digits",
+  "shape_diff": 0.53,
+  "size_diff": 0.541
+ },
+ {
+  "char": ":",
+  "code": "U+003A",
+  "name": "Colon",
+  "category": "punctuation",
+  "shape_diff": 0.18,
+  "size_diff": 0.766
+ },
+ {
+  "char": ";",
+  "code": "U+003B",
+  "name": "Semicolon",
+  "category": "punctuation",
+  "shape_diff": 0.333,
+  "size_diff": 0.793
+ },
+ {
+  "char": "<",
+  "code": "U+003C",
+  "name": "Less-Than Sign",
+  "category": "symbols",
+  "shape_diff": 0.24,
+  "size_diff": 0.57
+ },
+ {
+  "char": "=",
+  "code": "U+003D",
+  "name": "Equals Sign",
+  "category": "symbols",
+  "shape_diff": 0.273,
+  "size_diff": 0.616
+ },
+ {
+  "char": ">",
+  "code": "U+003E",
+  "name": "Greater-Than Sign",
+  "category": "symbols",
+  "shape_diff": 0.245,
+  "size_diff": 0.58
+ },
+ {
+  "char": "?",
+  "code": "U+003F",
+  "name": "Question Mark",
+  "category": "punctuation",
+  "shape_diff": 0.499,
+  "size_diff": 0.574
+ },
+ {
+  "char": "@",
+  "code": "U+0040",
+  "name": "Commercial At",
+  "category": "punctuation",
+  "shape_diff": 0.418,
+  "size_diff": 0.664
+ },
+ {
+  "char": "A",
+  "code": "U+0041",
+  "name": "Latin Capital Letter A",
+  "category": "uppercase",
+  "shape_diff": 0.297,
+  "size_diff": 0.21
+ },
+ {
+  "char": "B",
+  "code": "U+0042",
+  "name": "Latin Capital Letter B",
+  "category": "uppercase",
+  "shape_diff": 0.178,
+  "size_diff": 0.282
+ },
+ {
+  "char": "C",
+  "code": "U+0043",
+  "name": "Latin Capital Letter C",
+  "category": "uppercase",
+  "shape_diff": 0.151,
+  "size_diff": 0.31
+ },
+ {
+  "char": "D",
+  "code": "U+0044",
+  "name": "Latin Capital Letter D",
+  "category": "uppercase",
+  "shape_diff": 0.086,
+  "size_diff": 0.289
+ },
+ {
+  "char": "E",
+  "code": "U+0045",
+  "name": "Latin Capital Letter E",
+  "category": "uppercase",
+  "shape_diff": 0.148,
+  "size_diff": 0.321
+ },
+ {
+  "char": "F",
+  "code": "U+0046",
+  "name": "Latin Capital Letter F",
+  "category": "uppercase",
+  "shape_diff": 0.115,
+  "size_diff": 0.302
+ },
+ {
+  "char": "G",
+  "code": "U+0047",
+  "name": "Latin Capital Letter G",
+  "category": "uppercase",
+  "shape_diff": 0.18,
+  "size_diff": 0.303
+ },
+ {
+  "char": "H",
+  "code": "U+0048",
+  "name": "Latin Capital Letter H",
+  "category": "uppercase",
+  "shape_diff": 0.054,
+  "size_diff": 0.34
+ },
+ {
+  "char": "I",
+  "code": "U+0049",
+  "name": "Latin Capital Letter I",
+  "category": "uppercase",
+  "shape_diff": 0.119,
+  "size_diff": 0.165
+ },
+ {
+  "char": "J",
+  "code": "U+004A",
+  "name": "Latin Capital Letter J",
+  "category": "uppercase",
+  "shape_diff": 0.187,
+  "size_diff": 0.509
+ },
+ {
+  "char": "K",
+  "code": "U+004B",
+  "name": "Latin Capital Letter K",
+  "category": "uppercase",
+  "shape_diff": 0.433,
+  "size_diff": 0.389
+ },
+ {
+  "char": "L",
+  "code": "U+004C",
+  "name": "Latin Capital Letter L",
+  "category": "uppercase",
+  "shape_diff": 0.067,
+  "size_diff": 0.625
+ },
+ {
+  "char": "M",
+  "code": "U+004D",
+  "name": "Latin Capital Letter M",
+  "category": "uppercase",
+  "shape_diff": 0.231,
+  "size_diff": 0.229
+ },
+ {
+  "char": "N",
+  "code": "U+004E",
+  "name": "Latin Capital Letter N",
+  "category": "uppercase",
+  "shape_diff": 0.103,
+  "size_diff": 0.3
+ },
+ {
+  "char": "O",
+  "code": "U+004F",
+  "name": "Latin Capital Letter O",
+  "category": "uppercase",
+  "shape_diff": 0.11,
+  "size_diff": 0.288
+ },
+ {
+  "char": "P",
+  "code": "U+0050",
+  "name": "Latin Capital Letter P",
+  "category": "uppercase",
+  "shape_diff": 0.137,
+  "size_diff": 0.321
+ },
+ {
+  "char": "Q",
+  "code": "U+0051",
+  "name": "Latin Capital Letter Q",
+  "category": "uppercase",
+  "shape_diff": 0.255,
+  "size_diff": 0.303
+ },
+ {
+  "char": "R",
+  "code": "U+0052",
+  "name": "Latin Capital Letter R",
+  "category": "uppercase",
+  "shape_diff": 0.319,
+  "size_diff": 0.371
+ },
+ {
+  "char": "S",
+  "code": "U+0053",
+  "name": "Latin Capital Letter S",
+  "category": "uppercase",
+  "shape_diff": 0.308,
+  "size_diff": 0.331
+ },
+ {
+  "char": "T",
+  "code": "U+0054",
+  "name": "Latin Capital Letter T",
+  "category": "uppercase",
+  "shape_diff": 0.113,
+  "size_diff": 0.103
+ },
+ {
+  "char": "U",
+  "code": "U+0055",
+  "name": "Latin Capital Letter U",
+  "category": "uppercase",
+  "shape_diff": 0.103,
+  "size_diff": 0.335
+ },
+ {
+  "char": "V",
+  "code": "U+0056",
+  "name": "Latin Capital Letter V",
+  "category": "uppercase",
+  "shape_diff": 0.17,
+  "size_diff": 0.185
+ },
+ {
+  "char": "W",
+  "code": "U+0057",
+  "name": "Latin Capital Letter W",
+  "category": "uppercase",
+  "shape_diff": 0.385,
+  "size_diff": 0.63
+ },
+ {
+  "char": "X",
+  "code": "U+0058",
+  "name": "Latin Capital Letter X",
+  "category": "uppercase",
+  "shape_diff": 0.424,
+  "size_diff": 0.255
+ },
+ {
+  "char": "Y",
+  "code": "U+0059",
+  "name": "Latin Capital Letter Y",
+  "category": "uppercase",
+  "shape_diff": 0.378,
+  "size_diff": 0.229
+ },
+ {
+  "char": "Z",
+  "code": "U+005A",
+  "name": "Latin Capital Letter Z",
+  "category": "uppercase",
+  "shape_diff": 0.279,
+  "size_diff": 0.437
+ },
+ {
+  "char": "[",
+  "code": "U+005B",
+  "name": "Left Square Bracket",
+  "category": "punctuation",
+  "shape_diff": 0.238,
+  "size_diff": 0.654
+ },
+ {
+  "char": "\\",
+  "code": "U+005C",
+  "name": "Reverse Solidus",
+  "category": "punctuation",
+  "shape_diff": 0.039,
+  "size_diff": 0.479
+ },
+ {
+  "char": "]",
+  "code": "U+005D",
+  "name": "Right Square Bracket",
+  "category": "punctuation",
+  "shape_diff": 0.231,
+  "size_diff": 0.653
+ },
+ {
+  "char": "^",
+  "code": "U+005E",
+  "name": "Circumflex Accent",
+  "category": "symbols",
+  "shape_diff": 0.294,
+  "size_diff": 0.395
+ },
+ {
+  "char": "_",
+  "code": "U+005F",
+  "name": "Low Line",
+  "category": "punctuation",
+  "shape_diff": 0.0,
+  "size_diff": 0.378
+ },
+ {
+  "char": "`",
+  "code": "U+0060",
+  "name": "Grave Accent",
+  "category": "symbols",
+  "shape_diff": 0.532,
+  "size_diff": 0.747
+ },
+ {
+  "char": "a",
+  "code": "U+0061",
+  "name": "Latin Small Letter A",
+  "category": "lowercase",
+  "shape_diff": 0.23,
+  "size_diff": 0.437
+ },
+ {
+  "char": "b",
+  "code": "U+0062",
+  "name": "Latin Small Letter B",
+  "category": "lowercase",
+  "shape_diff": 0.227,
+  "size_diff": 0.45
+ },
+ {
+  "char": "c",
+  "code": "U+0063",
+  "name": "Latin Small Letter C",
+  "category": "lowercase",
+  "shape_diff": 0.213,
+  "size_diff": 0.451
+ },
+ {
+  "char": "d",
+  "code": "U+0064",
+  "name": "Latin Small Letter D",
+  "category": "lowercase",
+  "shape_diff": 0.227,
+  "size_diff": 0.443
+ },
+ {
+  "char": "e",
+  "code": "U+0065",
+  "name": "Latin Small Letter E",
+  "category": "lowercase",
+  "shape_diff": 0.232,
+  "size_diff": 0.433
+ },
+ {
+  "char": "f",
+  "code": "U+0066",
+  "name": "Latin Small Letter F",
+  "category": "lowercase",
+  "shape_diff": 0.633,
+  "size_diff": 0.618
+ },
+ {
+  "char": "g",
+  "code": "U+0067",
+  "name": "Latin Small Letter G",
+  "category": "lowercase",
+  "shape_diff": 0.255,
+  "size_diff": 0.494
+ },
+ {
+  "char": "h",
+  "code": "U+0068",
+  "name": "Latin Small Letter H",
+  "category": "lowercase",
+  "shape_diff": 0.17,
+  "size_diff": 0.482
+ },
+ {
+  "char": "i",
+  "code": "U+0069",
+  "name": "Latin Small Letter I",
+  "category": "lowercase",
+  "shape_diff": 0.263,
+  "size_diff": 0.543
+ },
+ {
+  "char": "j",
+  "code": "U+006A",
+  "name": "Latin Small Letter J",
+  "category": "lowercase",
+  "shape_diff": 0.326,
+  "size_diff": 0.442
+ },
+ {
+  "char": "k",
+  "code": "U+006B",
+  "name": "Latin Small Letter K",
+  "category": "lowercase",
+  "shape_diff": 0.198,
+  "size_diff": 0.376
+ },
+ {
+  "char": "l",
+  "code": "U+006C",
+  "name": "Latin Small Letter L",
+  "category": "lowercase",
+  "shape_diff": 0.42,
+  "size_diff": 0.567
+ },
+ {
+  "char": "m",
+  "code": "U+006D",
+  "name": "Latin Small Letter M",
+  "category": "lowercase",
+  "shape_diff": 0.328,
+  "size_diff": 0.527
+ },
+ {
+  "char": "n",
+  "code": "U+006E",
+  "name": "Latin Small Letter N",
+  "category": "lowercase",
+  "shape_diff": 0.133,
+  "size_diff": 0.498
+ },
+ {
+  "char": "o",
+  "code": "U+006F",
+  "name": "Latin Small Letter O",
+  "category": "lowercase",
+  "shape_diff": 0.155,
+  "size_diff": 0.405
+ },
+ {
+  "char": "p",
+  "code": "U+0070",
+  "name": "Latin Small Letter P",
+  "category": "lowercase",
+  "shape_diff": 0.205,
+  "size_diff": 0.425
+ },
+ {
+  "char": "q",
+  "code": "U+0071",
+  "name": "Latin Small Letter Q",
+  "category": "lowercase",
+  "shape_diff": 0.203,
+  "size_diff": 0.425
+ },
+ {
+  "char": "r",
+  "code": "U+0072",
+  "name": "Latin Small Letter R",
+  "category": "lowercase",
+  "shape_diff": 0.217,
+  "size_diff": 0.638
+ },
+ {
+  "char": "s",
+  "code": "U+0073",
+  "name": "Latin Small Letter S",
+  "category": "lowercase",
+  "shape_diff": 0.321,
+  "size_diff": 0.496
+ },
+ {
+  "char": "t",
+  "code": "U+0074",
+  "name": "Latin Small Letter T",
+  "category": "lowercase",
+  "shape_diff": 0.393,
+  "size_diff": 0.594
+ },
+ {
+  "char": "u",
+  "code": "U+0075",
+  "name": "Latin Small Letter U",
+  "category": "lowercase",
+  "shape_diff": 0.14,
+  "size_diff": 0.376
+ },
+ {
+  "char": "v",
+  "code": "U+0076",
+  "name": "Latin Small Letter V",
+  "category": "lowercase",
+  "shape_diff": 0.212,
+  "size_diff": 0.281
+ },
+ {
+  "char": "w",
+  "code": "U+0077",
+  "name": "Latin Small Letter W",
+  "category": "lowercase",
+  "shape_diff": 0.389,
+  "size_diff": 0.544
+ },
+ {
+  "char": "x",
+  "code": "U+0078",
+  "name": "Latin Small Letter X",
+  "category": "lowercase",
+  "shape_diff": 0.143,
+  "size_diff": 0.388
+ },
+ {
+  "char": "y",
+  "code": "U+0079",
+  "name": "Latin Small Letter Y",
+  "category": "lowercase",
+  "shape_diff": 0.299,
+  "size_diff": 0.389
+ },
+ {
+  "char": "z",
+  "code": "U+007A",
+  "name": "Latin Small Letter Z",
+  "category": "lowercase",
+  "shape_diff": 0.31,
+  "size_diff": 0.528
+ },
+ {
+  "char": "{",
+  "code": "U+007B",
+  "name": "Left Curly Bracket",
+  "category": "punctuation",
+  "shape_diff": 0.423,
+  "size_diff": 0.474
+ },
+ {
+  "char": "|",
+  "code": "U+007C",
+  "name": "Vertical Line",
+  "category": "symbols",
+  "shape_diff": 0.0,
+  "size_diff": 0.082
+ },
+ {
+  "char": "}",
+  "code": "U+007D",
+  "name": "Right Curly Bracket",
+  "category": "punctuation",
+  "shape_diff": 0.477,
+  "size_diff": 0.518
+ },
+ {
+  "char": "~",
+  "code": "U+007E",
+  "name": "Tilde",
+  "category": "symbols",
+  "shape_diff": 0.451,
+  "size_diff": 0.453
+ },
+ {
+  "char": "¡",
+  "code": "U+00A1",
+  "name": "Inverted Exclamation Mark",
+  "category": "punctuation",
+  "shape_diff": 0.39,
+  "size_diff": 0.527
+ },
+ {
+  "char": "¢",
+  "code": "U+00A2",
+  "name": "Cent Sign",
+  "category": "symbols",
+  "shape_diff": 0.451,
+  "size_diff": 0.566
+ },
+ {
+  "char": "£",
+  "code": "U+00A3",
+  "name": "Pound Sign",
+  "category": "symbols",
+  "shape_diff": 0.285,
+  "size_diff": 0.314
+ },
+ {
+  "char": "¤",
+  "code": "U+00A4",
+  "name": "Currency Sign",
+  "category": "symbols",
+  "shape_diff": 0.459,
+  "size_diff": 0.846
+ },
+ {
+  "char": "¥",
+  "code": "U+00A5",
+  "name": "Yen Sign",
+  "category": "symbols",
+  "shape_diff": 0.375,
+  "size_diff": 0.332
+ },
+ {
+  "char": "¦",
+  "code": "U+00A6",
+  "name": "Broken Bar",
+  "category": "symbols",
+  "shape_diff": 0.0,
+  "size_diff": 0.097
+ },
+ {
+  "char": "§",
+  "code": "U+00A7",
+  "name": "Section Sign",
+  "category": "punctuation",
+  "shape_diff": 0.283,
+  "size_diff": 0.738
+ },
+ {
+  "char": "¨",
+  "code": "U+00A8",
+  "name": "Diaeresis",
+  "category": "symbols",
+  "shape_diff": 0.072,
+  "size_diff": 0.598
+ },
+ {
+  "char": "©",
+  "code": "U+00A9",
+  "name": "Copyright Sign",
+  "category": "symbols",
+  "shape_diff": 0.745,
+  "size_diff": 0.906
+ },
+ {
+  "char": "«",
+  "code": "U+00AB",
+  "name": "Left-Pointing Double Angle Quotation Mark",
+  "category": "punctuation",
+  "shape_diff": 0.421,
+  "size_diff": 0.777
+ },
+ {
+  "char": "¬",
+  "code": "U+00AC",
+  "name": "Not Sign",
+  "category": "symbols",
+  "shape_diff": 0.047,
+  "size_diff": 0.706
+ },
+ {
+  "char": "®",
+  "code": "U+00AE",
+  "name": "Registered Sign",
+  "category": "symbols",
+  "shape_diff": 0.661,
+  "size_diff": 0.886
+ },
+ {
+  "char": "¯",
+  "code": "U+00AF",
+  "name": "Macron",
+  "category": "symbols",
+  "shape_diff": 0.0,
+  "size_diff": 0.621
+ },
+ {
+  "char": "°",
+  "code": "U+00B0",
+  "name": "Degree Sign",
+  "category": "symbols",
+  "shape_diff": 0.458,
+  "size_diff": 0.568
+ },
+ {
+  "char": "±",
+  "code": "U+00B1",
+  "name": "Plus-Minus Sign",
+  "category": "symbols",
+  "shape_diff": 0.356,
+  "size_diff": 0.739
+ },
+ {
+  "char": "»",
+  "code": "U+00BB",
+  "name": "Right-Pointing Double Angle Quotation Mark",
+  "category": "punctuation",
+  "shape_diff": 0.411,
+  "size_diff": 0.775
+ },
+ {
+  "char": "¿",
+  "code": "U+00BF",
+  "name": "Inverted Question Mark",
+  "category": "punctuation",
+  "shape_diff": 0.502,
+  "size_diff": 0.907
+ },
+ {
+  "char": "÷",
+  "code": "U+00F7",
+  "name": "Division Sign",
+  "category": "symbols",
+  "shape_diff": 0.466,
+  "size_diff": 0.715
+ },
+ {
+  "char": "–",
+  "code": "U+2013",
+  "name": "En Dash",
+  "category": "punctuation",
+  "shape_diff": 0.0,
+  "size_diff": 0.621
+ },
+ {
+  "char": "—",
+  "code": "U+2014",
+  "name": "Em Dash",
+  "category": "punctuation",
+  "shape_diff": 0.0,
+  "size_diff": 0.644
+ },
+ {
+  "char": "←",
+  "code": "U+2190",
+  "name": "Leftwards Arrow",
+  "category": "symbols",
+  "shape_diff": 0.458,
+  "size_diff": 0.742
+ },
+ {
+  "char": "↑",
+  "code": "U+2191",
+  "name": "Upwards Arrow",
+  "category": "symbols",
+  "shape_diff": 0.618,
+  "size_diff": 0.765
+ },
+ {
+  "char": "→",
+  "code": "U+2192",
+  "name": "Rightwards Arrow",
+  "category": "symbols",
+  "shape_diff": 0.458,
+  "size_diff": 0.742
+ },
+ {
+  "char": "↓",
+  "code": "U+2193",
+  "name": "Downwards Arrow",
+  "category": "symbols",
+  "shape_diff": 0.627,
+  "size_diff": 0.764
+ },
+ {
+  "char": "↔",
+  "code": "U+2194",
+  "name": "Left Right Arrow",
+  "category": "symbols",
+  "shape_diff": 0.562,
+  "size_diff": 0.832
+ },
+ {
+  "char": "↕",
+  "code": "U+2195",
+  "name": "Up Down Arrow",
+  "category": "symbols",
+  "shape_diff": 0.678,
+  "size_diff": 0.822
+ },
+ {
+  "char": "↖",
+  "code": "U+2196",
+  "name": "North West Arrow",
+  "category": "symbols",
+  "shape_diff": 0.321,
+  "size_diff": 0.896
+ },
+ {
+  "char": "↗",
+  "code": "U+2197",
+  "name": "North East Arrow",
+  "category": "symbols",
+  "shape_diff": 0.319,
+  "size_diff": 0.896
+ },
+ {
+  "char": "↘",
+  "code": "U+2198",
+  "name": "South East Arrow",
+  "category": "symbols",
+  "shape_diff": 0.319,
+  "size_diff": 0.896
+ },
+ {
+  "char": "↙",
+  "code": "U+2199",
+  "name": "South West Arrow",
+  "category": "symbols",
+  "shape_diff": 0.318,
+  "size_diff": 0.895
+ }
+]

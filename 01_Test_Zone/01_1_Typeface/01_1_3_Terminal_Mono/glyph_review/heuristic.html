@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CSL Terminal: stroke and curve heuristic</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @font-face { font-family: "CSL V4"; src: url("../CSL4_TERMINAL_0011.ttf") format("truetype"); }
+  @font-face { font-family: "CSL v2"; font-weight: 100 800; src: url("../../../../03_Branding_Assets/03_02_Typefaces/02_Internal/CSL_Terminal.woff2") format("woff2"); }
+  @font-face { font-family: "Proto A"; src: url("proto/mono_A.ttf") format("truetype"); }
+  @font-face { font-family: "Proto B"; src: url("proto/mono_B.ttf") format("truetype"); }
+  :root { --bg: #08090c; --panel: #0f1116; --line: #23262e; --fg: #e6e8ee; --muted: #8a90a0; --gold: #f5b432; --accent: #9aa8ff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.55 "CSL v2", ui-monospace, monospace; }
+  main { max-width: 1500px; margin: 0 auto; padding: 20px 24px 80px; }
+  h1 { font-size: 16px; font-weight: 500; letter-spacing: .05em; margin: 0 0 12px; }
+  h2 { font-size: 13px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 28px 0 10px; }
+  p, li { color: #c9cdd6; max-width: 980px; }
+  code { color: var(--accent); }
+  .cols, .row { display: grid; grid-template-columns: 70px repeat(4, 1fr) 260px; gap: 10px; align-items: center; }
+  .cols { position: sticky; top: 0; background: var(--bg); padding: 10px 0; border-bottom: 1px solid var(--line); z-index: 2; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  .row { border-bottom: 1px solid var(--line); padding: 6px 0; }
+  .row .meta { color: var(--muted); font-size: 12px; }
+  .row .meta b { display: block; font: 28px "CSL v2"; color: var(--fg); }
+  .g { font-size: 150px; line-height: 1.15; text-align: center; background: var(--panel); border: 1px solid var(--line); border-radius: 2px; }
+  .csl { font-family: "CSL V4"; color: var(--gold); }
+  .cur { font-family: "CSL v2"; }
+  .pa { font-family: "Proto A"; }
+  .pb { font-family: "Proto B"; }
+  .pick { display: flex; flex-direction: column; gap: 4px; }
+  .pick button { font: inherit; text-align: left; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 2px; padding: 4px 8px; cursor: pointer; }
+  .pick button.on { border-color: var(--fg); background: #1c2030; }
+  .pick input { font: inherit; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 2px; padding: 4px 8px; }
+  .flag { color: var(--gold); }
+  .code { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .code div { background: var(--panel); border: 1px solid var(--line); padding: 10px 12px; white-space: pre; font-size: 15pt; line-height: 1.4; overflow: hidden; }
+  .code div span { display: block; font: 11px "CSL v2"; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px; }
+  #status { position: fixed; right: 16px; bottom: 12px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>CSL TERMINAL · STROKE AND CURVE HEURISTIC</h1>
+  <p>What I took from your 124 answers: keep JetBrains Mono's letterforms (103 kept), and bring over two CSL qualities everywhere, letters and digits first, symbols in a later pass:</p>
+  <ul>
+    <li><b>Even stroke width.</b> CSL strokes are the same width all the way round; JetBrains Mono tapers where curves meet stems (top of <code>a</code>, foot of <code>9</code>, curve of <code>2</code>, the rings of <code>%</code>) and draws horizontals thinner than verticals (<code>e</code>, <code>i</code>, <code>M</code>).</li>
+    <li><b>Squarer curvature.</b> CSL's curve starts later, so straight sides run longer and the corner is tighter, while staying a real curve (not the "Comic Sans" over-tight version).</li>
+    <li><b>Specific ports:</b> <code>?</code> and <code>¿</code> take CSL's shape (bigger dot, fitted to JetBrains Mono's width and height, <code>¿</code> lowered); <code>Q</code> gets a vertical tail; <code>0</code>'s slash takes position and weight from the CSL branding font; <code>i</code> keeps JetBrains Mono's dot; <code>6</code> and <code>9</code> keep JetBrains Mono's open forms so they can't be read as <code>b</code> / <code>g</code>.</li>
+  </ul>
+  <p>The two prototypes below apply the first two points to letters and digits (Regular only, nothing ported yet, no colour compensation): horizontals thickened to the vertical stem width, and every corner rebuilt as two concentric arcs so the stroke keeps its width round the bend. <b>A</b> uses CSL's corner radius (1.5 × the stroke), <b>B</b> a softer 2 × the stroke. Pick per row which is closest (or neither); the most-different and "mix" glyphs come first. Answers save to <code>heuristic_answers.json</code>.</p>
+
+  <h2>In code, 15 pt</h2>
+  <div class="code" id="code"></div>
+
+  <h2>Per glyph</h2>
+  <div class="cols"><span></span><span>CSL V4</span><span>current v2</span><span>A · radius 1.5</span><span>B · radius 2.0</span><span>closest to what you want</span></div>
+  <div id="rows"></div>
+</main>
+<div id="status"></div>
+<script>
+const SAMPLE = `fn process(cases: &[Case]) -> Result<Score, Error> {
+    let session = Session::open(&config)?; // 0x2356 89
+    match parse("sequence 2025") { Ok(v) => v, _ => 0 }
+}`;
+const FONTS = [["CSL V4", "csl", "CSL V4 (designer)"], ["CSL v2", "cur", "current v2"], ["Proto A", "pa", "A · radius 1.5"], ["Proto B", "pb", "B · radius 2.0"]];
+const KEY = "csl-heuristic-review-v1";
+let answers = JSON.parse(localStorage.getItem(KEY) || "{}"), timer;
+const $ = (id) => document.getElementById(id);
+
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(answers));
+  clearTimeout(timer);
+  timer = setTimeout(async () => {
+    try {
+      const r = await fetch("heuristic_answers.json", { method: "PUT", body: JSON.stringify(answers, null, 1) });
+      $("status").textContent = r.ok ? `saved ${new Date().toLocaleTimeString()}` : "saved in browser only";
+    } catch { $("status").textContent = "saved in browser only"; }
+  }, 400);
+}
+
+async function init() {
+  for (const [fam, cls, label] of FONTS) {
+    const d = document.createElement("div"); d.className = cls;
+    d.innerHTML = `<span>${label}</span>`; d.append(SAMPLE); $("code").append(d);
+  }
+  const glyphs = await (await fetch("glyphs.json", { cache: "no-store" })).json();
+  let review = [];
+  try { review = await (await fetch("answers.json", { cache: "no-store" })).json(); } catch {}
+  const mix = new Set(review.filter((a) => a.decision === "mix" || a.decision === "csl").map((a) => a.char));
+  try { Object.assign(answers, await (await fetch("heuristic_answers.json", { cache: "no-store" })).json()); } catch {}
+  const letters = glyphs.filter((g) => ["lowercase", "uppercase", "digits"].includes(g.category));
+  letters.sort((a, b) => mix.has(b.char) - mix.has(a.char) || b.shape_diff - a.shape_diff);
+  for (const g of letters) {
+    const row = document.createElement("div"); row.className = "row";
+    const meta = document.createElement("div"); meta.className = "meta";
+    meta.innerHTML = `<b></b>${g.code}${mix.has(g.char) ? '<br><span class="flag">you marked mix</span>' : ""}`;
+    meta.querySelector("b").textContent = g.char; row.append(meta);
+    for (const [, cls] of FONTS) { const c = document.createElement("div"); c.className = `g ${cls}`; c.textContent = g.char; row.append(c); }
+    const pick = document.createElement("div"); pick.className = "pick";
+    for (const [v, label] of [["A", "A · radius 1.5"], ["B", "B · radius 2.0"], ["current", "current v2"], ["neither", "neither (note)"]]) {
+      const b = document.createElement("button"); b.textContent = label; b.dataset.v = v;
+      b.classList.toggle("on", answers[g.char]?.pick === v);
+      b.onclick = () => { answers[g.char] = { ...(answers[g.char] || {}), pick: v }; for (const x of pick.querySelectorAll("button")) x.classList.toggle("on", x === b); save(); };
+      pick.append(b);
+    }
+    const note = document.createElement("input"); note.placeholder = "note"; note.value = answers[g.char]?.note || "";
+    note.oninput = () => { answers[g.char] = { ...(answers[g.char] || {}), note: note.value }; save(); };
+    pick.append(note); row.append(pick); $("rows").append(row);
+  }
+}
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReaCloud — NIGHT_DRIVE (Nocturne app)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap">
+  <link rel="stylesheet" href="nocturne.css">
+  <script src="nocturne.js"></script>
+  <style>
+    /* Atmosphere, toned down for a tool: fainter fog, near-invisible grain and scanlines. */
+    .x-app .n-atmos { --fog-k: 0.5; }
+    .x-app .n-atmos::before { opacity: 0.035; }
+    .x-app .n-atmos::after { opacity: 0.1; }
+    [data-theme="ps5"] .x-app .n-atmos::after { opacity: 0.04; }
+
+    /* Reusable bits (x- = candidates for nocturne.css) */
+    .x-btn-s { height: 28px; padding: 0 12px; gap: 8px; font-size: 10px; }
+    .x-ini {                    /* collaborator initials: a hairline-framed glyph tile */
+      display: inline-grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      background: var(--void);
+      font: 10px/1 var(--font-brand);
+      color: var(--fg);
+    }
+    .x-ini--you { border-color: var(--ether); color: var(--ether); }
+    .x-stack { display: flex; gap: 4px; }
+    .x-sub { margin: 0; font-size: 12px; line-height: 1.4; color: var(--fg-dim); }
+    .x-scroll { overflow: auto; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+    .x-railhead {               /* rail section header: HUD label + right-aligned count */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      height: 40px;
+      padding-inline: 20px;
+      border-bottom: 1px solid var(--line);
+      flex: none;
+    }
+    .x-tabs { display: flex; gap: 20px; }
+    .x-tab {
+      padding: 0 0 6px;
+      border: 0;
+      border-bottom: 1px solid transparent;
+      background: none;
+      font: 10px/1 var(--font-brand);
+      color: var(--fg-dim);
+      cursor: pointer;
+      transition: color var(--t-fast) var(--snap), border-color var(--t-fast) var(--snap);
+    }
+    .x-tab:hover { color: var(--fg); }
+    .x-tab[aria-pressed="true"] { color: var(--fg); border-bottom-color: var(--ether); box-shadow: 0 1px 8px -2px var(--ether-glow); }
+
+    /* Window */
+    .app {
+      position: relative;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 264px minmax(0, 1fr) 320px;
+      grid-template-rows: 40px minmax(0, 1fr) 24px;
+      grid-template-areas: "bar bar bar" "left mid right" "foot foot foot";
+    }
+
+    /* Title strip */
+    .bar {
+      grid-area: bar;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding-inline: 16px 8px;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--void) 55%, transparent);
+      backdrop-filter: blur(12px);
+    }
+    .bar__mark { width: 26px; --mark-color: var(--fg); }
+    .bar__proj { display: flex; align-items: center; gap: 12px; }
+    .bar__name { font: 20px/1 var(--font-brand); color: var(--fg); }
+    .bar__branch { color: var(--fg-dim); white-space: nowrap; }
+    .bar__branch b { font-weight: 400; color: var(--ether); }
+    .bar__sep { width: 1px; height: 16px; background: var(--line); flex: none; }
+    .bar__right { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+    .bar__act { display: flex; gap: 6px; }
+
+    /* Rails */
+    .rail { display: flex; flex-direction: column; min-height: 0; }
+    .rail--l { grid-area: left; border-right: 1px solid var(--line); }
+    .rail--r { grid-area: right; border-left: 1px solid var(--line); }
+    .rail .n-row { padding-inline: 20px; gap: 12px; }
+    .rail ul { list-style: none; margin: 0; padding: 0; }
+
+    .proj { grid-template-columns: minmax(0, 1fr) auto; padding-block: 11px; }
+    .proj a { text-decoration: none; display: grid; gap: 2px; min-width: 0; }
+    .proj a::after { content: ""; position: absolute; inset: 0; }
+    .proj { position: relative; }
+    .proj__name { font: 10px/1.4 var(--font-brand); color: var(--fg); }
+    .proj[aria-current="true"] { background: var(--raise); box-shadow: inset 1px 0 0 var(--ether); }
+    .proj[aria-current="true"] .proj__name { color: var(--ether); }
+    .proj__del {
+      position: relative;
+      z-index: 1;
+      padding: 4px 0;
+      border: 0;
+      background: none;
+      font: 10px/1 var(--font-brand);
+      color: var(--fg-dim);
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity var(--t-fast) var(--snap), color var(--t-fast) var(--snap);
+    }
+    .proj[aria-current="true"] .proj__del, .proj__del:focus-visible { opacity: 1; }
+    .proj__del:hover { color: var(--status-critical); }
+
+    .hist { flex: 1; min-height: 0; }
+    .hist .n-row { grid-template-columns: 56px minmax(0, 1fr); align-items: start; padding-block: 10px; }
+    .hist__id { color: var(--ether); padding-top: 2px; }
+    .hist__msg { margin: 0; font-size: 13px; line-height: 1.45; color: var(--fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .hist__head .hist__id { text-shadow: 0 0 10px var(--ether-glow); }
+
+    /* Center */
+    .mid { grid-area: mid; display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+
+    .xport {                    /* transport readout */
+      display: grid;
+      grid-template-columns: auto auto auto auto minmax(180px, 1fr);
+      border-bottom: 1px solid var(--line);
+      flex: none;
+    }
+    .xport__cell { display: grid; gap: 10px; align-content: start; padding: 16px 24px 14px; border-right: 1px solid var(--line); }
+    .xport__cell:last-child { border-right: 0; }
+    .xport__v { font: 20px/1 var(--font-dot-mono); color: var(--fg); white-space: nowrap; }
+    .xport__v small { font-size: 10px; color: var(--fg-dim); margin-left: 6px; }
+    .xport__tc { font-size: 40px; letter-spacing: 0; text-shadow: 0 0 18px var(--ether-glow); }
+    .xport__store { display: grid; gap: 10px; }
+    .xport__store .n-meter { --status: var(--fg); }
+
+    .lane {                     /* 24h push lane: commits as ticks, playhead = now */
+      position: relative;
+      height: 44px;
+      margin: 0 24px;
+      flex: none;
+    }
+    .lane::before { content: ""; position: absolute; left: 0; right: 0; top: 30px; height: 1px; background: var(--line); }
+    .lane i { position: absolute; left: var(--x); top: 24px; width: 1px; height: 13px; background: var(--fg-dim); }
+    .lane i.is-head { background: var(--ether); box-shadow: 0 0 10px var(--ether); height: 19px; top: 21px; }
+    .lane__now { position: absolute; right: 0; top: 4px; bottom: 0; width: 1px; background: var(--ether); box-shadow: 0 0 12px var(--ether); }
+    .lane .n-hud { position: absolute; top: 6px; }
+    .lane__l { left: 0; }
+    .lane__r { right: 10px; }
+
+    .tbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 20px 24px 12px; flex: none; }
+
+    .tbl { flex: 1; min-height: 0; padding: 0 24px 24px; }
+    .tr { grid-template-columns: 24px minmax(0, 1.25fr) 112px 64px minmax(0, 1.35fr) 84px; gap: 16px; padding-block: 11px; }
+    .tr--head { position: sticky; top: 0; z-index: 1; padding-block: 10px; background: color-mix(in srgb, var(--void) 70%, transparent); backdrop-filter: blur(10px); }
+    .tr--head:hover { background: color-mix(in srgb, var(--void) 70%, transparent); }
+    .tr__i { font: 10px/1 var(--font-brand); color: var(--fg-dim); }
+    .tr__name { display: grid; gap: 2px; min-width: 0; }
+    .tr__name b { font: 10px/1.4 var(--font-brand); color: var(--fg); }
+    .tr__name .x-sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tr__own { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--fg-dim); min-width: 0; white-space: nowrap; }
+    .tr__size { font: 10px/1 var(--font-dot-mono); color: var(--fg-dim); text-align: right; white-space: nowrap; }
+    .tr__st { display: grid; gap: 6px; justify-items: start; min-width: 0; }
+    .tr__st .n-meter { width: 100%; max-width: 160px; }
+    .tr__act { justify-self: end; }
+    .tr--attn .tr__i { color: var(--fg); }
+
+    /* Right rail: log + collaborators */
+    .log {
+      flex: 1;
+      min-height: 0;
+      margin: 0;
+      padding: 12px 20px 16px;
+      list-style: none;
+      font: 11px/1.6 var(--font-terminal);
+      color: var(--fg);
+    }
+    .log li { display: grid; grid-template-columns: 52px 8px minmax(0, 1fr); column-gap: 8px; align-items: baseline; padding-block: 2px; }
+    .log time { color: var(--fg-dim); }
+    .log__lv { width: 8px; height: 8px; align-self: start; margin-top: 5px; }
+    .log__lv.n-status::before { flex: none; }
+    .log__lv.n-status { gap: 0; }
+    .log__msg { overflow-wrap: anywhere; }
+    .log__msg em { font-style: normal; color: var(--fg-dim); }
+    .log__msg b { font-weight: 400; color: var(--ether); }
+    .log__cur::after { content: "_"; color: var(--ether); animation: blink 1.1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .collab .n-row { grid-template-columns: 22px minmax(0, 1fr) auto; padding-block: 10px; }
+    .collab p { margin: 0; }
+    .collab__n { font: 10px/1.4 var(--font-brand); color: var(--fg); }
+    .collab .n-row:last-child { border-bottom: 0; }
+    .rail--r > .collab { flex: none; border-top: 1px solid var(--line); }
+
+    /* Status strip */
+    .foot {
+      grid-area: foot;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding-inline: 16px;
+      border-top: 1px solid var(--line);
+      background: color-mix(in srgb, var(--void) 55%, transparent);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .foot .n-hud:last-child { margin-left: auto; }
+
+    /* Destructive confirm: side sheet over a blurred void scrim */
+    .sheet { position: fixed; inset: 0; z-index: 50; visibility: hidden; transition: visibility 0s linear var(--t-med); }
+    .sheet[data-open="true"] { visibility: visible; transition: none; }
+    .sheet__scrim {
+      position: absolute;
+      inset: 0;
+      background: color-mix(in srgb, var(--void) 70%, transparent);
+      backdrop-filter: blur(6px) saturate(0.6);
+      opacity: 0;
+      transition: opacity var(--t-med) var(--snap);
+    }
+    .sheet[data-open="true"] .sheet__scrim { opacity: 1; }
+    .sheet__panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(100%, 480px);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 0 40px;
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+      backdrop-filter: blur(18px);
+      border-left: 1px solid var(--line);
+      box-shadow: -1px 0 0 0 var(--ether-glow), -40px 0 80px -40px var(--ether-glow);
+      translate: 100% 0;
+      transition: translate var(--t-med) var(--snap);
+    }
+    .sheet[data-open="true"] .sheet__panel { translate: 0 0; }
+    .sheet__top { display: flex; align-items: center; justify-content: space-between; height: 40px; border-bottom: 1px solid var(--line); }
+    .sheet__body { display: grid; gap: 24px; align-content: end; padding-block: 40px; }
+    .sheet__title { color: var(--fg); white-space: nowrap; }
+    .sheet__facts { margin: 8px 0 0; display: grid; }
+    .sheet__facts div { display: flex; justify-content: space-between; padding-block: 10px; border-bottom: 1px solid var(--line); }
+    .sheet__facts div:first-child { border-top: 1px solid var(--line); }
+    .sheet__facts dt { font: 10px/1 var(--font-brand); color: var(--fg-dim); }
+    .sheet__facts dd { margin: 0; font: 10px/1 var(--font-dot-mono); color: var(--fg); }
+    .sheet__act { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 8px 40px; }
+    .sheet button.n-link { padding: 0; border: 0; background: none; cursor: pointer; }
+    .sheet__x { padding: 6px 0; border: 0; background: none; color: var(--fg-dim); font: 10px/1 var(--font-brand); cursor: pointer; }
+    .sheet__x:hover { color: var(--fg); }
+
+    /* Narrow: the window becomes a scrolling stack. */
+    @media (max-width: 1100px) {
+      .app { height: auto; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; grid-template-areas: "bar" "mid" "right" "left" "foot"; }
+      .rail--l, .rail--r { border: 0; border-top: 1px solid var(--line); }
+      .hist, .log { flex: none; max-height: 360px; }
+      .tbl { overflow: visible; }
+      .tr--head { position: static; }
+    }
+    @media (max-width: 720px) {
+      .bar { flex-wrap: wrap; gap: 10px 14px; padding: 10px 16px; }
+      .bar__right { width: 100%; justify-content: space-between; margin-left: 0; }
+      .bar__sep, .bar__ini { display: none; }
+      .xport { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .xport__cell { padding: 14px 16px; border-bottom: 1px solid var(--line); }
+      .xport__cell:first-child, .xport__cell:last-child { grid-column: 1 / -1; border-right: 0; }
+      .xport__cell:nth-child(4) { border-right: 0; }
+      .lane { margin: 0 16px; }
+      .tbar { flex-direction: column; align-items: flex-start; gap: 14px; padding-inline: 16px; }
+      .tbl { padding-inline: 16px; }
+      .tr { grid-template-columns: 20px minmax(0, 1fr) auto; grid-template-areas: "i name size" ". own own" ". st act"; row-gap: 10px; column-gap: 12px; }
+      .tr--head { display: none; }
+      .tr__i { grid-area: i; }
+      .tr__name { grid-area: name; }
+      .tr__own { grid-area: own; }
+      .tr__size { grid-area: size; }
+      .tr__st { grid-area: st; }
+      .tr__act { grid-area: act; align-self: end; }
+      .foot { flex-wrap: wrap; white-space: normal; gap: 8px 16px; padding-block: 10px; }
+      .foot .n-hud:last-child { margin-left: 0; }
+      .sheet__panel { padding: 0 20px; }
+      .sheet__title { font-size: 30px; }
+    }
+  </style>
+</head>
+<body class="x-app">
+  <div class="n-atmos" aria-hidden="true"></div>
+
+  <div class="app" id="app">
+    <header class="bar">
+      <div class="bar__proj">
+        <span class="n-mark n-glow bar__mark" role="img" aria-label="ReaCloud" style="--mark:url('../../../04_Product_Assets/04_01_ReaCloud/04_01_01_Emblem/Rectangle_NoPadding_ReaCloud.svg'); --mark-ratio: 2291/1679"></span>
+        <p class="n-hud"><span class="n-idx">RC</span> PROJECT</p>
+        <h1 class="bar__name" style="margin: 0; font-weight: 400">NIGHT_DRIVE</h1>
+      </div>
+      <span class="bar__sep" aria-hidden="true"></span>
+      <span class="n-code-s bar__branch"><b>main</b> → origin <span aria-hidden="true">·</span> 3 ahead</span>
+      <span class="bar__sep" aria-hidden="true"></span>
+      <span class="n-status s-neutral n-status--live">DAEMON ONLINE</span>
+      <div class="bar__right">
+        <div class="x-stack bar__ini" aria-label="Collaborators: you, Maya K, Jonas S, Rio V">
+          <span class="x-ini x-ini--you" title="You">EK</span>
+          <span class="x-ini" title="Maya K">MK</span>
+          <span class="x-ini" title="Jonas S">JS</span>
+          <span class="x-ini" title="Rio V">RV</span>
+        </div>
+        <div class="bar__act">
+          <button class="n-btn x-btn-s" type="button">COMMIT</button>
+          <button class="n-btn n-btn--primary x-btn-s" type="button">PUSH 3 <span class="n-arrow">↑</span></button>
+        </div>
+      </div>
+    </header>
+
+    <nav class="rail rail--l" aria-label="Projects and history">
+      <div class="x-railhead"><p class="n-hud"><span class="n-idx">01</span> PROJECTS</p><span class="n-hud">5</span></div>
+      <ul>
+        <li class="n-row proj" aria-current="true">
+          <a href="#night_drive"><span class="proj__name">NIGHT_DRIVE</span><span class="x-sub">14 tracks · 6.2 GB</span></a>
+          <button class="proj__del" type="button" data-sheet aria-label="Delete project NIGHT_DRIVE">DELETE</button>
+        </li>
+        <li class="n-row proj"><a href="#glass"><span class="proj__name">GLASS_CATHEDRAL</span><span class="x-sub">22 tracks · 0.7 GB</span></a></li>
+        <li class="n-row proj"><a href="#signal"><span class="proj__name">SIGNAL_LOSS</span><span class="x-sub">9 tracks · 0.3 GB</span></a></li>
+        <li class="n-row proj"><a href="#rust"><span class="proj__name">RUST_HYMN</span><span class="x-sub">31 tracks · 0.2 GB</span></a></li>
+        <li class="n-row proj"><a href="#cold"><span class="proj__name">COLD_START_DEMO</span><span class="x-sub">6 tracks · 0.04 GB</span></a></li>
+      </ul>
+
+      <div class="x-railhead" style="margin-top: 16px; border-top: 1px solid var(--line)"><p class="n-hud"><span class="n-idx">02</span> HISTORY</p><span class="n-hud">48 VERSIONS</span></div>
+      <ul class="hist x-scroll">
+        <li class="n-row hist__head"><span class="n-code-s hist__id">7c1e9a4</span><div><p class="hist__msg">tighten drums</p><p class="x-sub">Maya K · 2 min ago</p></div></li>
+        <li class="n-row"><span class="n-code-s hist__id">b83f0d2</span><div><p class="hist__msg">vox comp, take 7</p><p class="x-sub">You · 18 min ago</p></div></li>
+        <li class="n-row"><span class="n-code-s hist__id">41ad9e7</span><div><p class="hist__msg">bass DI re-amp</p><p class="x-sub">Rio V · 1 h ago</p></div></li>
+        <li class="n-row"><span class="n-code-s hist__id">e09c5b1</span><div><p class="hist__msg">double-tracked rhythm L/R</p><p class="x-sub">Jonas S · 3 h ago</p></div></li>
+        <li class="n-row"><span class="n-code-s hist__id">5f72c08</span><div><p class="hist__msg">synth pad bounce</p><p class="x-sub">Rio V · yesterday</p></div></li>
+        <li class="n-row"><span class="n-code-s hist__id">a3b6e10</span><div><p class="hist__msg">tempo map 128 → 126 → 128</p><p class="x-sub">You · yesterday</p></div></li>
+        <li class="n-row"><span class="n-code-s hist__id">0d4e7f2</span><div><p class="hist__msg">room mics, new placement</p><p class="x-sub">Maya K · 2 d ago</p></div></li>
+        <li class="n-row"><span class="n-code-s hist__id">9e21b3c</span><div><p class="hist__msg">initial session</p><p class="x-sub">You · 6 d ago</p></div></li>
+      </ul>
+    </nav>
+
+    <main class="mid">
+      <div class="xport" aria-label="Session readout">
+        <div class="xport__cell">
+          <p class="n-hud"><span class="n-idx">03</span> POSITION</p>
+          <span class="xport__v xport__tc n-dot">00:03:42:18</span>
+        </div>
+        <div class="xport__cell">
+          <p class="n-hud">BAR</p>
+          <span class="xport__v n-dot">112.3</span>
+        </div>
+        <div class="xport__cell">
+          <p class="n-hud">BPM</p>
+          <span class="xport__v n-dot">128.00</span>
+        </div>
+        <div class="xport__cell">
+          <p class="n-hud">METER</p>
+          <span class="xport__v n-dot">4/4</span>
+        </div>
+        <div class="xport__cell xport__store">
+          <p class="n-hud" style="justify-content: space-between">STORAGE <span>BASIC</span></p>
+          <span class="xport__v n-dot">7.4<small>/ 10 GB</small></span>
+          <div class="n-meter" role="meter" aria-label="Storage used" aria-valuemin="0" aria-valuemax="10" aria-valuenow="7.4" style="--v: 74%"><i></i></div>
+        </div>
+      </div>
+
+      <div class="lane" aria-label="Pushes in the last 24 hours">
+        <span class="n-hud lane__l">-24H</span>
+        <span class="n-hud lane__r">NOW</span>
+        <i style="--x: 6%"></i><i style="--x: 9%"></i><i style="--x: 31%"></i><i style="--x: 33%"></i><i style="--x: 34.5%"></i>
+        <i style="--x: 58%"></i><i style="--x: 71%"></i><i style="--x: 86%"></i><i style="--x: 93%"></i><i class="is-head" style="--x: 98.4%"></i>
+        <span class="lane__now" aria-hidden="true"></span>
+      </div>
+
+      <div class="tbar">
+        <p class="n-hud n-hud--fg"><span class="n-idx">04</span> TRACKS <span style="color: var(--fg-dim)">/ 412 MB TO PUSH</span></p>
+        <div class="x-tabs" role="group" aria-label="Filter tracks">
+          <button class="x-tab" type="button" aria-pressed="true">ALL 10</button>
+          <button class="x-tab" type="button" aria-pressed="false">CHANGED 4</button>
+          <button class="x-tab" type="button" aria-pressed="false">NEEDS YOU 3</button>
+        </div>
+      </div>
+
+      <div class="tbl x-scroll" role="table" aria-label="Tracks">
+        <div class="n-row tr tr--head" role="row">
+          <span class="n-hud" role="columnheader">#</span>
+          <span class="n-hud" role="columnheader">TRACK</span>
+          <span class="n-hud" role="columnheader">OWNER</span>
+          <span class="n-hud" role="columnheader" style="justify-content: flex-end">SIZE</span>
+          <span class="n-hud" role="columnheader">STATUS</span>
+          <span class="n-hud" role="columnheader" style="justify-content: flex-end">ACTION</span>
+        </div>
+
+        <div class="n-row tr" role="row">
+          <span class="tr__i" role="cell">01</span>
+          <span class="tr__name" role="cell"><b>DRUMS_OH</b><span class="x-sub">drums_oh.wav · 2 takes</span></span>
+          <span class="tr__own" role="cell"><span class="x-ini">MK</span>Maya K</span>
+          <span class="tr__size" role="cell">212 MB</span>
+          <span class="tr__st" role="cell"><span class="n-status s-success">PUSHED</span><span class="x-sub">2 min ago</span></span>
+          <span class="tr__act" role="cell"></span>
+        </div>
+        <div class="n-row tr" role="row">
+          <span class="tr__i" role="cell">02</span>
+          <span class="tr__name" role="cell"><b>KICK_IN</b><span class="x-sub">kick_in.wav</span></span>
+          <span class="tr__own" role="cell"><span class="x-ini x-ini--you">EK</span>You</span>
+          <span class="tr__size" role="cell">88 MB</span>
+          <span class="tr__st" role="cell"><span class="n-status s-neutral">UP TO DATE</span></span>
+          <span class="tr__act" role="cell"></span>
+        </div>
+        <div class="n-row tr" role="row">
+          <span class="tr__i" role="cell">03</span>
+          <span class="tr__name" role="cell"><b>BASS_DI</b><span class="x-sub">bass_di.wav · re-amp</span></span>
+          <span class="tr__own" role="cell"><span class="x-ini">RV</span>Rio V</span>
+          <span class="tr__size" role="cell">164 MB</span>
+          <span class="tr__st s-progress" role="cell"><span class="n-status">PUSHING 64%</span><span class="n-meter" role="progressbar" aria-label="Push progress" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100" style="--v: 64%"><i></i></span></span>
+          <span class="tr__act" role="cell"></span>
+        </div>
+        <div class="n-row tr" role="row">
+          <span class="tr__i" role="cell">04</span>
+          <span class="tr__name" role="cell"><b>GTR_L_RHYTHM</b><span class="x-sub">gtr_l_rhythm.wav · DI + amp</span></span>
+          <span class="tr__own" role="cell"><span class="x-ini x-ini--you">EK</span>You</span>
+          <span class="tr__size" role="cell">402 MB</span>
+          <span class="tr__st" role="cell"><span class="n-status s-caution">PAUSED</span><span class="x-sub">Slow connection</span></span>
+          <span class="tr__act" role="cell"></span>
+        </div>
+        <div class="n-row tr tr--attn" role="row">
+          <span class="tr__i" role="cell">05</span>
+          <span class="tr__name" role="cell"><b>VOX_LEAD</b><span class="x-sub">vox_lead.wav · comp 7</span></span>
+          <span class="tr__own" role="cell"><span class="x-ini x-ini--you">EK</span>You</span>
+          <span class="tr__size" role="cell">126 MB</span>
+          <span class="tr__st" role="cell"><span class="n-status s-warning">CONFLICT</span><span class="x-sub">Also edited by Maya K</span></span>
+          <span class="tr__act" role="cell"><button class="n-btn x-btn-s" type="button">RESOLVE</button></span>
+        </div>
+        <div class="n-row tr tr--attn" role="row">
+          <span class="tr__i" role="cell">06</span>
+          <span class="tr__name" role="cell"><b>SYNTH_PAD</b><span class="x-sub">synth_pad.wav · bounce</span></span>
+          <span class="tr__own" role="cell"><span class="x-ini">RV</span>Rio V</span>
+          <span class="tr__size" role="cell">73 MB</span>
+          <span class="tr__st" role="cell"><span class="n-status s-critical">PUSH FAILED</span><span class="x-sub">Timed out after 3 tries</span></span>
+          <span class="tr__act" role="cell"><button class="n-btn x-btn-s" type="button">RETRY</button></span>
+        </div>
+        <div class="n-row tr tr--attn" role="row">
+          <span class="tr__i" role="cell">07</span>
+          <span class="tr__name" role="cell"><b>GTR_R_RHYTHM</b><span class="x-sub">gtr_r_rhythm.wav · DI + amp</span></span>
+          <span class="tr__own" role="cell"><span class="x-ini">JS</span>Jonas S</span>
+          <span class="tr__size" role="cell">398 MB</span>
+          <span class="tr__st" role="cell"><span class="n-status s-notify">NEW VERSIONS</span><span class="x-sub">3 from Jonas S</span></span>
+          <span class="tr__act" role="cell"><button class="n-btn x-btn-s" type="button">PULL <span class="n-arrow">↓</span></button></span>
+        </div>
+        <div class="n-row tr" role="row">
+          <span class="tr__i" role="cell">08</span>
+          <span class="tr__name" role="cell"><b>SNARE_TOP</b><span class="x-sub">snare_top.wav</span></span>
+          <span class="tr__own" role="cell"><span class="x-ini">MK</span>Maya K</span>
+          <span class="tr__size" role="cell">91 MB</span>
+          <span class="tr__st" role="cell"><span class="n-status s-neutral">UP TO DATE</span></span>
+          <span class="tr__act" role="cell"></span>
+        </div>
+        <div class="n-row tr" role="row">
+          <span class="tr__i" role="cell">09</span>
+          <span class="tr__name" role="cell"><b>ROOM_MICS</b><span class="x-sub">room_l.wav, room_r.wav</span></span>
+          <span class="tr__own" role="cell"><span class="x-ini">MK</span>Maya K</span>
+          <span class="tr__size" role="cell">240 MB</span>
+          <span class="tr__st" role="cell"><span class="n-status s-neutral">UP TO DATE</span></span>
+          <span class="tr__act" role="cell"></span>
+        </div>
+        <div class="n-row tr" role="row">
+          <span class="tr__i" role="cell">10</span>
+          <span class="tr__name" role="cell"><b>NIGHT_DRIVE.RPP</b><span class="x-sub">REAPER project file</span></span>
+          <span class="tr__own" role="cell"><span class="x-ini x-ini--you">EK</span>You</span>
+          <span class="tr__size" role="cell">1.2 MB</span>
+          <span class="tr__st" role="cell"><span class="n-status s-success">PUSHED</span><span class="x-sub">2 min ago</span></span>
+          <span class="tr__act" role="cell"></span>
+        </div>
+      </div>
+    </main>
+
+    <aside class="rail rail--r" aria-label="Daemon and collaborators">
+      <div class="x-railhead"><p class="n-hud"><span class="n-idx">05</span> DAEMON LOG</p><span class="n-hud">REACLOUDD</span></div>
+      <ol class="log x-scroll" id="log" aria-live="polite">
+        <li><time>13:58:02</time><span></span><span class="log__msg">reacloudd 1.4.2 up <em>· pid 4127</em></span></li>
+        <li><time>13:58:02</time><span></span><span class="log__msg">watching <em>~/Music/REAPER/NIGHT_DRIVE</em></span></li>
+        <li><time>13:58:03</time><span></span><span class="log__msg">origin eu-west <em>· tls ok · 41 ms</em></span></li>
+        <li><time>13:58:03</time><span></span><span class="log__msg">index 14 tracks <em>· 6.2 GB</em></span></li>
+        <li><time>14:00:41</time><span></span><span class="log__msg">change vox_lead.wav <em>+12.4 MB</em></span></li>
+        <li><time>14:00:44</time><span></span><span class="log__msg">commit <b>7c1e9a4</b> "tighten drums"</span></li>
+        <li><time>14:00:45</time><span></span><span class="log__msg">push drums_oh.wav <em>212 MB</em> ok</span></li>
+        <li><time>14:00:47</time><span></span><span class="log__msg">push night_drive.rpp <em>1.2 MB</em> ok</span></li>
+        <li><time>14:01:32</time><span></span><span class="log__msg">link 0.4 MB/s <em>·</em> pause gtr_l_rhythm.wav</span></li>
+        <li><time>14:01:58</time><span class="n-status s-critical log__lv" role="img" aria-label="Error"></span><span class="log__msg">error: push synth_pad.wav timed out <em>(3/3)</em></span></li>
+        <li><time>14:02:04</time><span></span><span class="log__msg">conflict vox_lead.wav <em>· local vs maya.k</em></span></li>
+        <li><time>14:02:09</time><span></span><span class="log__msg">remote 3 new versions <em>· gtr_r_rhythm.wav</em></span></li>
+        <li><time>14:02:11</time><span></span><span class="log__msg log__cur">push bass_di.wav 64% <em>· 3.1 MB/s</em></span></li>
+      </ol>
+
+      <div class="collab">
+        <div class="x-railhead"><p class="n-hud"><span class="n-idx">06</span> COLLABORATORS</p><span class="n-hud">4</span></div>
+        <ul>
+          <li class="n-row"><span class="x-ini x-ini--you">EK</span><div><p class="collab__n">YOU</p><p class="x-sub">Owner · this machine</p></div><span class="n-status s-success n-status--live">ONLINE</span></li>
+          <li class="n-row"><span class="x-ini">MK</span><div><p class="collab__n">MAYA K</p><p class="x-sub">Editing vox_lead</p></div><span class="n-status s-success">ONLINE</span></li>
+          <li class="n-row"><span class="x-ini">JS</span><div><p class="collab__n">JONAS S</p><p class="x-sub">Last seen 40 min ago</p></div><span class="n-status s-caution">AWAY</span></li>
+          <li class="n-row"><span class="x-ini">RV</span><div><p class="collab__n">RIO V</p><p class="x-sub">Last seen yesterday</p></div><span class="n-status">OFFLINE</span></li>
+        </ul>
+      </div>
+    </aside>
+
+    <footer class="foot">
+      <p class="n-hud">REACLOUD 1.4.2</p>
+      <p class="n-hud">REAPER 7.22 <span>/</span> 48 KHZ 24 BIT</p>
+      <p class="n-hud">↑ 3.1 MB/S <span>/</span> ↓ 0.0 MB/S</p>
+      <p class="n-hud">RECORD. COMMIT. PUSH.</p>
+    </footer>
+  </div>
+
+  <div class="sheet" id="sheet" data-open="false">
+    <div class="sheet__scrim" data-close></div>
+    <section class="sheet__panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title" aria-describedby="sheet-desc">
+      <div class="sheet__top">
+        <p class="n-hud"><span class="n-idx">!</span> DESTRUCTIVE <span>/</span> ORIGIN</p>
+        <button class="sheet__x" type="button" data-close aria-label="Close">ESC</button>
+      </div>
+      <div class="sheet__body">
+        <span class="n-status s-critical">CANNOT BE UNDONE</span>
+        <h2 class="n-title sheet__title" id="sheet-title">DELETE PROJECT?</h2>
+        <p class="n-body" id="sheet-desc">NIGHT_DRIVE and all 48 versions leave origin for every collaborator. Local files on this machine stay.</p>
+        <dl class="sheet__facts">
+          <div><dt>PROJECT</dt><dd>NIGHT_DRIVE</dd></div>
+          <div><dt>VERSIONS</dt><dd>48</dd></div>
+          <div><dt>STORAGE FREED</dt><dd>6.2 GB</dd></div>
+          <div><dt>COLLABORATORS</dt><dd>4</dd></div>
+        </dl>
+      </div>
+      <div class="sheet__act">
+        <button class="n-link" type="button" data-close>KEEP</button>
+        <button class="n-btn n-btn--danger" type="button">DELETE</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const sheet = document.getElementById("sheet");
+    const app = document.getElementById("app");
+    let opener = null;
+    function setSheet(open) {
+      sheet.dataset.open = String(open);
+      app.inert = open;
+      if (open && opener) sheet.querySelector(".n-link").focus();
+      if (!open && opener) { opener.focus(); opener = null; }
+    }
+    setSheet(new URLSearchParams(location.search).has("sheet"));
+    document.querySelectorAll("[data-sheet]").forEach((b) => b.addEventListener("click", () => { opener = b; setSheet(true); }));
+    sheet.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => setSheet(false)));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && sheet.dataset.open === "true") setSheet(false); });
+    const log = document.getElementById("log");
+    log.scrollTop = log.scrollHeight;
+  </script>
+</body>
+</html>

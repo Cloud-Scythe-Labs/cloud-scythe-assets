@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cloud Scythe Labs — Live in the DAW</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="mockups.css">
+  <script src="mockups.js"></script>
+  <style>
+    /* Page layout only: role, type, space and radius tokens; no raw colors. */
+    :root {
+      --page-pad: var(--space-4);
+      --gap-section: var(--space-8);
+    }
+    a { color: inherit; }
+
+    .wrap { width: min(100% - 2 * var(--page-pad), 1280px); margin-inline: auto; }
+    .page-top { padding-top: var(--space-3); }
+
+    /* Nav */
+    .nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+    .nav__brand { margin-right: auto; }
+    .nav__lockup { width: 240px; }
+    .nav__links { display: flex; gap: var(--space-2); }
+
+    /* Narrow-screen menu: native disclosure; the panel opens in flow inside the nav block. */
+    .x-menu { display: none; }
+    .x-menu > summary { list-style: none; }
+    .x-menu > summary::-webkit-details-marker { display: none; }
+    .x-menu__panel { display: none; flex-basis: 100%; gap: var(--space-2); }
+
+    /* Hero: full-bleed ticker band, then the one-line Display title, both on --bg-primary. */
+    .hero { margin-top: var(--space-3); }
+    .band { height: 360px; --ticker-size: 120px; }
+    .hero__title { margin-top: var(--space-5); }
+
+    /* Product cards: photo on top takes the card's own corners; body below. */
+    .cards { margin-top: var(--space-5); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+    .x-card { display: flex; flex-direction: column; padding: 0; overflow: clip; }
+    .x-card__photo { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+    .x-card__body { flex: 1; display: flex; flex-direction: column; padding: var(--space-4); }
+    .x-card__name { margin: 0; height: var(--type-display-s); }
+    .x-card__lockup { height: 100%; }
+    .x-card__body .t-body { margin-bottom: var(--space-4); }
+    .x-card__actions { margin-top: auto; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .x-card__actions .btn { flex: 1 1 auto; justify-content: center; }
+
+    /* Sections */
+    .section { margin-top: var(--gap-section); }
+    .product { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-4); }
+    .product__copy { display: flex; flex-direction: column; }
+    .product__copy .actions { margin-top: auto; padding-top: var(--space-4); }
+
+    .steps { margin: var(--space-3) 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); }
+    .steps > .block { display: flex; flex-direction: column; }
+    .steps .t-body { margin-bottom: var(--space-3); }
+    .x-cli { margin: auto 0 0; white-space: pre; overflow-x: auto; }
+
+    /* Footer */
+    .footer { margin-top: var(--gap-section); padding-bottom: var(--space-7); }
+    .footer__mark { font-size: var(--type-display); line-height: 1; white-space: nowrap; }
+    .footer__tag { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+    .footer__tag > p { margin: 0; }
+    .footer__cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
+    .footer__cols ul { list-style: none; margin: 0; padding: 0; }
+
+    /* Status: pip + label in dark contexts, chip in PS5 (light-context hues fail 3:1 as marks). */
+    .x-when-light { display: none; }
+    [data-theme="ps5"] .x-when-dark { display: none; }
+    [data-theme="ps5"] .x-when-light { display: inline-flex; }
+
+    /* Step down one size per family; Display swaps to Mono before it could wrap. */
+    @media (max-width: 1199px) {
+      .hero__title { font-size: var(--type-display); }
+      .steps { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 959px) {
+      .nav__links, .nav__cta { display: none; }
+      .x-menu { display: block; }
+      .nav:has(.x-menu[open]) .x-menu__panel { display: grid; }
+      .footer__mark { font-size: var(--type-display-s); }
+    }
+    @media (max-width: 899px) {
+      .cards, .product { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 767px) {
+      :root { --page-pad: var(--space-3); --gap-section: var(--space-6); }
+      .band { height: 240px; --ticker-size: 60px; }
+      .hero__title { font-family: var(--font-brand); font-size: var(--type-title-l); line-height: var(--leading-title); }
+    }
+    @media (max-width: 599px) {
+      .block:not(.x-card), .x-card__body { padding: var(--space-3); }
+      .actions .btn { flex: 1 1 100%; justify-content: center; }
+      .hero__title { font-size: var(--type-title); }
+      .nav__lockup { width: 160px; }
+      .product__title { font-size: var(--type-title); }
+      .footer__mark { font-family: var(--font-dot-mono); font-size: var(--type-title); line-height: var(--leading-title); white-space: normal; }
+      .footer__cols { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+    }
+    @media (max-width: 439px) {
+      .hero__title { font-size: var(--type-title-s); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap page-top">
+    <header class="block block--tight nav">
+      <a class="nav__brand" href="#">
+        <span class="mark nav__lockup" role="img" aria-label="Cloud Scythe Labs" style="--mark:url('../../03_Branding_Assets/03_05_Lockups/03_05_01_Mono/Lockup2_NoPadding_Mono.svg'); --mark-ratio: 655/122"></span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a class="btn btn--secondary" href="#reacloud">REACLOUD</a>
+        <a class="btn btn--secondary" href="#altair">ALTAIR</a>
+        <a class="btn btn--secondary" href="#contact">CONTACT</a>
+      </nav>
+      <a class="btn btn--primary nav__cta" href="#">LOG IN</a>
+      <details class="x-menu">
+        <summary class="btn btn--secondary" aria-controls="site-menu">MENU</summary>
+      </details>
+      <nav class="x-menu__panel" id="site-menu" aria-label="Menu">
+        <a class="btn btn--secondary" href="#reacloud">REACLOUD</a>
+        <a class="btn btn--secondary" href="#altair">ALTAIR</a>
+        <a class="btn btn--secondary" href="#contact">CONTACT</a>
+        <a class="btn btn--primary" href="#">LOG IN</a>
+      </nav>
+    </header>
+  </div>
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="ticker band on-primary">
+      <div class="ticker__field" aria-hidden="true">
+      <div class="ticker__row">CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;</div>
+      <div class="ticker__row">LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;</div>
+      <div class="ticker__row">CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;</div>
+      <div class="ticker__row">LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;</div>
+      <div class="ticker__row">CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;</div>
+      <div class="ticker__row">LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;</div>
+      <div class="ticker__row">CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;</div>
+      <div class="ticker__row">LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;LIVE IN THE DAW&nbsp;</div>
+      <div class="ticker__row">CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;CLOUD SCYTHE LABS&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <h1 class="t-hero hero__title on-primary" id="hero-title">LIVE IN THE DAW</h1>
+
+      <div class="cards">
+        <article class="block x-card" id="reacloud" aria-labelledby="reacloud-name">
+          <img class="x-card__photo" src="img/reacloud-hero.jpg" alt="ReaCloud panel open inside REAPER on a studio monitor">
+          <div class="x-card__body">
+            <div class="stack">
+              <h2 class="x-card__name" id="reacloud-name">
+                <span class="mark x-card__lockup" role="img" aria-label="ReaCloud" style="--mark:url('../../04_Product_Assets/04_01_ReaCloud/04_01_03_Lockups/Lockup2_NoPadding.svg'); --mark-ratio: 3430/512"></span>
+              </h2>
+              <p class="t-label">RECORD. COMMIT. PUSH.</p>
+              <p class="t-body">ReaCloud connects artists, studios and producers, syncing sessions across machines.</p>
+            </div>
+            <div class="x-card__actions">
+              <a class="btn btn--secondary" href="#collaboration">LEARN MORE</a>
+              <a class="btn btn--secondary" href="#">DOCUMENTATION</a>
+              <a class="btn btn--primary" href="#">GET STARTED</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="block x-card" id="altair" aria-labelledby="altair-name">
+          <img class="x-card__photo" src="img/altair-hero.jpg" alt="Altair instrument interface in Kontakt over a seven-string guitar">
+          <div class="x-card__body">
+            <div class="stack">
+              <h2 class="t-display-s x-card__name" id="altair-name">ALTAIR</h2>
+              <p class="t-label">MASSIVE METAL TONES</p>
+              <p class="t-body">A modern metal guitar library for Native Instruments Kontakt. Tight, aggressive, mix-ready.</p>
+            </div>
+            <div class="x-card__actions">
+              <a class="btn btn--secondary" href="#">LEARN MORE</a>
+              <a class="btn btn--secondary" href="#">DOCUMENTATION</a>
+              <a class="btn btn--primary" href="#">GET STARTED</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <main class="wrap">
+    <section class="section" id="collaboration" aria-labelledby="collab-title">
+      <div class="block product">
+        <div class="stack">
+          <h2 class="t-title-l product__title" id="collab-title">EFFORTLESS COLLABORATION</h2>
+          <p class="t-label">WITH REACLOUD</p>
+        </div>
+        <div class="product__copy stack-3">
+          <p class="t-body">ReaCloud connects sessions and projects in Reaper™, so you can collaborate instantly.</p>
+          <p class="t-body">Designed in mind for solo artists, bands, producers, and studios.</p>
+          <div class="actions">
+            <a class="btn btn--secondary" href="#contact">CONTACT US</a>
+            <a class="btn btn--secondary" href="#">DOCUMENTATION</a>
+            <a class="btn btn--primary" href="#">SEE PRICING</a>
+          </div>
+        </div>
+      </div>
+
+      <ol class="steps" aria-label="How ReaCloud works">
+        <li class="block">
+          <div class="stack">
+            <h3 class="t-title-s">01_PLUG-IN</h3>
+            <p class="t-body">Snapshot and commit takes from inside REAPER, one version per click.</p>
+          </div>
+          <pre class="block--inset t-code x-cli"><code>$ reacloud commit
+snapshot 0f3a2c</code></pre>
+        </li>
+        <li class="block">
+          <div class="stack">
+            <h3 class="t-title-s">02_DAEMON</h3>
+            <p class="t-body">A lightweight desktop daemon syncs your sessions in the background.</p>
+          </div>
+          <pre class="block--inset t-code x-cli"><code>$ reacloud status
+daemon  running</code></pre>
+        </li>
+        <li class="block">
+          <div class="stack">
+            <h3 class="t-title-s">03_CLOUD</h3>
+            <p class="t-body">Push from the studio, pull on any machine, share with collaborators.</p>
+          </div>
+          <pre class="block--inset t-code x-cli"><code>$ reacloud push
+pushed  142 MB</code></pre>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="wrap footer" id="contact">
+    <div class="block stack-5">
+      <div class="stack-3">
+        <p class="t-dot-display footer__mark">CLOUD SCYTHE LABS</p>
+        <div class="footer__tag">
+          <p class="t-title-s">LIVE IN THE DAW</p>
+          <p>
+            <span class="pip s-success x-when-dark">ALL SYSTEMS ONLINE</span>
+            <span class="chip s-success x-when-light">ALL SYSTEMS ONLINE</span>
+          </p>
+        </div>
+      </div>
+      <nav class="footer__cols" aria-label="Footer">
+        <div class="stack">
+          <h2 class="t-label">PRODUCTS</h2>
+          <ul class="t-body-s stack">
+            <li><a href="#reacloud">ReaCloud</a></li>
+            <li><a href="#altair">Altair</a></li>
+          </ul>
+        </div>
+        <div class="stack">
+          <h2 class="t-label">COMPANY</h2>
+          <ul class="t-body-s stack">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Technology</a></li>
+          </ul>
+        </div>
+        <div class="stack">
+          <h2 class="t-label">CONNECT</h2>
+          <ul class="t-body-s stack">
+            <li><a href="#">GitHub</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+      </nav>
+      <p class="t-body-s">© 2026 Cloud Scythe Labs. Reaper is a trademark of Cockos Incorporated.</p>
+    </div>
+  </footer>
+</body>
+</html>

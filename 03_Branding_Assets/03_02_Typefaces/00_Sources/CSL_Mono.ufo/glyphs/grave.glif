@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="grave" format="2">
+	<unicode hex="0060"/>
+	<advance width="600"/>
+	<outline>
+		<contour>
+			<point x="300" y="695.0537109375" type="line" smooth="yes"/>
+			<point x="300" y="697.80859375"/>
+			<point x="297.6669921875" y="700.0283203125"/>
+			<point x="295" y="700.0283203125" type="curve" smooth="yes"/>
+			<point x="205" y="700.0283203125" type="line" smooth="yes"/>
+			<point x="202.3330078125" y="700.0283203125"/>
+			<point x="200" y="697.80859375"/>
+			<point x="200" y="695.0537109375" type="curve" smooth="yes"/>
+			<point x="200" y="505.0302734375" type="line" smooth="yes"/>
+			<point x="200" y="502.275390625"/>
+			<point x="202.3330078125" y="500.0556640625"/>
+			<point x="205" y="500.0556640625" type="curve" smooth="yes"/>
+			<point x="295" y="500.0556640625" type="line" smooth="yes"/>
+			<point x="297.6669921875" y="500.0556640625"/>
+			<point x="300" y="502.275390625"/>
+			<point x="300" y="505.0302734375" type="curve" smooth="yes"/>
+		</contour>
+	</outline>
+</glyph>

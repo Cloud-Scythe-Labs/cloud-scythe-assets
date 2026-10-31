@@ -1,0 +1,11 @@
+# Font build toolchain for non-Nix setups. Versions match the nixpkgs pinned in
+# the repo-root flake.lock (which uses Python 3.14).
+fonttools[woff]==4.63.0
+ufo2ft==3.9.1
+fontmake==3.12.2
+ufoLib2==0.18.1
+compreffor==0.6.0
+skia-pathops==0.9.2
+ufonormalizer==0.6.2
+pillow==12.3.0
+brotli==1.2.0

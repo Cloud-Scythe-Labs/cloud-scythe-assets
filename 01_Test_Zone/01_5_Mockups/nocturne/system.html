@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cloud Scythe Labs — Nocturne direction sheet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap">
+  <link rel="stylesheet" href="nocturne.css">
+  <script src="nocturne.js"></script>
+  <style>
+    /* Token names inside copy never break at their leading hyphens. */
+    .x-tok { white-space: nowrap; }
+    .n-hud .x-tok { display: contents; }
+    figcaption.n-hud { flex-wrap: wrap; row-gap: 6px; line-height: 1.3; }
+
+    /* Header (same pattern as home.html) */
+    .hdr {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: color-mix(in srgb, var(--void) 70%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .hdr__in { display: flex; align-items: center; gap: 40px; height: 72px; }
+    .hdr .n-brand { --h: 48px; flex: none; }
+    .hdr__nav { display: flex; gap: 32px; margin-left: auto; }
+    .hdr__nav a { font: 20px/1 var(--font-brand); text-decoration: none; color: var(--fg-dim); transition: color var(--t-fast) var(--snap); }
+    .hdr__nav a:hover { color: var(--fg); }
+    .hdr .n-btn { height: 36px; }
+
+    /* Intro */
+    .intro { position: relative; overflow: hidden; min-height: min(calc(100vh - 72px), 920px); display: grid; align-content: end; padding-block: 144px 56px; }
+    .intro .n-bleed {
+      --y: 42%;
+      -webkit-mask: linear-gradient(to bottom, var(--fg) 62%, transparent 92%);
+              mask: linear-gradient(to bottom, var(--fg) 62%, transparent 92%);
+    }
+    .intro__copy { position: relative; display: grid; gap: 28px; justify-items: start; }
+    .intro__title { margin-left: -6px; }
+    .intro__foot { position: relative; display: flex; flex-wrap: wrap; gap: 16px 40px; align-items: center; margin-top: 88px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .intro__foot .n-hud:last-child { margin-left: auto; }
+    .readout { font: 13px/1 var(--font-dot-mono); color: var(--fg); text-transform: uppercase; }
+
+    /* Section heads: HUD index + Mono title, then 56px to content */
+    .head { display: grid; gap: 28px; margin-bottom: 72px; }
+    .head .n-title { max-width: 22ch; }
+    .band-section { background: var(--abyss); border-block: 1px solid var(--line); }
+    .sub { display: grid; gap: 20px; }
+    .sub + .sub { margin-top: 96px; }
+
+    /* 01 Direction: stacked words, rationale + rule on the right */
+    .dir { container-type: inline-size; border-top: 1px solid var(--line); }
+    .dir__row { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); align-items: end; padding-block: 22px 18px; }
+    .dir__word { position: relative; display: flex; align-items: flex-start; gap: 16px; }
+    .dir__word .n-hud { padding-top: 0.6em; }
+    .dir__word .n-display { font-size: min(120px, 8.6cqi); line-height: 0.86; transition: text-shadow var(--t-med) var(--snap); }
+    .dir__row:hover .n-display { text-shadow: 0 0 32px var(--ether-glow); }
+    .dir__text { display: grid; gap: 10px; padding-bottom: 6px; }
+    .dir__rule { margin: 0; font-size: 13px; line-height: 1.6; color: var(--fg); }
+    .dir__rule b { font: 10px/1 var(--font-brand); color: var(--ether); margin-right: 8px; font-weight: 400; }
+
+    /* 02 Palette */
+    .x-band { --band-h: 72px; }
+    .x-band__in { display: grid; grid-template-columns: 200px minmax(0, 1fr) 150px 110px; gap: var(--gutter); align-items: center; min-height: var(--band-h); }
+    .x-band__tok { font: 20px/1 var(--font-brand); text-transform: uppercase; }
+    .x-band__role { font-size: 13px; line-height: 1.5; }
+    .x-band__ratio { font: 10px/1 var(--font-brand); text-transform: uppercase; }
+    .x-band__hex { font: 15px/1 var(--font-dot-mono); text-align: right; }
+    .ramp { border-block: 1px solid var(--line); }
+    .ramp-head { padding-bottom: 14px; }
+    .ramp-head .x-band__in { min-height: 0; }
+    .x-swatch { width: 16px; height: 16px; flex: none; background: var(--swatch, var(--fg)); }
+
+    .ether { align-items: stretch; row-gap: 40px; }
+    .ether__stage { grid-column: 1 / span 7; position: relative; min-height: 300px; background: var(--void); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+    .ether__beam { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: linear-gradient(to right, transparent, var(--ether) 30% 70%, transparent); box-shadow: 0 0 18px var(--ether), 0 0 60px var(--ether-glow); }
+    .ether__node { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; translate: -50% -50%; background: var(--ether); box-shadow: 0 0 16px var(--ether), 0 0 48px var(--ether-glow); }
+    .ether__fog { position: absolute; inset: 0; background: radial-gradient(60% 70% at 70% 30%, color-mix(in srgb, var(--fog) 55%, transparent), transparent 70%); }
+    .ether__focus { position: absolute; left: 32px; bottom: 32px; }
+    .ether__focus .n-btn { outline: 1px solid var(--ether); outline-offset: 3px; box-shadow: 0 0 0 4px var(--ether-glow); }
+    .ether__stage > .n-hud { position: absolute; left: 32px; top: 28px; }
+    .ether__list { grid-column: 8 / span 5; align-content: center; display: grid; border-top: 1px solid var(--line); }
+    .tok-row { grid-template-columns: 16px minmax(0, 1fr) auto; gap: 16px; }
+    .tok-row__name { display: grid; gap: 6px; }
+    .tok-row__name .n-small { font-size: 12px; }
+    .tok-row__val { display: grid; gap: 6px; justify-items: end; text-align: right; }
+
+    .status-table { border-top: 1px solid var(--line); }
+    .st-row { grid-template-columns: 240px minmax(0, 1fr) 180px 200px; }
+    .st-head { padding-block: 0 14px; border-top: 0; border-bottom: 1px solid var(--line); }
+    .st-head:hover { background: none; }
+    .x-strip {
+      height: 16px;
+      background: linear-gradient(to right,
+        var(--status) 0 50%,
+        color-mix(in srgb, var(--status) 45%, var(--surface)) 50% 75%,
+        color-mix(in srgb, var(--status) 16%, var(--surface)) 75%);
+      box-shadow: 0 0 16px color-mix(in srgb, var(--status) 30%, transparent);
+    }
+    .st-cell { display: grid; gap: 6px; }
+    .st-cell .n-hud { color: var(--fg-dim); }
+    .hexline { display: flex; align-items: center; gap: 10px; font: 15px/1 var(--font-dot-mono); color: var(--fg); }
+    .ratio { font: 15px/1 var(--font-dot-mono); color: var(--fg); }
+
+    /* 03 Type */
+    .type { border-top: 1px solid var(--line); }
+    .type__row { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); align-items: center; padding-block: 36px; }
+    .type__meta { display: grid; gap: 12px; align-content: start; }
+    .type__spec { container-type: inline-size; min-width: 0; overflow: hidden; }
+    .spec-mega { font: min(176px, 22cqi)/0.9 var(--font-display); text-transform: uppercase; white-space: nowrap; margin: 0 0 0 -4px; }
+    .spec-hud { display: grid; gap: 18px; }
+    .spec-hud__x3 { font-size: 30px; gap: 30px; }
+    .spec-dot { margin: 0; font: 32px/1.1 var(--font-dot-mono); text-transform: uppercase; display: flex; flex-wrap: wrap; gap: 0 1.2em; }
+    .spec-term { margin: 0; display: grid; gap: 14px; }
+    .spec-term b { font-weight: 400; color: var(--ether); }
+    .spec-term pre { margin: 0; white-space: pre-wrap; }
+
+    /* 04 Marks */
+    .marks { row-gap: 40px; }
+    .marks__hero { grid-column: 1 / span 7; display: grid; gap: 14px; }
+    .marks__stage { position: relative; aspect-ratio: 1 / 1.05; background: radial-gradient(70% 60% at 55% 45%, color-mix(in srgb, var(--fog) 40%, transparent), transparent 70%), var(--void); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+    .marks__emblem { position: absolute; width: 112%; aspect-ratio: 1; left: 6%; top: -2%; }
+    .marks__emblem .ring { --mark-color: var(--ether); opacity: 0.85; position: absolute; inset: 0; }
+    .marks__emblem .blade { --mark-color: var(--fg); position: absolute; inset: 0; }
+    .marks__clean { grid-column: 8 / span 5; display: grid; gap: 24px; align-content: start; }
+    .x-frame { display: grid; grid-template-rows: 1fr auto; gap: 14px; }
+    .x-frame__box { container-type: inline-size; display: grid; place-items: center; padding: 48px 40px; background: var(--void); border: 1px solid var(--line); border-radius: var(--r); }
+    .marks__rule { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--gutter); align-items: baseline; padding-top: 24px; border-top: 1px solid var(--line); }
+    .marks__rule .n-title-s b { color: var(--ether); font-weight: 400; }
+    .marks__rule + .marks__rule { margin-top: 16px; }
+    .marks__spec { display: grid; gap: 24px; justify-items: start; }
+    .x-ratio { display: grid; grid-template-columns: 140px repeat(2, minmax(0, 200px)); align-items: center; gap: 14px var(--gutter); padding-top: 4px; }
+    .x-ratio .readout { font-size: 20px; }
+
+    /* 05 Components: meta left, demo right, hairline between */
+    .comp { border-top: 1px solid var(--line); }
+    .comp__row { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: var(--gutter); padding-block: 40px; border-bottom: 1px solid var(--line); }
+    .comp__meta { display: grid; gap: 12px; align-content: start; }
+    .comp__demo { min-width: 0; display: grid; gap: 32px; }
+    .acts { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 28px 40px; }
+    .act { display: grid; gap: 14px; justify-items: start; }
+    .acts__push { margin-left: auto; display: flex; align-items: flex-end; gap: 28px 40px; flex-wrap: wrap; }
+    .statuses { display: flex; flex-wrap: wrap; gap: 20px 36px; }
+    .meters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px var(--gutter); }
+    .meter { display: grid; gap: 14px; }
+    .meter__top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+    .list { border-top: 1px solid var(--line); }
+    .list .n-row { grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) 24px; text-decoration: none; padding-inline: 4px; }
+    .list .n-row:hover .n-arrow { transform: translateX(6px); }
+    .list .n-arrow { transition: transform var(--t-fast) var(--snap); color: var(--fg-dim); }
+    .list__name { font-size: 15px; color: var(--fg); }
+    .list .n-dot { font-size: 13px; color: var(--fg-dim); }
+
+    .x-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px var(--gutter); max-width: 760px; }
+    .x-form__wide { grid-column: 1 / -1; }
+    .x-form__actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; align-items: center; gap: 28px; padding-top: 8px; }
+    .x-field { display: grid; gap: 10px; align-content: start; }
+    .x-input {
+      width: 100%;
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r);
+      background: var(--surface);
+      color: var(--fg);
+      font: 15px/1 var(--font-body);
+      transition: border-color var(--t-fast) var(--snap), box-shadow var(--t-med) var(--snap);
+    }
+    .x-input::placeholder { color: var(--fg-dim); }
+    .x-input:hover { border-color: var(--fg-dim); }
+    .x-input:focus, .x-input:focus-visible { outline: none; border-color: var(--ether); box-shadow: 0 0 0 1px var(--ether), 0 0 22px var(--ether-glow); }
+    .x-input[aria-invalid="true"] { border-color: var(--status-critical); }
+    .x-select { position: relative; }
+    .x-select .x-input { appearance: none; padding-right: 40px; cursor: pointer; }
+    .x-select::after { content: "↓"; position: absolute; right: 14px; top: 50%; translate: 0 -50%; color: var(--fg-dim); pointer-events: none; font: 15px/1 var(--font-body); }
+    .x-check { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--fg-dim); cursor: pointer; }
+    .x-check input { width: 16px; height: 16px; margin: 0; accent-color: var(--ether); }
+
+    .panel-stage { position: relative; min-height: 340px; overflow: hidden; border-radius: var(--r); background: var(--void); border: 1px solid var(--line); }
+    .panel-stage__ghost { position: absolute; right: -60px; top: -40px; width: 420px; aspect-ratio: 1; }
+    .panel-stage__ghost .ring { --mark-color: var(--ether); opacity: 0.55; position: absolute; inset: 0; }
+    .panel-stage__ghost .blade { --mark-color: var(--fg); opacity: 0.35; position: absolute; inset: 0; }
+    .panel-stage__word { position: absolute; left: 24px; bottom: 8px; font: 120px/0.9 var(--font-display); color: var(--fg-faint); white-space: nowrap; }
+    .panel-stage .n-panel { position: absolute; left: 32%; top: 48px; width: min(440px, 60%); display: grid; gap: 18px; }
+    .panel-stage .n-dot { margin: 0; font-size: 32px; line-height: 1; text-transform: uppercase; }
+    .panel__actions { display: flex; justify-content: flex-end; align-items: center; gap: 28px; }
+    .panel__actions .n-btn { height: 40px; }
+
+    /* 06 Motion */
+    .curve { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: var(--gutter); align-items: center; padding-bottom: 40px; border-bottom: 1px solid var(--line); }
+    .curve__svg { width: 140px; height: 140px; color: var(--ether); overflow: visible; }
+    .curve__svg .axis { stroke: var(--line); }
+    .curve__svg .path { stroke: currentColor; filter: drop-shadow(0 0 6px var(--ether-glow)); }
+    .tokens { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gutter); }
+    .tokens > div { display: grid; gap: 10px; align-content: start; }
+    .demos { row-gap: 0; }
+    .demo { grid-column: span 6; display: grid; gap: 18px; padding-block: 32px 40px; border-bottom: 1px solid var(--line); }
+    .demo__top { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 36px; }
+    .demo__top .n-btn { height: 36px; font-size: 13px; padding: 0 14px; }
+    .x-stage { position: relative; display: grid; place-items: center; min-height: 260px; background: color-mix(in srgb, var(--abyss) 70%, transparent); border-top: 1px solid var(--line); overflow: hidden; }
+    .reveal-demo { display: grid; gap: 16px; justify-items: start; width: min(380px, 84%); }
+    .reveal-demo .n-display-s { white-space: nowrap; }
+    .reveal-demo .n-meter { width: 100%; }
+    .pulses { display: grid; gap: 22px; }
+    .mat { width: 200px; aspect-ratio: 1; position: relative; }
+    .mat .ring { --mark-color: var(--ether); position: absolute; inset: 0; opacity: 0.8; }
+    .mat .blade { --mark-color: var(--fg); position: absolute; inset: 0; }
+    .mat.is-play { animation: x-materialise 2.2s var(--snap) both; }
+    @keyframes x-materialise { from { opacity: 0; filter: blur(32px); scale: 1.08; } }
+    .tick { margin-top: 72px; display: grid; gap: 14px; }
+    .tick .n-ticker { height: 420px; border-block: 1px solid var(--line); background: var(--abyss); --ticker-size: 112px; --ticker-time: 24s; }
+
+    /* 07 Do / Don't */
+    .dd { row-gap: 56px; }
+    .x-dd { grid-column: span 6; display: grid; gap: 16px; }
+    .x-dd__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .x-dd__cell { display: grid; gap: 12px; align-content: start; }
+    .x-dd__stage { display: grid; place-items: center; height: 180px; padding: 20px; background: var(--abyss); border-top: 1px solid var(--line); overflow: hidden; }
+    .x-dd__stage--dont { opacity: 0.92; }
+    .x-skel { display: block; height: 5px; background: var(--fg-faint); }
+    .x-skel--fg { background: var(--fg); height: 10px; }
+    /* Don't: renders of what Nocturne rejects (relative colour on our tokens, no new hex) */
+    .bad-pills { display: grid; gap: 10px; justify-items: center; }
+    .bad-pill { padding: 6px 14px; border-radius: 999px; font: 700 12px/1 var(--font-body); color: var(--on-status); }
+    .bad-pill--ok { background: oklch(from var(--green) 0.78 0.17 h); }
+    .bad-pill--err { background: oklch(from var(--red) 0.64 0.22 h); }
+    .bad-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+    .bad-card { display: grid; gap: 8px; padding: 12px; border-radius: 10px; background: var(--raise); border: 1px solid var(--line); box-shadow: 0 6px 18px color-mix(in srgb, var(--void) 60%, transparent); }
+    .bad-card i { width: 16px; height: 16px; border-radius: 50%; background: oklch(from var(--blue) 0.7 0.16 h); }
+    .good-rows { width: 100%; }
+    .good-rows > div { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; padding-block: 11px; border-bottom: 1px solid var(--line); }
+    .good-rows .x-skel { width: 70%; }
+    .bad-btn { padding: 14px 26px; border: 0; border-radius: 10px; background: linear-gradient(135deg, oklch(from var(--purple) 0.66 0.2 h), oklch(from var(--blue) 0.66 0.17 h)); color: var(--on-status); font: 700 14px/1 var(--font-body); box-shadow: 0 8px 24px oklch(from var(--purple) 0.5 0.2 h / 0.45); }
+    .bad-center { display: grid; gap: 9px; justify-items: center; width: 70%; }
+    .bad-center .x-skel--fg { width: 70%; }
+    .bad-center .x-skel:nth-child(2) { width: 90%; }
+    .bad-center .x-skel:nth-child(3) { width: 75%; }
+    .bad-center .bad-pill { margin-top: 6px; background: var(--fg); color: var(--void); }
+    .good-asym { display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px 4px; width: 100%; align-items: end; }
+    .good-asym .n-hud { grid-column: 1 / -1; }
+    .good-asym .x-skel--fg { grid-column: 1 / span 9; height: 16px; }
+    .good-asym .lines { grid-column: 1 / span 6; display: grid; gap: 6px; }
+    .good-asym .btn { grid-column: 9 / span 4; height: 14px; background: var(--fg); }
+
+    /* Footer */
+    .ftr { padding-block: 40px 56px; border-top: 1px solid var(--line); }
+    .ftr__in { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; }
+
+    @media (max-width: 1100px) {
+      .n-mega { font-size: 88px; }
+      .hdr__nav { display: none; }
+      .hdr .n-btn { margin-left: auto; }
+      .x-band__in { grid-template-columns: 160px minmax(0, 1fr) 120px 96px; }
+      .st-row { grid-template-columns: 190px minmax(0, 1fr) 130px 150px; }
+      .ether__stage, .ether__list, .marks__hero, .marks__clean { grid-column: 1 / -1; }
+      .marks__clean { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .marks__stage { aspect-ratio: 16 / 11; }
+      .marks__emblem { width: 76%; left: 12%; top: -6%; }
+      .demo { grid-column: 1 / -1; }
+      .x-dd { grid-column: 1 / -1; }
+      .tokens { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 24px; }
+    }
+    @media (max-width: 720px) {
+      .hdr .n-brand { --h: 32px; }
+      .n-mega { font: 40px/1 var(--font-brand); white-space: normal; }
+      .n-display { font: 40px/1 var(--font-brand); white-space: normal; }
+      .intro { padding-block: 96px 40px; }
+      .intro__foot { margin-top: 56px; }
+      .intro__foot .n-hud:last-child { margin-left: 0; }
+      .head { margin-bottom: 48px; }
+      .sub + .sub { margin-top: 72px; }
+
+      /* Single words sized to the column stay Display: they cannot wrap, so they cannot break. */
+      .dir__row { grid-template-columns: 1fr; gap: 14px; padding-block: 20px 22px; }
+      .dir__word .n-display { font: 14.4cqi/0.9 var(--font-display); white-space: nowrap; }
+      .dir__word { flex-direction: column; gap: 10px; }
+      .dir__word .n-hud { padding-top: 0; }
+
+      .x-band { --band-h: 0; }
+      .x-band__in { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 16px; padding-block: 16px; }
+      .x-band__role { grid-column: 1 / -1; grid-row: 2; }
+      .x-band__ratio { grid-column: 1 / -1; grid-row: 3; }
+      .x-band__hex { grid-column: 2; grid-row: 1; }
+      .ramp-head { display: none; }
+      .st-head { display: none; }
+      .st-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); row-gap: 16px; padding-block: 20px; }
+      .st-row > :first-child, .st-row .x-strip { grid-column: 1 / -1; }
+
+      .type__row { grid-template-columns: 1fr; gap: 20px; padding-block: 28px; }
+      .spec-dot { font-size: 22px; }
+      .spec-hud__x3 { font-size: 18px; gap: 18px; }
+      .marks__clean { grid-template-columns: 1fr; }
+      .marks__stage { aspect-ratio: 1 / 1.05; }
+      .marks__emblem { width: 112%; left: 6%; top: -2%; }
+      .marks__rule { grid-template-columns: 1fr; gap: 12px; }
+      .x-frame__box { padding: 36px 28px; }
+      .x-ratio { grid-template-columns: 1fr 1fr 1fr; column-gap: 12px; }
+      .x-ratio .n-hud { font-size: 10px; line-height: 1.3; }
+
+      .comp__row { grid-template-columns: 1fr; gap: 24px; padding-block: 32px; }
+      .acts__push { margin-left: 0; }
+      .meters { grid-template-columns: 1fr; gap: 28px; }
+      .list .n-row { grid-template-columns: minmax(0, 1fr) auto 24px; row-gap: 8px; }
+      .list .n-row > :nth-child(3), .list .n-row > :nth-child(4) { display: none; }
+      .x-form { grid-template-columns: 1fr; }
+      .panel-stage { min-height: 420px; }
+      .panel-stage .n-panel { left: 16px; right: 16px; width: auto; top: 120px; }
+      .panel-stage__ghost { width: 300px; right: -80px; }
+      .panel-stage__word { font-size: 64px; }
+
+      .curve { grid-template-columns: 1fr; gap: 28px; }
+      .tick .n-ticker { height: 280px; --ticker-size: 60px; }
+      .x-dd__pair { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="n-atmos" aria-hidden="true"></div>
+
+  <header class="hdr">
+    <div class="n-wrap hdr__in">
+      <a class="n-brand n-brand--csl" href="#sheet-title" aria-label="Cloud Scythe Labs">
+        <span class="n-mark" style="--mark:url('../../../03_Branding_Assets/03_03_Emblem/03_03_01_Mono/Rectangle_NoPadding_CSLMono.svg'); --mark-ratio: 1677/3000"></span>
+        <span class="n-mark n-brand__type" style="--mark:url('../../../03_Branding_Assets/03_04_Logotype/Logotype2_NoPadding.svg'); --mark-ratio: 634/54"></span>
+      </a>
+      <nav class="hdr__nav" aria-label="Sections">
+        <a href="#palette">PALETTE</a>
+        <a href="#type">TYPE</a>
+        <a href="#marks">MARKS</a>
+        <a href="#components">COMPONENTS</a>
+        <a href="#motion">MOTION</a>
+      </nav>
+      <a class="n-btn" href="home.html">HOME</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="sheet-title">
+      <div class="n-bleed" aria-hidden="true">
+        <span class="n-mark ring n-glow" style="--mark:url('../../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo2.svg')"></span>
+        <span class="n-mark blade n-glow" style="--mark:url('../../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo1.svg')"></span>
+      </div>
+      <div class="n-wrap intro__copy">
+        <p class="n-hud" data-reveal><span class="n-idx">00</span> CLOUD SCYTHE LABS <span>/</span> DIRECTION SHEET <span>/</span> ROUND 3</p>
+        <h1 class="n-mega intro__title" id="sheet-title" data-reveal style="--i:1">NOCTURNE</h1>
+        <p class="n-body" data-reveal style="--i:2">Cold light in a black room. The marks and typefaces stay; colour, surfaces, layout and motion change. One accent, muted status, hairlines instead of boxes, and motion that snaps in and drifts out.</p>
+      </div>
+      <div class="n-wrap">
+        <div class="intro__foot" data-reveal style="--i:3">
+          <span class="n-status s-progress n-status--live">PROPOSED DIRECTION</span>
+          <span class="n-hud">THEME <span class="readout" data-readout="theme">PS2</span></span>
+          <a class="n-hud n-scroll" href="#direction">07 SECTIONS <span class="n-arrow" aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 DIRECTION -->
+    <section class="n-section n-wrap" aria-labelledby="direction">
+      <div class="head">
+        <p class="n-hud" id="direction" data-reveal><span class="n-idx">01</span> DIRECTION</p>
+        <h2 class="n-title" data-reveal style="--i:1">FIVE WORDS. EACH ONE IS A RULE.</h2>
+      </div>
+      <div class="dir">
+        <div class="n-row dir__row" data-reveal>
+          <div class="dir__word"><span class="n-hud"><span class="n-idx">D.01</span></span><p class="n-display">FAST</p></div>
+          <div class="dir__text">
+            <p class="n-small">Speed reads in straight lines and instant response.</p>
+            <p class="dir__rule"><b>RULE</b><span class="x-tok">--snap</span> easing, 120 ms response, 2 px corners, speed-sweep hover, rotated ticker.</p>
+          </div>
+        </div>
+        <div class="n-row dir__row" data-reveal style="--i:1">
+          <div class="dir__word"><span class="n-hud"><span class="n-idx">D.02</span></span><p class="n-display">DARK</p></div>
+          <div class="dir__text">
+            <p class="n-small">The PS2 boot black: the page is a void, light is the exception.</p>
+            <p class="dir__rule"><b>RULE</b><span class="x-tok">--void</span> page, cold near-black bands, grayscale imagery that fades into the void.</p>
+          </div>
+        </div>
+        <div class="n-row dir__row" data-reveal style="--i:2">
+          <div class="dir__word"><span class="n-hud"><span class="n-idx">D.03</span></span><p class="n-display">INTIMIDATING</p></div>
+          <div class="dir__text">
+            <p class="n-small">Scale and restraint: huge titles, few words, nothing friendly.</p>
+            <p class="dir__rule"><b>RULE</b>One-line Display up to 176 px, HUD labels over chatty copy, no pills, no rounded cards.</p>
+          </div>
+        </div>
+        <div class="n-row dir__row" data-reveal style="--i:3">
+          <div class="dir__word"><span class="n-hud"><span class="n-idx">D.04</span></span><p class="n-display">ETHEREAL</p></div>
+          <div class="dir__text">
+            <p class="n-small">Cold light in fog: glow replaces fill, shapes materialise.</p>
+            <p class="dir__rule"><b>RULE</b>One accent (<span class="x-tok">--ether</span>) for focus and glow, fog atmosphere, blur-to-sharp reveals, status as a lit pixel.</p>
+          </div>
+        </div>
+        <div class="n-row dir__row" data-reveal style="--i:4">
+          <div class="dir__word"><span class="n-hud"><span class="n-idx">D.05</span></span><p class="n-display">EXCITING</p></div>
+          <div class="dir__text">
+            <p class="n-small">Motion and contrast spikes: the one bright thing matters.</p>
+            <p class="dir__rule"><b>RULE</b>Ticker bands between sections, primary action in solid <span class="x-tok">--fg</span>, live pulse, 60 ms reveal stagger.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 PALETTE -->
+    <section class="n-section" aria-labelledby="palette" style="padding-bottom: 0">
+      <div class="n-wrap head">
+        <p class="n-hud" id="palette" data-reveal><span class="n-idx">02</span> PALETTE</p>
+        <h2 class="n-title" data-reveal style="--i:1">BLACK, COLD GRAYS, ONE LIGHT.</h2>
+        <p class="n-body" data-reveal style="--i:2">Neutrals carry a faint cold tint. Values are read live from the active theme; ratios are WCAG contrast against <span class="x-tok">--surface</span>.</p>
+      </div>
+
+      <div class="n-wrap ramp-head" aria-hidden="true">
+        <div class="x-band__in">
+          <span class="n-hud">TOKEN</span><span class="n-hud">ROLE</span><span class="n-hud">VS SURFACE</span><span class="n-hud" style="justify-content: flex-end">HEX</span>
+        </div>
+      </div>
+      <div class="ramp" role="list" aria-label="Neutral ramp">
+        <div class="x-band" role="listitem" data-band="--void" style="background: var(--void)"><div class="n-wrap x-band__in"><span class="x-band__tok"><span class="x-tok">--void</span></span><span class="x-band__role">Page. The boot-screen black.</span><span class="x-band__ratio" data-ratio="--void">—</span><span class="x-band__hex" data-hex="--void">—</span></div></div>
+        <div class="x-band" role="listitem" data-band="--abyss" style="background: var(--abyss)"><div class="n-wrap x-band__in"><span class="x-band__tok"><span class="x-tok">--abyss</span></span><span class="x-band__role">Full-bleed section bands.</span><span class="x-band__ratio" data-ratio="--abyss">—</span><span class="x-band__hex" data-hex="--abyss">—</span></div></div>
+        <div class="x-band" role="listitem" data-band="--surface" style="background: var(--surface)"><div class="n-wrap x-band__in"><span class="x-band__tok"><span class="x-tok">--surface</span></span><span class="x-band__role">Panels, inputs. The contrast reference.</span><span class="x-band__ratio" data-ratio="--surface">—</span><span class="x-band__hex" data-hex="--surface">—</span></div></div>
+        <div class="x-band" role="listitem" data-band="--raise" style="background: var(--raise)"><div class="n-wrap x-band__in"><span class="x-band__tok"><span class="x-tok">--raise</span></span><span class="x-band__role">Hover, sweep fill, nested rows.</span><span class="x-band__ratio" data-ratio="--raise">—</span><span class="x-band__hex" data-hex="--raise">—</span></div></div>
+        <div class="x-band" role="listitem" data-band="--line" style="background: var(--line)"><div class="n-wrap x-band__in"><span class="x-band__tok"><span class="x-tok">--line</span></span><span class="x-band__role">Hairline structure. Decorative only.</span><span class="x-band__ratio" data-ratio="--line">—</span><span class="x-band__hex" data-hex="--line">—</span></div></div>
+        <div class="x-band" role="listitem" data-band="--fg-faint" style="background: var(--fg-faint)"><div class="n-wrap x-band__in"><span class="x-band__tok"><span class="x-tok">--fg-faint</span></span><span class="x-band__role">Decorative type only. Never information.</span><span class="x-band__ratio" data-ratio="--fg-faint">—</span><span class="x-band__hex" data-hex="--fg-faint">—</span></div></div>
+        <div class="x-band" role="listitem" data-band="--line-strong" style="background: var(--line-strong)"><div class="n-wrap x-band__in"><span class="x-band__tok"><span class="x-tok">--line-strong</span></span><span class="x-band__role">Control boundaries: inputs, default buttons. ≥ 3:1.</span><span class="x-band__ratio" data-ratio="--line-strong">—</span><span class="x-band__hex" data-hex="--line-strong">—</span></div></div>
+        <div class="x-band" role="listitem" data-band="--fg-dim" style="background: var(--fg-dim)"><div class="n-wrap x-band__in"><span class="x-band__tok"><span class="x-tok">--fg-dim</span></span><span class="x-band__role">Body copy, secondary text, HUD labels.</span><span class="x-band__ratio" data-ratio="--fg-dim">—</span><span class="x-band__hex" data-hex="--fg-dim">—</span></div></div>
+        <div class="x-band" role="listitem" data-band="--fg" style="background: var(--fg)"><div class="n-wrap x-band__in"><span class="x-band__tok"><span class="x-tok">--fg</span></span><span class="x-band__role">Titles, labels, marks, primary fill.</span><span class="x-band__ratio" data-ratio="--fg">—</span><span class="x-band__hex" data-hex="--fg">—</span></div></div>
+      </div>
+
+      <div class="n-wrap" style="padding-block: 120px 0">
+        <div class="sub">
+          <p class="n-hud" data-reveal><span class="n-idx">02.B</span> ETHER <span>/</span> THE ONLY LIGHT</p>
+          <div class="n-grid ether">
+            <div class="ether__stage" data-reveal style="--i:1" aria-hidden="true">
+              <div class="ether__fog"></div>
+              <div class="ether__beam"></div>
+              <div class="ether__node"></div>
+              <p class="n-hud">FOCUS <span>/</span> ACTIVE <span>/</span> GLOW SOURCE</p>
+              <div class="ether__focus"><span class="n-btn">FOCUSED</span></div>
+            </div>
+            <div class="ether__list" data-reveal style="--i:2">
+              <div class="n-row tok-row"><span class="x-swatch" style="--swatch: var(--ether); box-shadow: 0 0 12px var(--ether)"></span><span class="tok-row__name"><span class="n-hud n-hud--fg">--ETHER</span><span class="n-small">Focus rings, active state, glow source, HUD indices.</span></span><span class="tok-row__val"><span class="hexline" data-hex="--ether">—</span><span class="n-hud" data-ratio="--ether">—</span></span></div>
+              <div class="n-row tok-row"><span class="x-swatch" style="--swatch: var(--ether-glow)"></span><span class="tok-row__name"><span class="n-hud n-hud--fg">--ETHER-GLOW</span><span class="n-small">Bloom around the emblem ring and focused controls.</span></span><span class="tok-row__val"><span class="hexline" data-hex="--ether-glow">—</span><span class="n-hud">ALPHA</span></span></div>
+              <div class="n-row tok-row"><span class="x-swatch" style="--swatch: var(--fog)"></span><span class="tok-row__name"><span class="n-hud n-hud--fg">--FOG</span><span class="n-small">Atmosphere gradients behind everything.</span></span><span class="tok-row__val"><span class="hexline" data-hex="--fog">—</span><span class="n-hud">AMBIENT</span></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub">
+          <p class="n-hud" data-reveal><span class="n-idx">02.C</span> STATUS <span>/</span> MUTED, LIT, LABELLED</p>
+          <p class="n-body" data-reveal style="--i:1">Status is a lit 8 px square plus a label, never a coloured pill. Hues sit at near-equal lightness with low chroma. Status hues are non-text indicators: they need 3:1 against <span class="x-tok">--surface</span>.</p>
+          <div class="status-table" data-reveal style="--i:2">
+            <div class="n-row st-row st-head" aria-hidden="true">
+              <span class="n-hud">STATUS</span><span class="n-hud">STRIP 100 / 45 / 16</span><span class="n-hud">LIVE HEX</span><span class="n-hud">VS SURFACE</span>
+            </div>
+            <div class="n-row st-row s-success"><span class="n-status s-success">SUCCESS / SYNCED</span><span class="x-strip" aria-hidden="true"></span><span class="st-cell"><span class="hexline" data-hex="--green">—</span><span class="n-hud">--GREEN</span></span><span class="st-cell"><span class="ratio" data-ratio="--green">—</span><span class="n-hud" data-grade="--green">—</span></span></div>
+            <div class="n-row st-row s-neutral"><span class="n-status s-neutral">NEUTRAL / IDLE</span><span class="x-strip" aria-hidden="true"></span><span class="st-cell"><span class="hexline" data-hex="--blue">—</span><span class="n-hud">--BLUE</span></span><span class="st-cell"><span class="ratio" data-ratio="--blue">—</span><span class="n-hud" data-grade="--blue">—</span></span></div>
+            <div class="n-row st-row s-caution"><span class="n-status s-caution">CAUTION / 80% QUOTA</span><span class="x-strip" aria-hidden="true"></span><span class="st-cell"><span class="hexline" data-hex="--yellow">—</span><span class="n-hud">--YELLOW</span></span><span class="st-cell"><span class="ratio" data-ratio="--yellow">—</span><span class="n-hud" data-grade="--yellow">—</span></span></div>
+            <div class="n-row st-row s-warning"><span class="n-status s-warning">WARNING / CONFLICT</span><span class="x-strip" aria-hidden="true"></span><span class="st-cell"><span class="hexline" data-hex="--orange">—</span><span class="n-hud">--ORANGE</span></span><span class="st-cell"><span class="ratio" data-ratio="--orange">—</span><span class="n-hud" data-grade="--orange">—</span></span></div>
+            <div class="n-row st-row s-critical"><span class="n-status s-critical">CRITICAL / PUSH FAILED</span><span class="x-strip" aria-hidden="true"></span><span class="st-cell"><span class="hexline" data-hex="--red">—</span><span class="n-hud">--RED</span></span><span class="st-cell"><span class="ratio" data-ratio="--red">—</span><span class="n-hud" data-grade="--red">—</span></span></div>
+            <div class="n-row st-row s-progress"><span class="n-status s-progress">PROGRESS / UPLOADING</span><span class="x-strip" aria-hidden="true"></span><span class="st-cell"><span class="hexline" data-hex="--purple">—</span><span class="n-hud">--PURPLE</span></span><span class="st-cell"><span class="ratio" data-ratio="--purple">—</span><span class="n-hud" data-grade="--purple">—</span></span></div>
+            <div class="n-row st-row s-notify"><span class="n-status s-notify">NOTIFY / 2 NEW</span><span class="x-strip" aria-hidden="true"></span><span class="st-cell"><span class="hexline" data-hex="--pink">—</span><span class="n-hud">--PINK</span></span><span class="st-cell"><span class="ratio" data-ratio="--pink">—</span><span class="n-hud" data-grade="--pink">—</span></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 TYPE -->
+    <section class="n-section n-wrap" aria-labelledby="type">
+      <div class="head">
+        <p class="n-hud" id="type" data-reveal><span class="n-idx">03</span> TYPE</p>
+        <h2 class="n-title" data-reveal style="--i:1">BRAND FONTS SHOUT. BODY WHISPERS.</h2>
+        <p class="n-body" data-reveal style="--i:2">Brand faces are uppercase only: titles, labels, buttons. Copy is JetBrains Mono in <span class="x-tok">--fg-dim</span>. HUD labels mark every section and caption.</p>
+      </div>
+      <div class="type">
+        <div class="n-row type__row" data-reveal>
+          <div class="type__meta"><p class="n-hud"><span class="n-idx">T.01</span> MEGA DISPLAY</p><p class="n-label">CSL DISPLAY 176 / 0.9</p><p class="n-small">Hero titles. One line, three words at most. 88 px under 1100, Mono 40 under 720.</p></div>
+          <div class="type__spec"><p class="spec-mega">NOCTURNE</p></div>
+        </div>
+        <div class="n-row type__row" data-reveal>
+          <div class="type__meta"><p class="n-hud"><span class="n-idx">T.02</span> MONO TITLE</p><p class="n-label">CSL MONO 40 / 1.1</p><p class="n-small">Section titles. May wrap; keep under 18 characters per line.</p></div>
+          <div class="type__spec"><p class="n-title" style="max-width: 18ch">FROM THE ARRANGE VIEW TO EVERY MACHINE</p></div>
+        </div>
+        <div class="n-row type__row" data-reveal>
+          <div class="type__meta"><p class="n-hud"><span class="n-idx">T.03</span> HUD LABEL</p><p class="n-label">CSL MONO 10 / 1</p><p class="n-small">Section indices, captions, table heads. Index in <span class="x-tok">--ether</span>, text in <span class="x-tok">--fg-dim</span>. Shown at 1× and 3×.</p></div>
+          <div class="type__spec spec-hud">
+            <p class="n-hud"><span class="n-idx">03</span> REACLOUD PIPELINE <span>/</span> RECORD <span>/</span> COMMIT <span>/</span> PUSH</p>
+            <p class="n-hud spec-hud__x3" aria-hidden="true"><span class="n-idx">03</span> REACLOUD PIPELINE</p>
+          </div>
+        </div>
+        <div class="n-row type__row" data-reveal>
+          <div class="type__meta"><p class="n-hud"><span class="n-idx">T.04</span> DOT MONO READOUT</p><p class="n-label">CSL DOT MONO 32 / 1.1</p><p class="n-small">Numbers that change: sizes, timers, hashes, prices.</p></div>
+          <div class="type__spec"><p class="spec-dot"><span>142 MB</span><span>00:03:21</span><span>7C1E9A4</span><span>$100/MO</span></p></div>
+        </div>
+        <div class="n-row type__row" data-reveal>
+          <div class="type__meta"><p class="n-hud"><span class="n-idx">T.05</span> BODY</p><p class="n-label">JETBRAINS MONO 15 / 1.65</p><p class="n-small">Paragraphs in <span class="x-tok">--fg-dim</span>, 56 characters wide at most. Sentence case.</p></div>
+          <div class="type__spec"><p class="n-body">Cloud storage and version control for REAPER. A quiet daemon pushes every session, so the whole band works on the latest take.</p></div>
+        </div>
+        <div class="n-row type__row" data-reveal>
+          <div class="type__meta"><p class="n-hud"><span class="n-idx">T.06</span> CSL TERMINAL</p><p class="n-label">CSL TERMINAL 22 · 11</p><p class="n-small">Code, logs, CLI output. Prompt and keys in <span class="x-tok">--ether</span>.</p></div>
+          <div class="type__spec spec-term">
+            <p class="n-code"><b>$</b> reacloud push</p>
+            <pre class="n-code-s"><b>reacloudd</b>  night_drive.rpp  3 changed
+<b>pushed</b>     142 MB  7c1e9a4  ok</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 MARKS -->
+    <section class="n-section band-section" aria-labelledby="marks">
+      <div class="n-wrap">
+        <div class="head">
+          <p class="n-hud" id="marks" data-reveal><span class="n-idx">04</span> MARKS</p>
+          <h2 class="n-title" data-reveal style="--i:1">UNCHANGED. LIT FROM WITHIN.</h2>
+        </div>
+        <div class="n-grid marks">
+          <figure class="marks__hero" style="margin: 0" data-reveal>
+            <div class="marks__stage">
+              <div class="marks__emblem">
+                <span class="n-mark ring n-glow" style="--mark:url('../../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo2.svg')"></span>
+                <span class="n-mark blade n-glow" role="img" aria-label="Cloud Scythe Labs emblem" style="--mark:url('../../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo1.svg')"></span>
+              </div>
+            </div>
+            <figcaption class="n-hud"><span class="n-idx">M.01</span> EMBLEM <span>/</span> ATMOSPHERIC <span>/</span> RING <span class="x-tok">--ETHER</span> + GLOW, MAY CROP OFF-CANVAS</figcaption>
+          </figure>
+          <div class="marks__clean">
+            <figure class="x-frame" style="margin: 0; --i:1" data-reveal>
+              <div class="x-frame__box"><span class="n-mark" role="img" aria-label="Cloud Scythe Labs lockup 1" style="width: min(260px, 100%); --mark:url('../../../03_Branding_Assets/03_05_Lockups/03_05_01_Mono/Lockup1_NoPadding_Mono.svg'); --mark-ratio: 634/275"></span></div>
+              <figcaption class="n-hud"><span class="n-idx">M.02</span> LOCKUP 1 <span>/</span> MONO <span>/</span> <span class="x-tok">--FG</span></figcaption>
+            </figure>
+            <figure class="x-frame" style="margin: 0" data-reveal>
+              <div class="x-frame__box"><a class="n-brand n-brand--csl" href="#marks" aria-label="Cloud Scythe Labs" style="--h: min(56px, 100cqi / 5.3)">
+                <span class="n-mark" style="--mark:url('../../../03_Branding_Assets/03_03_Emblem/03_03_01_Mono/Rectangle_NoPadding_CSLMono.svg'); --mark-ratio: 1677/3000"></span>
+                <span class="n-mark n-brand__type" style="--mark:url('../../../03_Branding_Assets/03_04_Logotype/Logotype2_NoPadding.svg'); --mark-ratio: 634/54"></span>
+              </a></div>
+              <figcaption class="n-hud"><span class="n-idx">M.03</span> COMPOSED BRAND <span>/</span> CSL <span>/</span> HEADER</figcaption>
+            </figure>
+            <figure class="x-frame" style="margin: 0" data-reveal>
+              <div class="x-frame__box"><a class="n-brand n-brand--reacloud" href="#marks" aria-label="ReaCloud" style="--h: min(56px, 100cqi / 6)">
+                <span class="n-mark" style="--mark:url('../../../04_Product_Assets/04_01_ReaCloud/04_01_01_Emblem/Rectangle_NoPadding_ReaCloud.svg'); --mark-ratio: 2291/1679"></span>
+                <span class="n-mark n-brand__type" style="--mark:url('../../../04_Product_Assets/04_01_ReaCloud/04_01_02_Logotype/Logotype2_NoPadding.svg'); --mark-ratio: 2617/399"></span>
+              </a></div>
+              <figcaption class="n-hud"><span class="n-idx">M.04</span> COMPOSED BRAND <span>/</span> REACLOUD <span>/</span> <span class="x-tok">--FG</span></figcaption>
+            </figure>
+          </div>
+          <div class="marks__rule" data-reveal>
+            <p class="n-hud"><span class="n-idx">RULE</span> MARK COLOUR</p>
+            <p class="n-title-s">MARKS STAY <span class="x-tok">--FG</span>. ONLY THE RING MAY GLOW <b>--ETHER</b>, AND ONLY IN ATMOSPHERIC USE.</p>
+          </div>
+          <div class="marks__rule" data-reveal>
+            <p class="n-hud"><span class="n-idx">RULE</span> COMPOSED BRAND</p>
+            <div class="marks__spec">
+              <p class="n-title-s">EMBLEM + LOGOTYPE, COMPOSED FROM THE SEPARATE FILES. THE GAP SCALES WITH THE EMBLEM.</p>
+              <div class="x-ratio">
+                <span class="n-hud">MARK</span><span class="n-hud">GAP / EMBLEM H</span><span class="n-hud">LOGOTYPE H / EMBLEM H</span>
+                <span class="n-hud n-hud--fg">CSL</span><span class="readout">0.42×</span><span class="readout">0.36×</span>
+                <span class="n-hud n-hud--fg">REACLOUD</span><span class="readout">0.50×</span><span class="readout">0.62×</span>
+              </div>
+              <p class="n-small">.n-brand--csl / .n-brand--reacloud; set only <span class="x-tok">--h</span> (emblem height): 48 px in the header, 32 px under 720. The shipped Lockup2 files keep their tighter gap and are not used in Nocturne layouts.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 COMPONENTS -->
+    <section class="n-section n-wrap" aria-labelledby="components">
+      <div class="head">
+        <p class="n-hud" id="components" data-reveal><span class="n-idx">05</span> COMPONENTS</p>
+        <h2 class="n-title" data-reveal style="--i:1">FEW BOXES. HAIRLINES DO THE WORK.</h2>
+      </div>
+      <div class="comp">
+        <div class="comp__row" data-reveal>
+          <div class="comp__meta"><p class="n-hud"><span class="n-idx">C.01</span> ACTIONS</p><p class="n-small">Hover for the speed sweep. Forward action rightmost; colour fill only for destructive.</p></div>
+          <div class="comp__demo">
+            <div class="acts">
+              <div class="act"><a class="n-link" href="#docs">DOCS <span class="n-arrow">→</span></a><span class="n-hud">LINK <span>/</span> TERTIARY</span></div>
+              <div class="acts__push">
+                <div class="act"><a class="n-btn" href="#draft">SAVE DRAFT</a><span class="n-hud">DEFAULT</span></div>
+                <div class="act"><a class="n-btn n-btn--primary" href="#push">PUSH <span class="n-arrow">→</span></a><span class="n-hud">PRIMARY <span>/</span> RIGHTMOST</span></div>
+              </div>
+            </div>
+            <div class="acts">
+              <div class="act"><a class="n-link" href="#cancel">CANCEL</a><span class="n-hud">LINK</span></div>
+              <div class="acts__push">
+                <div class="act"><button class="n-btn n-btn--danger" type="button">DELETE PROJECT</button><span class="n-hud">DANGER <span>/</span> THE ONLY FILL</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="comp__row" data-reveal>
+          <div class="comp__meta"><p class="n-hud"><span class="n-idx">C.02</span> STATUS</p><p class="n-small">Lit pixel plus label. Live states pulse.</p></div>
+          <div class="comp__demo">
+            <div class="statuses">
+              <span class="n-status s-success">SYNCED</span>
+              <span class="n-status s-neutral">IDLE</span>
+              <span class="n-status s-caution">80% QUOTA</span>
+              <span class="n-status s-warning">CONFLICT</span>
+              <span class="n-status s-critical">PUSH FAILED</span>
+              <span class="n-status s-progress n-status--live">UPLOADING</span>
+              <span class="n-status s-notify">2 NEW</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="comp__row" data-reveal>
+          <div class="comp__meta"><p class="n-hud"><span class="n-idx">C.03</span> METER</p><p class="n-small">2 px bar with glow. Readout in Dot Mono, state labelled.</p></div>
+          <div class="comp__demo meters">
+            <div class="meter"><div class="meter__top"><span class="n-hud">STORAGE <span>/</span> BASIC</span><span class="readout">7.4 / 10 GB</span></div><div class="n-meter s-caution" style="--v: 74%"><i></i></div><span class="n-status s-caution">74% USED</span></div>
+            <div class="meter"><div class="meter__top"><span class="n-hud">UPLOAD</span><span class="readout">88 / 142 MB</span></div><div class="n-meter s-progress" style="--v: 62%"><i></i></div><span class="n-status s-progress n-status--live">PUSHING</span></div>
+            <div class="meter"><div class="meter__top"><span class="n-hud">STORAGE <span>/</span> PRO</span><span class="readout">36 / 200 GB</span></div><div class="n-meter" style="--v: 18%"><i></i></div><span class="n-status s-success">HEALTHY</span></div>
+          </div>
+        </div>
+
+        <div class="comp__row" data-reveal>
+          <div class="comp__meta"><p class="n-hud"><span class="n-idx">C.04</span> LIST ROWS</p><p class="n-small">Hairline-separated rows, hover raise and arrow nudge. No cards.</p></div>
+          <div class="comp__demo">
+            <div class="list">
+              <a class="n-row" href="#p1"><span class="list__name">night_drive.rpp</span><span class="n-status s-success">SYNCED</span><span class="n-dot">142 MB</span><span class="n-dot">2 MIN AGO</span><span class="n-arrow">→</span></a>
+              <a class="n-row" href="#p2"><span class="list__name">altair_demo_mix.rpp</span><span class="n-status s-progress n-status--live">UPLOADING</span><span class="n-dot">1.2 GB</span><span class="n-dot">NOW</span><span class="n-arrow">→</span></a>
+              <a class="n-row" href="#p3"><span class="list__name">ep_vocals_v4.rpp</span><span class="n-status s-warning">CONFLICT</span><span class="n-dot">486 MB</span><span class="n-dot">YESTERDAY</span><span class="n-arrow">→</span></a>
+              <a class="n-row" href="#p4"><span class="list__name">drum_stems.rpp</span><span class="n-status s-neutral">IDLE</span><span class="n-dot">3.8 GB</span><span class="n-dot">12 DAYS</span><span class="n-arrow">→</span></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="comp__row" data-reveal>
+          <div class="comp__meta"><p class="n-hud"><span class="n-idx">C.05</span> FORM</p><p class="n-small">Inputs carry a 1 px <span class="x-tok">--line-strong</span> boundary (≥ 3:1 on <span class="x-tok">--surface</span>). Focus is an <span class="x-tok">--ether</span> outline with glow. Errors use a labelled status.</p></div>
+          <div class="comp__demo">
+            <form class="x-form" onsubmit="return false">
+              <label class="x-field"><span class="n-hud">EMAIL</span><input class="x-input" type="email" placeholder="you@studio.com" autocomplete="email"></label>
+              <label class="x-field"><span class="n-hud">PLAN</span><span class="x-select"><select class="x-input"><option>Basic · $10/mo · 10 GB</option><option selected>Pro · $100/mo · 200 GB</option><option>Enterprise · custom</option></select></span></label>
+              <label class="x-field"><span class="n-hud">PROJECT</span><input class="x-input" type="text" value="night_drive"></label>
+              <div class="x-field"><label class="n-hud" for="remote">REMOTE</label><input class="x-input" id="remote" type="text" value="reacloud://band/night drive" aria-invalid="true" aria-describedby="remote-err"><span class="n-status s-critical" id="remote-err">NO SPACES IN REMOTE NAMES</span></div>
+              <label class="x-check x-form__wide"><input type="checkbox" checked> Push automatically when the project is saved</label>
+              <div class="x-form__actions">
+                <a class="n-link" href="#cancel">CANCEL</a>
+                <button class="n-btn n-btn--primary" type="submit">CREATE PROJECT <span class="n-arrow">→</span></button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="comp__row" data-reveal>
+          <div class="comp__meta"><p class="n-hud"><span class="n-idx">C.06</span> PANEL</p><p class="n-small">Translucent and blurred, top hairline only. Use when a container is genuinely needed: dialogs, overlays, plan summaries.</p></div>
+          <div class="comp__demo">
+            <div class="panel-stage">
+              <div class="panel-stage__ghost" aria-hidden="true">
+                <span class="n-mark ring n-glow" style="--mark:url('../../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo2.svg')"></span>
+                <span class="n-mark blade" style="--mark:url('../../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo1.svg')"></span>
+              </div>
+              <span class="panel-stage__word" aria-hidden="true">200 GB</span>
+              <div class="n-panel">
+                <p class="n-hud"><span class="n-idx">PLAN</span> REACLOUD PRO</p>
+                <p class="n-dot">$100/MO</p>
+                <p class="n-small">200 GB of storage and full version history for every session.</p>
+                <div class="panel__actions">
+                  <a class="n-link" href="#compare">COMPARE</a>
+                  <a class="n-btn n-btn--primary" href="#upgrade">UPGRADE <span class="n-arrow">→</span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 MOTION -->
+    <section class="n-section band-section" aria-labelledby="motion" style="padding-bottom: 0">
+      <div class="n-wrap">
+        <div class="head">
+          <p class="n-hud" id="motion" data-reveal><span class="n-idx">06</span> MOTION</p>
+          <h2 class="n-title" data-reveal style="--i:1">SNAP IN. DRIFT OUT.</h2>
+        </div>
+        <div class="curve" data-reveal>
+          <svg class="curve__svg" viewBox="0 0 100 100" fill="none" aria-label="Easing curve cubic-bezier(0.16, 1, 0.3, 1)" role="img">
+            <path class="axis" d="M0 100 H100 M0 100 V0" stroke-width="1" vector-effect="non-scaling-stroke"/>
+            <path class="path" d="M0 100 C16 0 30 0 100 0" stroke-width="2" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <div class="tokens">
+            <div><p class="n-hud"><span class="n-idx">--SNAP</span> EASING</p><p class="readout" data-prop="--snap">—</p><p class="n-small">Ease-out-expo. Everything.</p></div>
+            <div><p class="n-hud"><span class="n-idx">--T-FAST</span> RESPONSE</p><p class="readout" data-prop="--t-fast">—</p><p class="n-small">Colour, border, arrow nudge.</p></div>
+            <div><p class="n-hud"><span class="n-idx">--T-MED</span> TRAVEL</p><p class="readout" data-prop="--t-med">—</p><p class="n-small">Speed sweep, glow.</p></div>
+            <div><p class="n-hud"><span class="n-idx">--T-SLOW</span> ARRIVAL</p><p class="readout" data-prop="--t-slow">—</p><p class="n-small">Reveals, plates. 60 ms stagger.</p></div>
+          </div>
+        </div>
+
+        <div class="n-grid demos">
+          <div class="demo" data-reveal>
+            <div class="demo__top"><p class="n-hud"><span class="n-idx">M.01</span> SPEED SWEEP <span>/</span> HOVER</p></div>
+            <div class="x-stage">
+              <div class="acts">
+                <a class="n-btn" href="#sweep">HOVER ME <span class="n-arrow">→</span></a>
+                <a class="n-btn n-btn--primary" href="#sweep">AND ME <span class="n-arrow">→</span></a>
+              </div>
+            </div>
+            <p class="n-small">::before sweeps from −101% to 0 over <span class="x-tok">--t-med</span>; arrow nudges 6 px over <span class="x-tok">--t-fast</span>.</p>
+          </div>
+          <div class="demo" data-reveal style="--i:1">
+            <div class="demo__top"><p class="n-hud"><span class="n-idx">M.02</span> REVEAL <span>/</span> BLUR + STAGGER</p><button class="n-btn" type="button" data-replay="reveal">REPLAY ↻</button></div>
+            <div class="x-stage">
+              <div class="reveal-demo" id="reveal-demo">
+                <p class="n-hud" data-reveal><span class="n-idx">01</span> INCOMING</p>
+                <p class="n-display-s" data-reveal style="--i:1">MATERIALISE</p>
+                <p class="n-small" data-reveal style="--i:2">16 px rise, 6 px blur, 900 ms, 60 ms apart.</p>
+                <div class="n-meter" data-reveal style="--i:3; --v: 70%"><i></i></div>
+              </div>
+            </div>
+            <p class="n-small">[data-reveal] + style="--i:N"; nocturne.js adds .is-in on scroll.</p>
+          </div>
+          <div class="demo" data-reveal>
+            <div class="demo__top"><p class="n-hud"><span class="n-idx">M.03</span> STATUS PULSE</p></div>
+            <div class="x-stage">
+              <div class="pulses">
+                <span class="n-status s-success n-status--live">ALL SYSTEMS ONLINE</span>
+                <span class="n-status s-progress n-status--live">PUSHING 142 MB</span>
+                <span class="n-status s-critical">PUSH FAILED <span style="color: var(--fg-dim)">/ STATIC</span></span>
+              </div>
+            </div>
+            <p class="n-small">.n-status--live: 1.6 s loop. Only for states that are happening now.</p>
+          </div>
+          <div class="demo" data-reveal style="--i:1">
+            <div class="demo__top"><p class="n-hud"><span class="n-idx">M.04</span> EMBLEM MATERIALISE</p><button class="n-btn" type="button" data-replay="mat">REPLAY ↻</button></div>
+            <div class="x-stage">
+              <div class="mat is-play" id="mat" aria-hidden="true">
+                <span class="n-mark ring n-glow" style="--mark:url('../../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo2.svg')"></span>
+                <span class="n-mark blade n-glow" style="--mark:url('../../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo1.svg')"></span>
+              </div>
+            </div>
+            <p class="n-small">Blur 32 px → sharp, scale 1.08 → 1, 2.2 s. Hero emblem only, once per page.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tick">
+        <p class="n-hud n-wrap" style="width: min(100%, var(--page))"><span class="n-idx">M.05</span> TICKER <span>/</span> −30° <span>/</span> ROWS ALTERNATE DIRECTION</p>
+        <div class="n-ticker" aria-hidden="true">
+          <div class="n-ticker__field">
+            <div class="n-ticker__row">FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;</div>
+            <div class="n-ticker__row n-ticker__row--fast">CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;</div>
+            <div class="n-ticker__row">FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;</div>
+            <div class="n-ticker__row">CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;</div>
+            <div class="n-ticker__row">FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;</div>
+            <div class="n-ticker__row n-ticker__row--fast">CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;NOCTURNE&nbsp;&nbsp;</div>
+            <div class="n-ticker__row">FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;FAST&nbsp;&nbsp;DARK&nbsp;&nbsp;INTIMIDATING&nbsp;&nbsp;ETHEREAL&nbsp;&nbsp;EXCITING&nbsp;&nbsp;</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 DO / DON'T -->
+    <section class="n-section n-wrap" aria-labelledby="dodont">
+      <div class="head">
+        <p class="n-hud" id="dodont" data-reveal><span class="n-idx">07</span> DO <span>/</span> DON'T</p>
+        <h2 class="n-title" data-reveal style="--i:1">WHAT ROUND 2 DID, AND WHAT NOCTURNE DOES.</h2>
+      </div>
+      <div class="n-grid dd">
+        <div class="x-dd" data-reveal>
+          <p class="n-hud n-hud--fg"><span class="n-idx">X.01</span> STATUS</p>
+          <div class="x-dd__pair">
+            <div class="x-dd__cell">
+              <div class="x-dd__stage x-dd__stage--dont" aria-hidden="true"><div class="bad-pills"><span class="bad-pill bad-pill--ok">Synced</span><span class="bad-pill bad-pill--err">Failed</span></div></div>
+              <span class="n-status s-critical">DON'T <span>/</span> SATURATED PILL</span>
+            </div>
+            <div class="x-dd__cell">
+              <div class="x-dd__stage"><div class="pulses"><span class="n-status s-success">SYNCED</span><span class="n-status s-critical">PUSH FAILED</span></div></div>
+              <span class="n-status s-success">DO <span>/</span> LIT SQUARE + LABEL</span>
+            </div>
+          </div>
+        </div>
+        <div class="x-dd" data-reveal style="--i:1">
+          <p class="n-hud n-hud--fg"><span class="n-idx">X.02</span> STRUCTURE</p>
+          <div class="x-dd__pair">
+            <div class="x-dd__cell">
+              <div class="x-dd__stage x-dd__stage--dont" aria-hidden="true"><div class="bad-cards"><div class="bad-card"><i></i><span class="x-skel" style="width: 80%"></span></div><div class="bad-card"><i></i><span class="x-skel" style="width: 60%"></span></div><div class="bad-card"><i></i><span class="x-skel" style="width: 70%"></span></div><div class="bad-card"><i></i><span class="x-skel" style="width: 50%"></span></div></div></div>
+              <span class="n-status s-critical">DON'T <span>/</span> BOXED CARD GRID</span>
+            </div>
+            <div class="x-dd__cell">
+              <div class="x-dd__stage" aria-hidden="true"><div class="good-rows"><div><span class="x-skel"></span><span class="n-status s-success">OK</span></div><div><span class="x-skel" style="width: 55%"></span><span class="n-status s-progress">SYNC</span></div><div><span class="x-skel" style="width: 62%"></span><span class="n-status s-neutral">IDLE</span></div></div></div>
+              <span class="n-status s-success">DO <span>/</span> HAIRLINE ROWS</span>
+            </div>
+          </div>
+        </div>
+        <div class="x-dd" data-reveal>
+          <p class="n-hud n-hud--fg"><span class="n-idx">X.03</span> BUTTONS</p>
+          <div class="x-dd__pair">
+            <div class="x-dd__cell">
+              <div class="x-dd__stage x-dd__stage--dont" aria-hidden="true"><span class="bad-btn">Get started!</span></div>
+              <span class="n-status s-critical">DON'T <span>/</span> 10 PX GRADIENT BLOB</span>
+            </div>
+            <div class="x-dd__cell">
+              <div class="x-dd__stage" aria-hidden="true"><span class="n-btn n-btn--primary">GET STARTED <span class="n-arrow">→</span></span></div>
+              <span class="n-status s-success">DO <span>/</span> 2 PX, SOLID <span class="x-tok">--FG</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="x-dd" data-reveal style="--i:1">
+          <p class="n-hud n-hud--fg"><span class="n-idx">X.04</span> LAYOUT</p>
+          <div class="x-dd__pair">
+            <div class="x-dd__cell">
+              <div class="x-dd__stage x-dd__stage--dont" aria-hidden="true"><div class="bad-center"><span class="x-skel x-skel--fg"></span><span class="x-skel"></span><span class="x-skel"></span><span class="bad-pill">Learn more</span></div></div>
+              <span class="n-status s-critical">DON'T <span>/</span> CENTERED STACK</span>
+            </div>
+            <div class="x-dd__cell">
+              <div class="x-dd__stage" aria-hidden="true"><div class="good-asym"><p class="n-hud"><span class="n-idx">01</span> INDEX</p><span class="x-skel x-skel--fg"></span><div class="lines"><span class="x-skel"></span><span class="x-skel" style="width: 80%"></span></div><span class="btn"></span></div></div>
+              <span class="n-status s-success">DO <span>/</span> ASYMMETRIC 12-COL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ftr">
+    <div class="n-wrap ftr__in">
+      <p class="n-hud">CLOUD SCYTHE LABS <span>/</span> NOCTURNE DIRECTION SHEET <span>/</span> ROUND 3</p>
+      <a class="n-link" href="home.html">HOME <span class="n-arrow">→</span></a>
+    </div>
+  </footer>
+
+  <script>
+  {
+    // Live token readouts: hex, WCAG contrast vs --surface, band text colour. Re-run on theme switch.
+    const root = document.documentElement;
+    const probe = document.createElement("i");
+    probe.hidden = true;
+    document.body.append(probe);
+
+    function rgb(value) {
+      probe.style.color = value;
+      return getComputedStyle(probe).color.match(/[\d.]+/g).slice(0, 3).map(Number);
+    }
+    function luminance([r, g, b]) {
+      const lin = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+      return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+    }
+    function contrast(a, b) {
+      const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+      return (hi + 0.05) / (lo + 0.05);
+    }
+    const token = (name) => getComputedStyle(root).getPropertyValue(name).trim();
+
+    function update() {
+      const surface = rgb("var(--surface)");
+      const fg = rgb("var(--fg)");
+      const ink = rgb("var(--void)");
+      document.querySelectorAll("[data-hex]").forEach((el) => { el.textContent = token(el.dataset.hex).toUpperCase(); });
+      document.querySelectorAll("[data-prop]").forEach((el) => { el.textContent = token(el.dataset.prop).toUpperCase(); });
+      document.querySelectorAll("[data-ratio]").forEach((el) => {
+        const r = contrast(rgb(`var(${el.dataset.ratio})`), surface);
+        el.textContent = el.classList.contains("ratio") ? `${r.toFixed(2)}:1` : `${r.toFixed(2)}:1 ON SURFACE`;
+      });
+      document.querySelectorAll("[data-grade]").forEach((el) => {
+        const r = contrast(rgb(`var(${el.dataset.grade})`), surface);
+        el.textContent = r >= 4.5 ? "AA TEXT + UI" : r >= 3 ? "AA UI (3:1)" : "BELOW 3:1";
+      });
+      document.querySelectorAll("[data-band]").forEach((el) => {
+        const bg = rgb(`var(${el.dataset.band})`);
+        el.style.color = contrast(fg, bg) >= contrast(ink, bg) ? "var(--fg)" : "var(--void)";
+      });
+      document.querySelectorAll("[data-readout]").forEach((el) => { el.textContent = (root.dataset[el.dataset.readout] || "").toUpperCase(); });
+    }
+
+    new MutationObserver(update).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    update();
+
+    // Motion replays
+    function restart(el, cls) { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+    document.querySelector('[data-replay="reveal"]').addEventListener("click", () => {
+      const items = document.querySelectorAll("#reveal-demo [data-reveal]");
+      items.forEach((el) => { el.style.transition = "none"; el.classList.remove("is-in"); });
+      void document.body.offsetWidth;
+      items.forEach((el) => { el.style.transition = ""; el.classList.add("is-in"); });
+    });
+    document.querySelector('[data-replay="mat"]').addEventListener("click", () => restart(document.getElementById("mat"), "is-play"));
+  }
+  </script>
+</body>
+</html>

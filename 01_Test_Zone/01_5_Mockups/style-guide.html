@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSL Design Language — Style guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="mockups.css">
+  <script src="mockups.js"></script>
+  <style>
+    /* Page layout: sections 80px apart, blocks inside a section 20px apart. */
+    main { display: grid; gap: var(--space-7); padding: var(--space-7) 0 var(--space-8); overflow-x: clip; }
+    .x-wrap { width: min(1200px, 100% - 2 * var(--space-4)); margin-inline: auto; }
+    .x-grid { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); }
+    .x-grid--wide { grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr)); }
+    .x-file { overflow-wrap: anywhere; }
+    code { font: inherit; white-space: nowrap; }
+
+    /* Header */
+    .x-hero { position: relative; }
+    .x-hero > :not(.texture) { position: relative; }
+    .x-hero .texture { top: calc(-1 * var(--space-7)); right: 0; width: 520px; height: 520px; }
+    .x-hero__intro { max-width: 760px; }
+    @media (max-width: 900px) { .x-hero .texture { display: none; } }
+    @media (max-width: 700px) { .x-hero-title { font-size: var(--type-display-s); } }
+
+    /* Swatch: token color straddling an inset half and a text-bg half, so every role stays visible. */
+    .x-swatch__ground {
+      position: relative;
+      height: 120px;
+      border-radius: var(--radius-s);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .x-swatch__ground::before { content: ""; background: var(--ground, var(--bg-inset)); }
+    .x-swatch__chip {
+      position: absolute;
+      inset: var(--space-3) 25%;
+      border-radius: var(--radius-s);
+      background: var(--swatch);
+    }
+
+    /* Status / pips: pips are dark-context only */
+    .x-light-only { display: none; }
+    [data-theme="ps5"] .x-light-only { display: block; }
+    [data-theme="ps5"] .x-dark-only { display: none; }
+    .x-pips { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-4); }
+
+    /* Type specimens */
+    .x-specimen { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: var(--space-4); }
+    .x-specimen__sample { min-width: 0; overflow: hidden; }
+    .x-scale { display: grid; gap: var(--space-3); }
+    .x-scale__row { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: var(--space-4); align-items: center; }
+    .x-scale__sample { min-width: 0; overflow: hidden; }
+    @media (max-width: 760px) {
+      .x-specimen, .x-scale__row { grid-template-columns: minmax(0, 1fr); gap: var(--space-2); }
+    }
+
+    /* Marks */
+    .x-stage { height: 180px; display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; }
+    .x-stage > * { max-width: 100%; }
+    .x-mark-card { display: grid; gap: var(--space-3); align-content: start; }
+
+    /* Components */
+    .x-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+    .x-list { display: grid; gap: var(--space-3); }
+    .x-code { margin: 0; white-space: pre-wrap; }
+
+    /* Spacing + radius */
+    .x-space { display: grid; grid-template-columns: 120px 80px minmax(0, 1fr); gap: var(--space-3); align-items: center; }
+    .x-space__bar { height: var(--space-3); background: var(--fg); border-radius: var(--radius-s); }
+    @media (max-width: 760px) {
+      .x-space { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2); }
+      .x-space__bar { grid-column: 1 / -1; }
+    }
+
+    /* Ticker band */
+    .x-band { height: 300px; }
+
+    /* Surfaces under review: each tile pins its own data-panel/-radius/-edge (mockups.css variant selectors are nestable). */
+    .x-compare { display: grid; gap: var(--space-3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .x-compare > * { display: grid; }
+    .x-compare .x-row { flex-wrap: wrap; }
+    .x-compare .actions { margin-left: auto; }
+    @media (max-width: 760px) { .x-compare { grid-template-columns: minmax(0, 1fr); } }
+
+    /* Photography: photos sit directly on the page with --radius corners; no border, filter or overlay. */
+    .x-photos { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); }
+    .x-photo { margin: 0; }
+    .x-photo__img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius); }
+    .x-bullets { margin: 0; padding-left: 2ch; max-width: var(--measure); }
+    .x-bullets > li + li { margin-top: var(--space-1); }
+
+    /* Duo2 ring color-cycle: steps through the extended colors, then idle, 0.5 s each. Duo1 stays --fg. */
+    .x-duo-cycle > .mark--duo2 { animation: x-duo-cycle 4s steps(1, end) infinite; }
+    @keyframes x-duo-cycle {
+      0%    { background: var(--red); }
+      12.5% { background: var(--orange); }
+      25%   { background: var(--yellow); }
+      37.5% { background: var(--green); }
+      50%   { background: var(--blue); }
+      62.5% { background: var(--purple); }
+      75%   { background: var(--pink); }
+      87.5% { background: var(--duo2-idle); }
+      100%  { background: var(--duo2-idle); }
+    }
+    @media (prefers-reduced-motion: reduce) { .x-duo-cycle > .mark--duo2 { animation: none; } }
+  </style>
+</head>
+<body>
+  <main>
+
+    <!-- 01 Header ─────────────────────────────────────────────────────── -->
+    <header class="x-wrap x-hero stack-5">
+      <span class="texture" aria-hidden="true" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_01_Mono/Square_NoPadding_CSLMono.svg')"></span>
+      <span class="mark on-primary" role="img" aria-label="Cloud Scythe Labs" style="--mark:url('../../03_Branding_Assets/03_05_Lockups/03_05_01_Mono/Lockup1_NoPadding_Mono.svg'); --mark-ratio: 634/275; width: 320px"></span>
+      <h1 class="t-display x-hero-title on-primary">STYLE GUIDE</h1>
+      <div class="block stack x-hero__intro">
+        <p class="t-label">01 / DESIGN LANGUAGE</p>
+        <p class="t-body">Tokens, type, marks and components for Cloud Scythe Labs and ReaCloud, rendered from <code>csl-tokens.css</code>. Theme, panel, radius and edge switch at the bottom right; everything below follows them except the pinned tiles in 02.</p>
+      </div>
+    </header>
+
+    <!-- 02 Surfaces under review ─────────────────────────────────────── -->
+    <section class="x-wrap stack-3" aria-labelledby="s-surfaces">
+      <div class="block stack">
+        <p class="t-label">02 / OPEN DECISION</p>
+        <h2 class="t-title" id="s-surfaces">SURFACES UNDER REVIEW</h2>
+        <p class="t-body">Four candidate treatments, each pinned to its own panel, radius and edge so they compare side by side. Panel color only differs in PS2 and PS1; PS5 keeps Faded White.</p>
+      </div>
+      <div class="x-compare">
+        <div data-panel="141414" data-radius="10" data-edge="none">
+          <div class="block stack-3">
+            <div class="stack">
+              <p class="t-label">A · PDF V1.0.2</p>
+              <p class="t-body-s">#141414 · 10 px · no edge. Live: <span data-hex="--bg-text">—</span> · <span data-hex="--radius">—</span></p>
+            </div>
+            <div class="stack">
+              <h3 class="t-title-s">PUSH SNAPSHOT</h3>
+              <p class="t-body">Commits "Night Drive" and syncs it to every collaborator's REAPER session.</p>
+            </div>
+            <label class="field"><span>COMMIT MESSAGE</span><input class="input" type="text" value="Vox comp, take 4"></label>
+            <div class="x-row">
+              <span class="chip s-neutral">3 CHANGES</span>
+              <div class="actions">
+                <button class="btn btn--secondary" type="button">CANCEL</button>
+                <button class="btn btn--primary" type="button">PUSH</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-panel="1c1c1c" data-radius="6" data-edge="hairline">
+          <div class="block stack-3">
+            <div class="stack">
+              <p class="t-label">B · LANDING / LIVE SITE</p>
+              <p class="t-body-s">#1C1C1C · 6 px · hairline. Live: <span data-hex="--bg-text">—</span> · <span data-hex="--radius">—</span></p>
+            </div>
+            <div class="stack">
+              <h3 class="t-title-s">PUSH SNAPSHOT</h3>
+              <p class="t-body">Commits "Night Drive" and syncs it to every collaborator's REAPER session.</p>
+            </div>
+            <label class="field"><span>COMMIT MESSAGE</span><input class="input" type="text" value="Vox comp, take 4"></label>
+            <div class="x-row">
+              <span class="chip s-neutral">3 CHANGES</span>
+              <div class="actions">
+                <button class="btn btn--secondary" type="button">CANCEL</button>
+                <button class="btn btn--primary" type="button">PUSH</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-panel="141414" data-radius="10" data-edge="hairline">
+          <div class="block stack-3">
+            <div class="stack">
+              <p class="t-label">C · MIX: PDF + HAIRLINE</p>
+              <p class="t-body-s">#141414 · 10 px · hairline. Live: <span data-hex="--bg-text">—</span> · <span data-hex="--radius">—</span></p>
+            </div>
+            <div class="stack">
+              <h3 class="t-title-s">PUSH SNAPSHOT</h3>
+              <p class="t-body">Commits "Night Drive" and syncs it to every collaborator's REAPER session.</p>
+            </div>
+            <label class="field"><span>COMMIT MESSAGE</span><input class="input" type="text" value="Vox comp, take 4"></label>
+            <div class="x-row">
+              <span class="chip s-neutral">3 CHANGES</span>
+              <div class="actions">
+                <button class="btn btn--secondary" type="button">CANCEL</button>
+                <button class="btn btn--primary" type="button">PUSH</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-panel="1c1c1c" data-radius="6" data-edge="none">
+          <div class="block stack-3">
+            <div class="stack">
+              <p class="t-label">D · MIX: LANDING, NO EDGE</p>
+              <p class="t-body-s">#1C1C1C · 6 px · no edge. Live: <span data-hex="--bg-text">—</span> · <span data-hex="--radius">—</span></p>
+            </div>
+            <div class="stack">
+              <h3 class="t-title-s">PUSH SNAPSHOT</h3>
+              <p class="t-body">Commits "Night Drive" and syncs it to every collaborator's REAPER session.</p>
+            </div>
+            <label class="field"><span>COMMIT MESSAGE</span><input class="input" type="text" value="Vox comp, take 4"></label>
+            <div class="x-row">
+              <span class="chip s-neutral">3 CHANGES</span>
+              <div class="actions">
+                <button class="btn btn--secondary" type="button">CANCEL</button>
+                <button class="btn btn--primary" type="button">PUSH</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 Themes ─────────────────────────────────────────────────────── -->
+    <section class="x-wrap stack-3" aria-labelledby="s-themes">
+      <div class="block stack">
+        <p class="t-label">03 / THEMES</p>
+        <h2 class="t-title" id="s-themes">ROLE TOKENS</h2>
+        <p class="t-body">Current theme: <strong data-theme-label>PS2 · dark context</strong>. Hex values are read from the live tokens and update with every review switch.</p>
+      </div>
+      <div class="x-grid">
+        <div class="block block--tight stack-3">
+          <div class="x-swatch__ground x-edge"><span class="x-swatch__chip" style="--swatch: var(--bg-primary)"></span></div>
+          <div class="stack">
+            <p class="t-label">PAGE / CANVAS</p>
+            <p class="t-body-s">--bg-primary</p>
+            <p class="t-label t-dot" data-hex="--bg-primary">—</p>
+            <p class="t-body-s" data-primitive="--bg-primary">—</p>
+          </div>
+        </div>
+        <div class="block block--tight stack-3">
+          <div class="x-swatch__ground x-edge"><span class="x-swatch__chip" style="--swatch: var(--bg-text)"></span></div>
+          <div class="stack">
+            <p class="t-label">TEXT BACKGROUND</p>
+            <p class="t-body-s">--bg-text</p>
+            <p class="t-label t-dot" data-hex="--bg-text">—</p>
+            <p class="t-body-s" data-primitive="--bg-text">—</p>
+          </div>
+        </div>
+        <div class="block block--tight stack-3">
+          <div class="x-swatch__ground x-edge"><span class="x-swatch__chip" style="--swatch: var(--bg-texture)"></span></div>
+          <div class="stack">
+            <p class="t-label">TEXTURE · DECOR ONLY</p>
+            <p class="t-body-s">--bg-texture</p>
+            <p class="t-label t-dot" data-hex="--bg-texture">—</p>
+            <p class="t-body-s" data-primitive="--bg-texture">—</p>
+          </div>
+        </div>
+        <div class="block block--tight stack-3">
+          <div class="x-swatch__ground x-edge"><span class="x-swatch__chip" style="--swatch: var(--fg)"></span></div>
+          <div class="stack">
+            <p class="t-label">TEXT / GRAPHICS</p>
+            <p class="t-body-s">--fg</p>
+            <p class="t-label t-dot" data-hex="--fg">—</p>
+            <p class="t-body-s" data-primitive="--fg">—</p>
+          </div>
+        </div>
+        <div class="block block--tight stack-3">
+          <div class="x-swatch__ground x-edge"><span class="x-swatch__chip" style="--swatch: var(--cta-bg)"></span></div>
+          <div class="stack">
+            <p class="t-label">PRIMARY BUTTON</p>
+            <p class="t-body-s">--cta-bg</p>
+            <p class="t-label t-dot" data-hex="--cta-bg">—</p>
+            <p class="t-body-s" data-primitive="--cta-bg">—</p>
+          </div>
+        </div>
+        <div class="block block--tight stack-3">
+          <div class="x-swatch__ground x-edge"><span class="x-swatch__chip" style="--swatch: var(--cta-fg)"></span></div>
+          <div class="stack">
+            <p class="t-label">TEXT ON PRIMARY</p>
+            <p class="t-body-s">--cta-fg</p>
+            <p class="t-label t-dot" data-hex="--cta-fg">—</p>
+            <p class="t-body-s" data-primitive="--cta-fg">—</p>
+          </div>
+        </div>
+        <div class="block block--tight stack-3">
+          <div class="x-swatch__ground x-edge"><span class="x-swatch__chip" style="--swatch: var(--duo2-idle)"></span></div>
+          <div class="stack">
+            <p class="t-label">DUO2 RING · IDLE</p>
+            <p class="t-body-s">--duo2-idle</p>
+            <p class="t-label t-dot" data-hex="--duo2-idle">—</p>
+            <p class="t-body-s" data-primitive="--duo2-idle">—</p>
+          </div>
+        </div>
+        <div class="block block--tight stack-3">
+          <div class="x-swatch__ground x-edge"><span class="x-swatch__chip" style="--swatch: var(--bg-inset)"></span></div>
+          <div class="stack">
+            <p class="t-label">NESTED SURFACE</p>
+            <p class="t-body-s">--bg-inset</p>
+            <p class="t-label t-dot" data-hex="--bg-inset">—</p>
+            <p class="t-body-s" data-primitive="--bg-inset">—</p>
+          </div>
+        </div>
+        <div class="block block--tight stack-3">
+          <div class="x-swatch__ground x-edge" style="--ground: var(--bg-primary)"><span class="x-swatch__chip" style="--swatch: var(--fg-on-primary)"></span></div>
+          <div class="stack">
+            <p class="t-label">BRAND ON PAGE FILL</p>
+            <p class="t-body-s">--fg-on-primary</p>
+            <p class="t-label t-dot" data-hex="--fg-on-primary">—</p>
+            <p class="t-body-s" data-primitive="--fg-on-primary">—</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 Extended + status colors ───────────────────────────────────── -->
+    <section class="x-wrap stack-3" aria-labelledby="s-status">
+      <div class="block stack">
+        <p class="t-label">04 / COLOR LOGIC</p>
+        <h2 class="t-title" id="s-status">STATUS COLORS</h2>
+        <p class="t-body">Color carries meaning only, always with a label. Text on a color fill is black. Hues switch between the dark-context (PS2, PS1) and light-context (PS5) sets.</p>
+      </div>
+      <div class="x-grid">
+        <div class="block block--tight stack">
+          <span class="chip s-success">SUCCESS</span>
+          <p class="t-body-s">--status-success · green. Upload done, correct password.</p>
+          <p class="t-label t-dot" data-hex="--status-success">—</p>
+        </div>
+        <div class="block block--tight stack">
+          <span class="chip s-neutral">NEUTRAL</span>
+          <p class="t-body-s">--status-neutral · blue. Connected, idle, working as usual.</p>
+          <p class="t-label t-dot" data-hex="--status-neutral">—</p>
+        </div>
+        <div class="block block--tight stack">
+          <span class="chip s-caution">CAUTION</span>
+          <p class="t-body-s">--status-caution · yellow. Slow connection, upload paused.</p>
+          <p class="t-label t-dot" data-hex="--status-caution">—</p>
+        </div>
+        <div class="block block--tight stack">
+          <span class="chip s-warning">WARNING</span>
+          <p class="t-body-s">--status-warning · orange. Resolvable: wrong password.</p>
+          <p class="t-label t-dot" data-hex="--status-warning">—</p>
+        </div>
+        <div class="block block--tight stack">
+          <span class="chip s-critical">CRITICAL</span>
+          <p class="t-body-s">--status-critical · red. Failures, destructive actions.</p>
+          <p class="t-label t-dot" data-hex="--status-critical">—</p>
+        </div>
+        <div class="block block--tight stack">
+          <span class="chip s-progress">PROGRESS</span>
+          <p class="t-body-s">--status-progress · purple. Syncing, rendering. Proposed.</p>
+          <p class="t-label t-dot" data-hex="--status-progress">—</p>
+        </div>
+        <div class="block block--tight stack">
+          <span class="chip s-notify">NOTIFY</span>
+          <p class="t-body-s">--status-notify · pink. Unread, mentions. Proposed.</p>
+          <p class="t-label t-dot" data-hex="--status-notify">—</p>
+        </div>
+        <div class="block block--tight stack">
+          <span class="chip s-idle">IDLE</span>
+          <p class="t-body-s">--status-idle · gray. Offline collaborator, no state. Proposed.</p>
+          <p class="t-label t-dot" data-hex="--status-idle">—</p>
+        </div>
+      </div>
+      <div class="block stack-3">
+        <div class="stack">
+          <h3 class="t-title-s">PIP + LABEL</h3>
+          <p class="t-body-s">Square status mark beside an <code>--fg</code> label. Dark contexts only (PS2, PS1); in PS5 the light-context hues fall under 3:1, so this page swaps them for chips.</p>
+        </div>
+        <div class="x-pips x-dark-only">
+          <span class="pip s-success">SYNCED</span>
+          <span class="pip s-neutral">CONNECTED</span>
+          <span class="pip s-caution">SLOW LINK</span>
+          <span class="pip s-warning">AUTH NEEDED</span>
+          <span class="pip s-critical">OFFLINE</span>
+          <span class="pip s-progress">SYNCING</span>
+          <span class="pip s-notify">2 MENTIONS</span>
+        </div>
+        <div class="x-light-only">
+          <div class="x-pips">
+            <span class="chip s-success">SYNCED</span>
+            <span class="chip s-neutral">CONNECTED</span>
+            <span class="chip s-caution">SLOW LINK</span>
+            <span class="chip s-warning">AUTH NEEDED</span>
+            <span class="chip s-critical">OFFLINE</span>
+            <span class="chip s-progress">SYNCING</span>
+            <span class="chip s-notify">2 MENTIONS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 Typography ─────────────────────────────────────────────────── -->
+    <section class="x-wrap stack-3" aria-labelledby="s-type">
+      <div class="block stack">
+        <p class="t-label">05 / TYPOGRAPHY</p>
+        <h2 class="t-title" id="s-type">TYPE FAMILIES</h2>
+        <p class="t-body">Brand fonts are uppercase, one weight, no tracking, and stay crisp at whole font-pixel sizes. JetBrains Mono sets the copy; CSL Terminal sets code.</p>
+      </div>
+
+      <div class="block x-specimen">
+        <div class="stack">
+          <h3 class="t-label">CSL DISPLAY</h3>
+          <p class="t-body-s">Large titles that fit on one line.</p>
+          <p class="t-body-s">Crisp: 11 · 22 · 33 · 44 · 66 · 88 · 110 · 132 px</p>
+        </div>
+        <div class="x-specimen__sample stack-3">
+          <p class="t-display">LIVE IN THE DAW</p>
+          <p class="t-display-s">LIVE IN THE DAW</p>
+        </div>
+      </div>
+
+      <div class="block x-specimen">
+        <div class="stack">
+          <h3 class="t-label">CSL MONO</h3>
+          <p class="t-body-s">Multi-line titles, headings, buttons, nav, labels. If in doubt, Mono.</p>
+          <p class="t-body-s">Crisp: 10 · 20 · 30 · 40 · 60 · 80 · 100 px</p>
+        </div>
+        <div class="x-specimen__sample stack-3">
+          <p class="t-title-l">SYNC EVERY TAKE</p>
+          <p class="t-title">SESSION SETTINGS</p>
+          <p class="t-label">INVITE COLLABORATOR</p>
+        </div>
+      </div>
+
+      <div class="block x-specimen">
+        <div class="stack">
+          <h3 class="t-label">CSL DOT DISPLAY</h3>
+          <p class="t-body-s">Dot alternate of Display. Here: large live readouts, one line (OPEN-1).</p>
+          <p class="t-body-s">Crisp: 11 · 22 · 33 · 44 · 66 · 88 · 110 · 132 px</p>
+        </div>
+        <div class="x-specimen__sample stack-3">
+          <p class="t-display t-dot-display">00:03:42</p>
+          <p class="t-display-s t-dot-display">SYNC 87%</p>
+        </div>
+      </div>
+
+      <div class="block x-specimen">
+        <div class="stack">
+          <h3 class="t-label">CSL DOT MONO</h3>
+          <p class="t-body-s">Dot alternate of Mono. Here: compact readouts, counters, BPM (OPEN-1).</p>
+          <p class="t-body-s">Crisp: 10 · 20 · 30 · 40 · 60 · 80 · 100 px</p>
+        </div>
+        <div class="x-specimen__sample stack-3">
+          <p class="t-title t-dot">128 BPM · 4/4</p>
+          <p class="t-label t-dot">3 / 12 FILES · 48.2 MB</p>
+        </div>
+      </div>
+
+      <div class="block x-specimen">
+        <div class="stack">
+          <h3 class="t-label">JETBRAINS MONO</h3>
+          <p class="t-body-s">Paragraphs, copy, input values, anything small. Sentence case.</p>
+          <p class="t-body-s">Sizes: 16 / 14 px at 1.6 leading, max 70ch</p>
+        </div>
+        <div class="x-specimen__sample stack-3">
+          <p class="t-body">Every take you record lands in the shared project while you keep playing. Collaborators see it within seconds.</p>
+          <p class="t-body-s">Last synced 2 minutes ago from Studio B.</p>
+        </div>
+      </div>
+
+      <div class="block x-specimen">
+        <div class="stack">
+          <h3 class="t-label">CSL TERMINAL</h3>
+          <p class="t-body-s">Code, logs, terminals, technical readouts. Proposed for product UI.</p>
+          <p class="t-body-s">Crisp: 11 · 22 · 33 px</p>
+        </div>
+        <div class="x-specimen__sample stack-3">
+          <p class="t-code">$ reacloud push --project night_drive</p>
+          <p class="t-code-s">12:04:55  sync ok  2 files  0 conflicts  latency 38 ms</p>
+        </div>
+      </div>
+
+      <div class="block stack-3">
+        <h3 class="t-title-s">TYPE SCALE</h3>
+        <div class="x-scale">
+          <div class="x-scale__row">
+            <div><p class="t-body-s">--type-hero</p><p class="t-body-s">132 px · Display</p></div>
+            <div class="x-scale__sample"><p class="t-hero">LIVE IN THE DAW</p></div>
+          </div>
+          <div class="x-scale__row">
+            <div><p class="t-body-s">--type-display</p><p class="t-body-s">88 px · Display</p></div>
+            <div class="x-scale__sample"><p class="t-display">LIVE IN THE DAW</p></div>
+          </div>
+          <div class="x-scale__row">
+            <div><p class="t-body-s">--type-display-s</p><p class="t-body-s">44 px · Display</p></div>
+            <div class="x-scale__sample"><p class="t-display-s">LIVE IN THE DAW</p></div>
+          </div>
+          <div class="x-scale__row">
+            <div><p class="t-body-s">--type-title-l</p><p class="t-body-s">60 px · Mono</p></div>
+            <div class="x-scale__sample"><p class="t-title-l">MIX NOTES</p></div>
+          </div>
+          <div class="x-scale__row">
+            <div><p class="t-body-s">--type-title</p><p class="t-body-s">40 px · Mono</p></div>
+            <div class="x-scale__sample"><p class="t-title">SESSION SETTINGS</p></div>
+          </div>
+          <div class="x-scale__row">
+            <div><p class="t-body-s">--type-title-s</p><p class="t-body-s">30 px · Mono</p></div>
+            <div class="x-scale__sample"><p class="t-title-s">COLLABORATORS</p></div>
+          </div>
+          <div class="x-scale__row">
+            <div><p class="t-body-s">--type-label</p><p class="t-body-s">20 px · Mono</p></div>
+            <div class="x-scale__sample"><p class="t-label">SYNC NOW</p></div>
+          </div>
+          <div class="x-scale__row">
+            <div><p class="t-body-s">--type-body</p><p class="t-body-s">16 px · JetBrains Mono</p></div>
+            <div class="x-scale__sample"><p class="t-body">Every take syncs to the project while you keep playing.</p></div>
+          </div>
+          <div class="x-scale__row">
+            <div><p class="t-body-s">--type-body-s</p><p class="t-body-s">14 px · JetBrains Mono</p></div>
+            <div class="x-scale__sample"><p class="t-body-s">Last synced 2 minutes ago from Studio B.</p></div>
+          </div>
+          <div class="x-scale__row">
+            <div><p class="t-body-s">--type-code</p><p class="t-body-s">22 px · Terminal</p></div>
+            <div class="x-scale__sample"><p class="t-code">reacloud status --watch</p></div>
+          </div>
+          <div class="x-scale__row">
+            <div><p class="t-body-s">--type-code-s</p><p class="t-body-s">13 px · Terminal</p></div>
+            <div class="x-scale__sample"><p class="t-code-s">12:04:55  sync ok  2 files  0 conflicts</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 Marks ──────────────────────────────────────────────────────── -->
+    <section class="x-wrap stack-3" aria-labelledby="s-marks">
+      <div class="block stack">
+        <p class="t-label">06 / BRAND MARKS</p>
+        <h2 class="t-title" id="s-marks">EMBLEMS, LOGOTYPES, LOCKUPS</h2>
+        <p class="t-body">Shipped SVGs, filled with <code>--fg</code> through a mask. Only the Duo2 ring takes color, always with a status label. Duo marks sit on text backgrounds only.</p>
+      </div>
+      <div class="x-grid x-grid--wide">
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="Cloud Scythe Labs emblem" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_01_Mono/Square_NoPadding_CSLMono.svg'); width: 140px"></span></div>
+          <figcaption class="stack"><p class="t-label">EMBLEM · MONO</p><p class="t-body-s x-file">Square_NoPadding_CSLMono.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="Cloud Scythe Labs emblem" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_01_Mono/Rectangle_NoPadding_CSLMono.svg'); --mark-ratio: 1677/3000; width: 90px"></span></div>
+          <figcaption class="stack"><p class="t-label">EMBLEM · MONO · RECT</p><p class="t-body-s x-file">Rectangle_NoPadding_CSLMono.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage">
+            <div class="duo" role="img" aria-label="Cloud Scythe Labs Duo emblem, idle" style="width: 140px">
+              <span class="mark mark--duo2" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo2.svg')"></span>
+              <span class="mark" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo1.svg')"></span>
+            </div>
+          </div>
+          <figcaption class="stack"><p class="t-label">DUO · IDLE</p><p class="t-body-s x-file">Square_NoPadding_CSLDuo1.svg + CSLDuo2.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage">
+            <div class="duo" role="img" aria-label="Cloud Scythe Labs Duo emblem, synced" style="width: 140px; --duo2: var(--status-success)">
+              <span class="mark mark--duo2" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo2.svg')"></span>
+              <span class="mark" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo1.svg')"></span>
+            </div>
+          </div>
+          <figcaption class="stack"><span class="chip s-success">SYNCED</span><p class="t-body-s x-file">Duo2 = --status-success</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage">
+            <div class="duo" role="img" aria-label="Cloud Scythe Labs Duo emblem, syncing" style="width: 140px; --duo2: var(--status-progress)">
+              <span class="mark mark--duo2" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo2.svg')"></span>
+              <span class="mark" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo1.svg')"></span>
+            </div>
+          </div>
+          <figcaption class="stack"><span class="chip s-progress">SYNCING</span><p class="t-body-s x-file">Duo2 = --status-progress</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage">
+            <div class="duo" role="img" aria-label="Cloud Scythe Labs Duo emblem, offline" style="width: 140px; --duo2: var(--status-critical)">
+              <span class="mark mark--duo2" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo2.svg')"></span>
+              <span class="mark" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo1.svg')"></span>
+            </div>
+          </div>
+          <figcaption class="stack"><span class="chip s-critical">OFFLINE</span><p class="t-body-s x-file">Duo2 = --status-critical</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="Cloud Scythe Labs" style="--mark:url('../../03_Branding_Assets/03_04_Logotype/Logotype1_NoPadding.svg'); --mark-ratio: 628/210; width: 300px"></span></div>
+          <figcaption class="stack"><p class="t-label">LOGOTYPE 1</p><p class="t-body-s x-file">Logotype1_NoPadding.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="Cloud Scythe Labs" style="--mark:url('../../03_Branding_Assets/03_04_Logotype/Logotype2_NoPadding.svg'); --mark-ratio: 634/54; width: 300px"></span></div>
+          <figcaption class="stack"><p class="t-label">LOGOTYPE 2</p><p class="t-body-s x-file">Logotype2_NoPadding.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="Cloud Scythe Labs" style="--mark:url('../../03_Branding_Assets/03_04_Logotype/Logotype3_NoPadding.svg'); --mark-ratio: 574/320; width: 250px"></span></div>
+          <figcaption class="stack"><p class="t-label">LOGOTYPE 3</p><p class="t-body-s x-file">Logotype3_NoPadding.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="Cloud Scythe Labs" style="--mark:url('../../03_Branding_Assets/03_05_Lockups/03_05_01_Mono/Lockup1_NoPadding_Mono.svg'); --mark-ratio: 634/275; width: 300px"></span></div>
+          <figcaption class="stack"><p class="t-label">LOCKUP 1</p><p class="t-body-s x-file">Lockup1_NoPadding_Mono.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="Cloud Scythe Labs" style="--mark:url('../../03_Branding_Assets/03_05_Lockups/03_05_01_Mono/Lockup2_NoPadding_Mono.svg'); --mark-ratio: 655/122; width: 300px"></span></div>
+          <figcaption class="stack"><p class="t-label">LOCKUP 2</p><p class="t-body-s x-file">Lockup2_NoPadding_Mono.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="ReaCloud emblem" style="--mark:url('../../04_Product_Assets/04_01_ReaCloud/04_01_01_Emblem/Square_NoPadding_ReaCloud.svg'); width: 140px"></span></div>
+          <figcaption class="stack"><p class="t-label">REACLOUD · EMBLEM</p><p class="t-body-s x-file">Square_NoPadding_ReaCloud.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="ReaCloud emblem" style="--mark:url('../../04_Product_Assets/04_01_ReaCloud/04_01_01_Emblem/Rectangle_NoPadding_ReaCloud.svg'); --mark-ratio: 2291/1679; width: 190px"></span></div>
+          <figcaption class="stack"><p class="t-label">REACLOUD · EMBLEM RECT</p><p class="t-body-s x-file">Rectangle_NoPadding_ReaCloud.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="ReaCloud" style="--mark:url('../../04_Product_Assets/04_01_ReaCloud/04_01_02_Logotype/Logotype1_NoPadding.svg'); --mark-ratio: 1882/974; width: 250px"></span></div>
+          <figcaption class="stack"><p class="t-label">REACLOUD · LOGOTYPE 1</p><p class="t-body-s x-file">04_01_02_Logotype/Logotype1_NoPadding.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="ReaCloud" style="--mark:url('../../04_Product_Assets/04_01_ReaCloud/04_01_02_Logotype/Logotype2_NoPadding.svg'); --mark-ratio: 2617/399; width: 300px"></span></div>
+          <figcaption class="stack"><p class="t-label">REACLOUD · LOGOTYPE 2</p><p class="t-body-s x-file">04_01_02_Logotype/Logotype2_NoPadding.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="ReaCloud" style="--mark:url('../../04_Product_Assets/04_01_ReaCloud/04_01_03_Lockups/Lockup1_NoPadding.svg'); --mark-ratio: 3341/974; width: 300px"></span></div>
+          <figcaption class="stack"><p class="t-label">REACLOUD · LOCKUP 1</p><p class="t-body-s x-file">04_01_03_Lockups/Lockup1_NoPadding.svg</p></figcaption>
+        </figure>
+        <figure class="block block--tight x-mark-card" style="margin: 0">
+          <div class="x-stage"><span class="mark" role="img" aria-label="ReaCloud" style="--mark:url('../../04_Product_Assets/04_01_ReaCloud/04_01_03_Lockups/Lockup2_NoPadding.svg'); --mark-ratio: 3430/512; width: 300px"></span></div>
+          <figcaption class="stack"><p class="t-label">REACLOUD · LOCKUP 2</p><p class="t-body-s x-file">04_01_03_Lockups/Lockup2_NoPadding.svg</p></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 07 Photography ───────────────────────────────────────────────── -->
+    <section class="x-wrap stack-3" aria-labelledby="s-photo">
+      <div class="block stack">
+        <p class="t-label">07 / PHOTOGRAPHY</p>
+        <h2 class="t-title" id="s-photo">PRODUCT PHOTOGRAPHY</h2>
+        <p class="t-body">Photos sit on the page with <code>--radius</code> corners and nothing else: no border, CSS filter, glow or overlay. Treatment lives in the file.</p>
+      </div>
+      <div class="x-photos">
+        <figure class="x-photo stack">
+          <img class="x-photo__img" src="img/reacloud-hero.jpg" width="1761" height="1264" alt="ReaCloud panel docked inside the REAPER DAW, black and white">
+          <figcaption class="block block--tight stack"><p class="t-label">REACLOUD</p><p class="t-body-s x-file">img/reacloud-hero.jpg · ReaCloud inside REAPER</p></figcaption>
+        </figure>
+        <figure class="x-photo stack">
+          <img class="x-photo__img" src="img/altair-hero.jpg" width="1000" height="608" alt="Altair Kontakt instrument on screen above a guitar, black and white">
+          <figcaption class="block block--tight stack"><p class="t-label">ALTAIR</p><p class="t-body-s x-file">img/altair-hero.jpg · Kontakt instrument on a guitar</p></figcaption>
+        </figure>
+      </div>
+      <div class="block stack-3">
+        <h3 class="t-title-s">DIRECTION</h3>
+        <ul class="x-bullets t-body">
+          <li>Black and white, high contrast.</li>
+          <li>Light backdrops; the subject reads dark against them.</li>
+          <li>Subtle film grain, baked into the file.</li>
+          <li>Skin tones may stay warm: the only color allowed.</li>
+          <li>No filters, glows, overlays or gradients added in CSS.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 08 Motion ─────────────────────────────────────────────────────── -->
+    <section class="stack-3" aria-labelledby="s-motion">
+      <div class="x-wrap block stack">
+        <p class="t-label">08 / MOTION</p>
+        <h2 class="t-title" id="s-motion">MOTION</h2>
+        <p class="t-body">Three moves, all decorative or attention-only: the Duo2 ring cycle, emblem distortion, and the ticker. Nothing moves under reduced motion.</p>
+      </div>
+      <div class="x-wrap x-grid x-grid--wide">
+        <div class="block stack-3">
+          <div class="x-stage">
+            <div class="duo x-duo-cycle" role="img" aria-label="Cloud Scythe Labs Duo emblem, loading" style="width: 140px">
+              <span class="mark mark--duo2" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo2.svg')"></span>
+              <span class="mark" style="--mark:url('../../03_Branding_Assets/03_03_Emblem/03_03_02_Duo/Square_NoPadding_CSLDuo1.svg')"></span>
+            </div>
+          </div>
+          <div class="stack">
+            <h3 class="t-title-s">DUO2 COLOR CYCLE</h3>
+            <p class="t-body-s">Ring steps red, orange, yellow, green, blue, purple, pink, idle; 0.5 s each. Loading and attention only, never a status. Reduced motion rests on idle gray.</p>
+          </div>
+        </div>
+        <div class="block stack">
+          <h3 class="t-title-s">EMBLEM DISTORTION</h3>
+          <p class="t-body-s">Designer v4 warps the emblem as a motion effect. Allowed only in hero, promo and loading moments, always animated back to the true mark.</p>
+          <p class="t-body-s">Never on the favicon, app icon, print or any static use; there §4.2 "never warp" holds.</p>
+        </div>
+        <div class="block stack">
+          <h3 class="t-title-s">TICKER</h3>
+          <p class="t-body-s">Divider below: alternating rows rotated 30°, looping every 5.67 s, in <code>--fg-on-primary</code> on the page fill. Carries no text you need to read; stills under reduced motion.</p>
+        </div>
+      </div>
+      <div class="ticker x-band on-primary">
+        <div class="ticker__field" aria-hidden="true">
+          <div class="ticker__row">CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;</div>
+          <div class="ticker__row">LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;</div>
+          <div class="ticker__row">CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;</div>
+          <div class="ticker__row">LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;</div>
+          <div class="ticker__row">CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;</div>
+          <div class="ticker__row">LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;</div>
+          <div class="ticker__row">CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;CLOUD SCYTHE LABS&nbsp;&nbsp;&nbsp;</div>
+          <div class="ticker__row">LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;LIVE IN THE DAW&nbsp;&nbsp;&nbsp;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 Components ─────────────────────────────────────────────────── -->
+    <section class="x-wrap stack-3" aria-labelledby="s-components">
+      <div class="block stack">
+        <p class="t-label">09 / COMPONENTS</p>
+        <h2 class="t-title" id="s-components">BUTTONS, STATUS, FORMS</h2>
+        <p class="t-body">No borders, no shadows: separation comes from fill and space. Forward actions sit on the right; one primary per region.</p>
+      </div>
+
+      <div class="x-grid x-grid--wide">
+        <div class="block stack-3">
+          <div class="stack">
+            <h3 class="t-title-s">BUTTONS</h3>
+            <p class="t-body-s">Secondary on a block takes <code>--bg-inset</code>; on the page it takes <code>--bg-text</code> (row under this grid). Danger replaces the primary for destructive confirms.</p>
+          </div>
+          <div class="actions">
+            <button class="btn btn--secondary" type="button">BACK</button>
+            <button class="btn btn--primary" type="button">SAVE</button>
+          </div>
+          <div class="actions">
+            <button class="btn btn--secondary" type="button">KEEP</button>
+            <button class="btn btn--danger" type="button">REMOVE</button>
+          </div>
+        </div>
+
+        <div class="block stack-3" role="group" aria-labelledby="dlg-publish">
+          <div class="stack">
+            <h3 class="t-title-s" id="dlg-publish">PUBLISH MIX?</h3>
+            <p class="t-body">Bounces the master to the shared project. Four collaborators get a notification.</p>
+          </div>
+          <div class="actions">
+            <button class="btn btn--secondary" type="button">CANCEL</button>
+            <button class="btn btn--primary" type="button">CONFIRM</button>
+          </div>
+        </div>
+
+        <div class="block stack-3" role="group" aria-labelledby="dlg-delete">
+          <div class="stack">
+            <h3 class="t-title-s" id="dlg-delete">DELETE SESSION?</h3>
+            <p class="t-body">Removes "Night Drive" and its 38 takes for everyone. This cannot be undone.</p>
+          </div>
+          <div class="actions">
+            <button class="btn btn--secondary" type="button">CANCEL</button>
+            <button class="btn btn--danger" type="button">DELETE</button>
+          </div>
+        </div>
+
+        <div class="block stack-3">
+          <h3 class="t-title-s">TRACKS</h3>
+          <div class="x-list">
+            <div class="x-row"><span class="t-label">01 DRUMS</span><span class="chip s-success">SYNCED</span></div>
+            <div class="x-row"><span class="t-label">02 BASS</span><span class="chip s-progress">SYNCING</span></div>
+            <div class="x-row"><span class="t-label">03 VOX TAKE 4</span><span class="chip s-warning">CONFLICT</span></div>
+            <div class="x-row"><span class="t-label">04 KEYS</span><span class="chip s-notify">2 NOTES</span></div>
+          </div>
+        </div>
+
+        <form class="block stack-3" onsubmit="return false">
+          <h3 class="t-title-s">INVITE</h3>
+          <label class="field"><span>EMAIL</span><input class="input" type="email" placeholder="name@studio.com"></label>
+          <label class="field"><span>PASSWORD</span><input class="input" type="password" value="session-pass"></label>
+          <span class="chip s-warning">INCORRECT PASSWORD</span>
+          <div class="actions">
+            <button class="btn btn--primary" type="submit">SEND INVITE</button>
+          </div>
+        </form>
+
+        <div class="block stack-3">
+          <div class="stack">
+            <h3 class="t-title-s">NESTED SURFACE</h3>
+            <p class="t-body-s">Insets take <code>--bg-inset</code> and <code>--radius-s</code>, never the page fill. A secondary button inside an inset steps back to <code>--bg-text</code>.</p>
+          </div>
+          <div class="block--inset stack-3">
+            <div class="stack">
+              <div class="x-row"><span class="t-label">NIGHT DRIVE</span><span class="chip s-neutral">CONNECTED</span></div>
+              <p class="t-body-s">12 tracks · last synced 2 minutes ago.</p>
+            </div>
+            <div class="actions">
+              <button class="btn btn--secondary" type="button">DETACH</button>
+              <button class="btn btn--primary" type="button">OPEN</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="block stack-3">
+          <h3 class="t-title-s">READOUTS</h3>
+          <div class="x-row">
+            <span class="t-label">SESSION</span>
+            <span class="t-display-s t-dot-display">00:03:42</span>
+          </div>
+          <div class="x-row">
+            <span class="t-label">TEMPO</span>
+            <span class="t-title t-dot">128 BPM</span>
+          </div>
+          <div class="x-row">
+            <span class="t-label">UPLOAD</span>
+            <span class="t-title t-dot">87%</span>
+          </div>
+        </div>
+
+        <div class="block stack-3">
+          <h3 class="t-title-s">TERMINAL</h3>
+          <pre class="t-code x-code">$ reacloud push</pre>
+          <pre class="t-code-s x-code">12:04:51  push  03_vox_take4.wav   48.2 MB  ok
+12:04:55  push  night_drive.rpp     112 KB  ok
+12:04:55  sync  2 files  0 conflicts  38 ms</pre>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn--secondary" type="button">BACK</button>
+        <button class="btn btn--primary" type="button">NEXT</button>
+      </div>
+    </section>
+
+    <!-- 10 Spacing + radius ───────────────────────────────────────────── -->
+    <section class="x-wrap stack-3" aria-labelledby="s-space">
+      <div class="block stack">
+        <p class="t-label">10 / LAYOUT</p>
+        <h2 class="t-title" id="s-space">SPACING AND RADIUS</h2>
+        <p class="t-body">A 10 px base matching the font pixel grid. One value per relationship: title to copy 10, block padding 20–30, between blocks 20, between sections 80.</p>
+      </div>
+      <div class="block stack-3">
+        <div class="x-space"><span class="t-label">SPACE-1</span><span class="t-body-s">5 px</span><span class="x-space__bar" style="width: var(--space-1)"></span></div>
+        <div class="x-space"><span class="t-label">SPACE-2</span><span class="t-body-s">10 px</span><span class="x-space__bar" style="width: var(--space-2)"></span></div>
+        <div class="x-space"><span class="t-label">SPACE-3</span><span class="t-body-s">20 px</span><span class="x-space__bar" style="width: var(--space-3)"></span></div>
+        <div class="x-space"><span class="t-label">SPACE-4</span><span class="t-body-s">30 px</span><span class="x-space__bar" style="width: var(--space-4)"></span></div>
+        <div class="x-space"><span class="t-label">SPACE-5</span><span class="t-body-s">40 px</span><span class="x-space__bar" style="width: var(--space-5)"></span></div>
+        <div class="x-space"><span class="t-label">SPACE-6</span><span class="t-body-s">60 px</span><span class="x-space__bar" style="width: var(--space-6)"></span></div>
+        <div class="x-space"><span class="t-label">SPACE-7</span><span class="t-body-s">80 px</span><span class="x-space__bar" style="width: var(--space-7)"></span></div>
+        <div class="x-space"><span class="t-label">SPACE-8</span><span class="t-body-s">120 px</span><span class="x-space__bar" style="width: var(--space-8)"></span></div>
+      </div>
+      <div class="x-grid x-grid--wide">
+        <div class="block stack-3">
+          <div class="stack">
+            <h3 class="t-title-s">--RADIUS · <span class="t-dot" data-hex="--radius">—</span></h3>
+            <p class="t-body-s">Blocks, sections, buttons. This block's own corners. PDF 10 px, site 6 px.</p>
+          </div>
+          <div class="actions"><button class="btn btn--primary" type="button">EXAMPLE</button></div>
+        </div>
+        <div class="block stack-3">
+          <div class="stack">
+            <h3 class="t-title-s">--RADIUS-S · <span class="t-dot" data-hex="--radius-s">—</span></h3>
+            <p class="t-body-s">Anything nested in a block: insets, chips, inputs, swatches. Half of <code>--radius</code>.</p>
+          </div>
+          <div class="block--inset x-row"><span class="t-label">INSET</span><span class="chip s-success">SYNCED</span></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Token readouts: each label reads the token where it sits (so pinned comparison tiles report their own values)
+    // and names the primitive it resolves to; re-render when any review switch changes.
+    (() => {
+      const root = document.documentElement;
+      const NEUTRALS = ["pure-black", "dark-accent", "faded-black", "gray-accent", "ps1-gray", "light-gray", "light-accent", "faded-white"];
+      const HUES = ["red", "orange", "yellow", "green", "blue", "purple", "pink"];
+      const PRIMITIVES = [
+        ...NEUTRALS.map((n) => `--csl-${n}`),
+        ...HUES.flatMap((h) => [`--csl-${h}-darkcon`, `--csl-${h}-lightcon`]),
+      ];
+      const THEMES = { ps2: "PS2 · dark context", ps1: "PS1 · dark context", ps5: "PS5 · light context" };
+
+      function render() {
+        const rootStyle = getComputedStyle(root);
+        const read = (style, token) => {
+          const v = style.getPropertyValue(token).trim();
+          return v.startsWith("#") ? v.toUpperCase() : v.replace(/(\d)px$/, "$1 px");
+        };
+        for (const el of document.querySelectorAll("[data-hex]")) el.textContent = read(getComputedStyle(el), el.dataset.hex);
+        for (const el of document.querySelectorAll("[data-primitive]")) {
+          const hex = read(getComputedStyle(el), el.dataset.primitive);
+          el.textContent = "= " + (PRIMITIVES.find((p) => read(rootStyle, p) === hex) ?? `${hex} (review panel)`);
+        }
+        for (const el of document.querySelectorAll("[data-theme-label]")) {
+          el.textContent = THEMES[root.dataset.theme] ?? THEMES.ps2;
+        }
+      }
+
+      new MutationObserver(render).observe(root, { attributes: true, attributeFilter: ["data-theme", "data-panel", "data-radius", "data-edge"] });
+      render();
+    })();
+  </script>
+</body>
+</html>
